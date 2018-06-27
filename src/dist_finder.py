@@ -7,11 +7,7 @@ from sensor_msgs.msg import LaserScan
 import matplotlib.pyplot as plt
 from race.msg import pid_input
 import time
-
-desired_trajectory = 1
-vel = 30
-
-pub = rospy.Publisher('error', pid_input, queue_size=10)
+from operator import add
 
 def linearReg(x, y):
     A = np.vstack([x, np.ones(len(x))]).T
@@ -26,7 +22,14 @@ def rect(r, theta):
 
 
 def callback(data):
-    xarr = []
+    a = np.split(data.ranges, 3)
+    side1 = a[0]
+    side2 = a[1]
+    wid = list(map(add, side1, side2))
+    wall = wid.index(min(wid))
+    print(wid[wall], wall, wall + 180)
+
+    """ xarr = []
     yarr = []
     thet = 0
     for i in data.ranges:
@@ -48,12 +51,9 @@ def callback(data):
     plt.plot(x,y)
     plt.plot(x,ya)
     plt.scatter(xarr,yarr)
-    plt.show()
+    plt.show() """
 
-    msg = pid_input()
-    msg.pid_error = 0
-    msg.pid_vel = vel
-    pub.publish(msg)
+
 
 
 if __name__ == '__main__':
