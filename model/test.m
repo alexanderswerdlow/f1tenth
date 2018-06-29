@@ -6,8 +6,8 @@ cr = 155494.663;
 Iz = 1436.24;
 vx = 5;
 
-A = [0      (-(cf + cr))/(m * vx)              (cf + cr)/(m)           ((lr * cr)-(lf*cf))/(m*vx);
-     0 -(I+m*l^2)*b/p  (m^2*g*l^2)/p   0;
+A = [0  1   0   0 
+     0      (-(cf + cr))/(m * vx)              (cf + cr)/(m)           ((lr * cr)-(lf*cf))/(m*vx);
      0      0              0           1;
      0 ((lr * cr)-(lf * cf))/(Iz * vx)       ((lf * cf)-(lr *cr))/(Iz)  (-((((lf)^2)*cf) + (((lr)^2)*cr)))/(Iz * vx)];
 B = [     0;
