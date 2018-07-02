@@ -8,21 +8,16 @@ from race.msg import pid_input
 import matplotlib.pyplot as plt
 import time
 from operator import add
+desired_trajectory = 1
+vel = 30
 
+pub = rospy.Publisher('error', pid_input, queue_size=10)
 def rect(r, theta):
     x = r * math.cos(theta)
     y = r * math.sin(theta)
     return x, y
 
 def callback(data):
-    """ global ocount
-    ocount += 1000
-    new_data = []
-    for i in range(0,360):
-        if data.ranges[i] < data.range_max and data.ranges[i] > data.range_min:
-            new_data.append(ocount)
-        else:
-            new_data.append(data.ranges[i]) """
     new_data = data.ranges
     half = len(new_data)/2
     side1 = new_data[:half]
@@ -42,8 +37,6 @@ def callback(data):
             xarr.append(point[0])
             yarr.append(point[1])
 
-
-
     p1 = rect(side1[wall], ((math.pi * 2) / 360) * wall)
     p2 = rect(side2[wall], (((math.pi * 2) / 360) * wall) + math.pi)
     try:
@@ -55,7 +48,7 @@ def callback(data):
 
         y = m1 * x + c1
         ya = m2 * x + c2
-        global counter
+        """ global counter
         if counter % 10 == 0:
             plt.clf()
             plt.plot(x,y)
@@ -67,31 +60,20 @@ def callback(data):
             plt.axis([-16, 16,-16,16])
             plt.draw()
             plt.pause(0.00000000001)
-        counter += 1
+        counter += 1 """
+        eq = (math.sqrt(((p1[0] + p2[0])**2) + ((p2[1] + p1[1])**2)))/ 2.0
+        er = eq - math.sqrt(((p1[0])**2) + ((p1[1])**2))
+        msg = pid_input()
+        msg.pid_error = er
+        msg.pid_vel = 10
+        pub.publish(msg)
     except ZeroDivisionError:
         pass
-    
-
-    
-    #print((side1[wall], ((math.pi * 2) / 360) * wall), (side2[wall], (((math.pi * 2) / 360) * wall) + math.pi))
-    #print((side1[wall], ((math.pi * 2) / 360) * wall), (side2[wall], ((math.pi * 2) / 360) * wall * 2))
-
-    #print(m1, m2)
-    #print(p1, p2)
-
-    
-
-    
-
-    #plt.scatter(p1[0],p1[1],marker='+')
-    #plt.scatter(p2[0],p2[1],marker='+')
-    
-    
 
 if __name__ == '__main__':
     counter = 0
     ocount = 1000
-    print("Robot")
+    print("Robot Started")
     rospy.init_node('dist_finder', anonymous=True)
     rospy.Subscriber("scan", LaserScan, callback)
     plt.ion()
