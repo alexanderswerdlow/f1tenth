@@ -1,8 +1,9 @@
 <launch>      
 	<include file="$(find razor_imu_9dof)/launch/razor-pub.launch" />
     <include file="$(find rplidar_ros)/launch/rplidar.launch" />
-    <node name="dist_finder" pkg="race" type="dist_finder.py" />
-    <node name="pid_controller" pkg="race" type="control.py" />
     <node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1" />
-    <node name="serial_talker" pkg="race" type="talker.py" />
+    <node name="dist_finder" pkg="race" type="dist_finder.py" output="screen" />
+    <node name="pid_controller" pkg="race" type="control.py" output="screen" />
+    <node name="serial_talker" pkg="race" type="talker.py" output="screen" />
+    <node pkg="rosbag" type="record" name="rosbag_record_standard_data" respawn="true" output="screen" args="-a -o /home/cyber-physical/Documents/logs/" />
 </launch>

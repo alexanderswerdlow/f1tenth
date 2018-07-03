@@ -16,7 +16,7 @@ def arduino_map(x, in_min, in_max, out_min, out_max):
 def callback(data):
 	velocity = data.velocity
 	angle = data.angle
-	print("Velocity: ",velocity,"Angle: ",angle)
+	#print("Velocity: ",velocity,"Angle: ",angle)
 	# Do the computation
 	pwm1 = arduino_map(velocity,-100,100,6554,13108);
 	pwm2 = arduino_map(angle,-30,30,6554,13108);
@@ -33,5 +33,5 @@ def talker():
 	rospy.spin()
 
 if __name__ == '__main__':
-	print("Serial talker initialized")
+	rospy.loginfo("Serial Talker Initialized")
 	talker()

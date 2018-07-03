@@ -25,7 +25,7 @@ def callback(data):
     wid = list(map(add, side1, side2))
     wall = wid.index(min(wid))
 
-    print(wall, wid[wall], (wall, side1[wall]), (wall + 180, side2[wall]))
+    #print(wall, wid[wall], (wall, side1[wall]), (wall + 180, side2[wall]))
 
     xarr = []
     yarr = []
@@ -64,7 +64,7 @@ def callback(data):
         eq = (math.sqrt(((p1[0] + p2[0])**2) + ((p2[1] + p1[1])**2)))/ 2.0
         er = eq - math.sqrt(((p1[0])**2) + ((p1[1])**2))
         msg = pid_input()
-        msg.pid_error = er
+        msg.pid_error = 10
         msg.pid_vel = 10
         pub.publish(msg)
     except ZeroDivisionError:
@@ -73,7 +73,7 @@ def callback(data):
 if __name__ == '__main__':
     counter = 0
     ocount = 1000
-    print("Robot Started")
+    print("Wall Finder Started")
     rospy.init_node('dist_finder', anonymous=True)
     rospy.Subscriber("scan", LaserScan, callback)
     plt.ion()
