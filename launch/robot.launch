@@ -3,5 +3,6 @@
     <include file="$(find rplidar_ros)/launch/rplidar.launch" />
     <node name="dist_finder" pkg="race" type="dist_finder.py" />
     <node name="pid_controller" pkg="race" type="control.py" />
-    <node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyUSB0" />
+    <node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1" />
+    <node name="serial_talker" pkg="race" type="talker.py" />
 </launch>

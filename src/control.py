@@ -7,7 +7,7 @@ from sensor_msgs.msg import Imu
 import math
 from quant import Quaternion
 
-kp = 14.0
+kp = 0.1667
 kd = 0.09
 prev_error = 0.0 
 vel_input = 25.0
@@ -28,7 +28,7 @@ def gyro(data):
 
 	msg = drive_param()
 	msg.velocity = vel_input	
-	msg.angle = pose.yaw * kp
+	msg.angle = math.degrees(pose.yaw) * kp
 	#print(msg.angle)
 	pub.publish(msg)
 	
