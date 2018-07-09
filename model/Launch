@@ -1,6 +1,0 @@
-roscore //Core
-rosrun race talker.py //Communiates with Teensy
-rosrun rosserial_python serial_node.py /dev/ttyUSB0 //Starts Teensy Serial node
-roslaunch rplidar_ros rplidar.launch //Starts Lidar node
-roslaunch razor_imu_9dof razor-pub.launch //Starts IMU Node
-ssh -R 52698:localhost:52698 cyber-physical@192.168.1.1 //VS Code
