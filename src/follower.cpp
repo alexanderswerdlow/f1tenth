@@ -87,7 +87,7 @@ DynamicModel::DynamicModel()
 void DynamicModel::updateState(double)
 {
     Eigen::MatrixXd steering(4, 1);
-    steering = K.cwiseProduct(X);
+    steering = -K.cwiseProduct(X);
     U = steering(0, 0) + steering(1, 0) + steering(2, 0) + steering(3, 0);
     Xdot = A * X + B * U + C * rDes;
     //Fix
