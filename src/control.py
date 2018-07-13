@@ -7,7 +7,7 @@ from race.msg import pid_input
 from sensor_msgs.msg import Imu
 from quant import Quaternion
 
-kp = 0.1667
+kp = 20
 kp2 = 0.1667
 kd = 0.09
 prev_error = 0.0 
@@ -21,14 +21,14 @@ def control(data):
 	global kp
 	global kp2
 	global kd
-	msg = drive_param()
-	msg.velocity = vel_input - (data.pid_error * kp2)
-	msg.angle = data.pid_error * kp
-	rospy.loginfo(vel_input)
-	#pub.publish(msg)
 	
 def gyro(data):
 	pose = Quaternion(data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w)
+	msg = drive_param()
+	#msg.velocity = vel_input - (data.pid_error * kp2)
+	msg.velocity = 1
+	msg.angle = math.degrees(pose.yaw) * 0.3
+	pub.publish(msg)
 
 if __name__ == '__main__':
 	rospy.init_node('pid_controller', anonymous=True)

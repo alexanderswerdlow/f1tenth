@@ -61,11 +61,13 @@ def callback(data):
             plt.draw()
             plt.pause(0.00000000001)
         counter += 1 """
-        eq = (math.sqrt(((p1[0] + p2[0])**2) + ((p2[1] + p1[1])**2)))/ 2.0
+        eq = (math.sqrt(((p1[0] + p2[0])**2) + ((p2[1] + p1[1])**2))) / 2.0
         er = eq - math.sqrt(((p1[0])**2) + ((p1[1])**2))
         msg = pid_input()
-        msg.pid_error = 10
-        msg.pid_vel = 10
+        if math.isnan(float(er)):
+            er = 0
+        msg.pid_error = float(er)
+        msg.pid_vel = float(10)
         pub.publish(msg)
     except ZeroDivisionError:
         pass
