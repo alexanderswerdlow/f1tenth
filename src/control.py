@@ -26,8 +26,8 @@ def gyro(data):
 	pose = Quaternion(data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w)
 	msg = drive_param()
 	#msg.velocity = vel_input - (data.pid_error * kp2)
-	msg.velocity = 1
-	msg.angle = math.degrees(pose.yaw) * 0.3
+	msg.velocity = 0
+	msg.angle = 15
 	pub.publish(msg)
 
 if __name__ == '__main__':
