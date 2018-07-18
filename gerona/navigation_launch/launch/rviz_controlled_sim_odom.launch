@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<launch>    <arg name="use_planner_cost" default="false" />
+    <arg name="use_planner_dynamic" default="false" />
+    <arg name="use_planner_static" default="false" />
+    <arg name="use_planner_default" default="true" />
+
+    <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter">
+      <rosparam command="load" file="$(find navigation_launch)/config/laser_config.yaml" />
+    </node>
+
+    <include file="$(find navigation_launch)/launch/rviz_controlled.launch">
+      <arg name="use_laser_obstacles" value="true" />
+      <arg name="use_planner_cost" value="$(arg use_planner_cost)" />
+      <arg name="use_planner_dynamic" value="$(arg use_planner_dynamic)" />
+      <arg name="use_planner_static" value="$(arg use_planner_static)" />
+      <arg name="use_planner_default" value="$(arg use_planner_default)" />
+    </include>
+
+    <param name="gerona/world_frame" value="odom" />
+    <param name="gerona/odom_frame" value="odom" />
+    <param name="gerona/robot_frame" value="base_link" />
+
+<!--
+    <param name="path_follower/world_frame" value="odom" />
+    <param name="path_follower/odom_frame" value="odom" />
+    <param name="path_follower/robot_frame" value="base_link" />
+
+    <param name="path_planner/world_frame" value="odom" />
+    <param name="path_planner/robot_frame" value="base_link" />
+    
+    <param name="highlevel_dummy/world_frame" value="odom" />
+-->
+
+    <param name="path_planner/render_open_cells" value="true" />
+    <param name="path_planner/algorithm" value="2d" />
+    <param name="path_planner/algorithm" value="generic" />
+    <param name="path_planner/optimization/optimize_cost" value="false" />
+    <param name="path_planner/optimization/publish_gradient" value="false" />
+    <param name="path_planner/optimization/weight/data" value="0.25" />
+    <param name="path_planner/optimization/weight/smooth" value="0.1" />
+    <param name="path_planner/optimization/weight/cost" value="1.0" />
+    <param name="path_planner/optimization/tolerance" value="1e-5" />
+
+    <param name="path_follower/local_planner/algorithm" value="NULL" />
+    <param name="path_follower/local_planner/algorithm" value="AStar" />
+    <param name="path_follower/supervisor/use_path_lookout" value="false" />
+    <param name="path_follower/supervisor/use_waypoint_timeout" value="false" />
+    <param name="path_follower/supervisor/waypoint_timeout/time" value="5.0" />
+    <param name="path_follower/supervisor/use_distance_to_path" value="false" />
+    <param name="path_follower/supervisor/path_lookout/obstacle_scale_distance" value="2" />
+    <param name="path_follower/supervisor/path_lookout/obstacle_scale_lifetime" value="2" />
+    <param name="path_follower/supervisor/path_lookout/path_width" value="0.8" />
+    <param name="path_follower/supervisor/distance_to_path/max_dist" value="4.0" />
+
+    <group ns="path_follower">
+        <group ns="collision_avoider">
+            <group ns="collision_box">
+                <param name="width" value="0.4" />
+                <param name="crit_length" value="0.4" />
+                <param name="min_length" value="0.6" />
+                <param name="max_length" value="1.0" />
+                <param name="velocity_factor" value="1.0" />
+                <param name="velocity_saturation" value="1.0" />
+            </group>
+        </group>
+    </group>
+
+    <group ns="path_planner">
+        <group ns="size">
+            <param name="width" value="0.4" />
+            <param name="forward" value="0.3" />
+            <param name="backward" value="-0.5" />
+        </group>
+    </group>
+
+    <param name="highlevel_dummy/grow_obstacles" value="true" />
+    <param name="highlevel_dummy/obstacle_radius" value="0.5" />
+    <param name="highlevel_dummy/target_speed" value="2.5" />
+
+    <param name="highlevel_dummy/planner/reversed" value="true" />
+    <param name="highlevel_dummy/planner/goal_dist_threshold" value="0.15" />
+    <param name="highlevel_dummy/planner/goal_angle_threshold" value="25" />
+    <param name="highlevel_dummy/planner/allow_forward" value="true" />
+    <param name="highlevel_dummy/planner/allow_backward" value="true" />
+    <param name="highlevel_dummy/planner/ackermann_la" value="0.8" />
+    <param name="highlevel_dummy/planner/ackermann_steer_steps" value="2" />
+    <param name="highlevel_dummy/planner/ackermann_max_steer_angle" value="40" />
+    <param name="highlevel_dummy/planner/ackermann_steer_delta" value="20" />
+
+</launch>

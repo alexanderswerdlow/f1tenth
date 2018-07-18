@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+    <group ns="path_follower">
+        <group ns="controller">
+            <!-- parameters, that are dependent of the controller or the robot model -->
+            <group ns="dynamic_window">
+                <param name="angle_fact" value="0.1" />
+                <param name="disobst_fact" value="10.0" />
+                <param name="v_fact" value="0.1" />
+                <param name="lin_acc" value="2.0" />
+                <param name="ang_acc" value="2.0" />
+                <param name="lin_dec" value="0.5" />
+                <param name="ang_dec" value="0.1" />
+                <param name="T_dwa" value="0.26" />
+                <param name="v_step" value="0.1" />
+                <param name="w_step" value="0.1" />
+                <param name="fact_T" value="10.0" />
+                <param name="step_T" value="0.13" />
+                <param name="obst_dist_thresh" value="0.8" />
+                <param name="max_ang_vel" value="0.5" />
+                <param name="initial_vel_fact" value="1e-3" />
+            </group>
+        </group>
+    </group>
+</launch>

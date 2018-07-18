@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+Launch the path follower with the PID controller for a car-like (Ackermann) robot.
+-->
+<launch>
+    <group ns="path_follower">
+        <group ns="controller">
+            <!-- parameters, that are dependent of the controller or the robot model -->
+            <group ns="ackermann_pid">
+                <param name="pid/kp" value="1.5" />
+                <param name="pid/ki" value="0.001" />
+            </group>
+        </group>
+    </group>  
+</launch>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+    <group ns="path_follower">
+        <group ns="controller">
+            <!-- parameters, that are dependent of the controller or the robot model -->
+            <group ns="ofc">
+                <param name="kp_lin" value="0.2" />
+                <param name="ki_lin" value="0.01" />
+                <param name="kd_lin" value="0.02" />
+                <param name="kp_ang" value="0.5" />
+                <param name="ki_ang" value="0.1" />
+                <param name="kd_ang" value="0.1" />
+                <param name="goal_x" value="2.0" />
+                <param name="goal_y" value="0.0" />
+                <param name="max_angular_velocity" value="0.5" />
+            </group>
+        </group>
+    </group>  
+</launch>

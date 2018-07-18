@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+  <name>path_control</name>
+  <version>1.0.0</version>
+  <description>Controls path planning and execution.</description>
+
+  <author email="sebastian.buck@uni-tuebingen.de">Sebastian Buck</author>
+  <author email="felix.widmaier@uni-tuebingen.de">Felix Widmaier</author>
+
+  <maintainer email="goran.huskic@uni-tuebingen.de">Goran Huskic</maintainer>
+  <maintainer email="sebastian.buck@uni-tuebingen.de">Sebastian Buck</maintainer>
+  <maintainer email="julian.jordan@uni-tuebingen.de">Julian Jordan</maintainer>
+  <maintainer email="adrian.zwiener@uni-tuebingen.de">Adrian Zwiener</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>path_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>tf2_geometry_msgs</build_depend>
+
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>actionlib</run_depend>
+  <run_depend>path_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>tf2_geometry_msgs</run_depend>
+
+
+  <export>
+  </export>
+</package>

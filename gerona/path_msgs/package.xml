@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <name>path_msgs</name>
+  <version>1.0.0</version>
+  <description>This packages bundles all messages used by the path navigation packages.</description>
+
+  <author email="sebastian.buck@uni-tuebingen.de">Sebastian Buck</author>
+  <author email="felix.widmaier@uni-tuebingen.de">Felix Widmaier</author>
+
+  <maintainer email="goran.huskic@uni-tuebingen.de">Goran Huskic</maintainer>
+  <maintainer email="sebastian.buck@uni-tuebingen.de">Sebastian Buck</maintainer>
+  <maintainer email="julian.jordan@uni-tuebingen.de">Julian Jordan</maintainer>
+  <maintainer email="adrian.zwiener@uni-tuebingen.de">Adrian Zwiener</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+
+  <run_depend>actionlib_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>nav_msgs</run_depend>
+
+  <build_depend>message_generation</build_depend>
+  <run_depend>message_runtime</run_depend>
+
+  <export>
+  </export>
+</package>

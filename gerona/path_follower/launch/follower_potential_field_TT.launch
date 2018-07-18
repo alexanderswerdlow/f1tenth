@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+    <group ns="path_follower">
+        <group ns="controller">
+            <!-- parameters, that are dependent of the controller or the robot model -->
+            <group ns="potential_field_tt">
+                <param name="kAtt" value="0.2" />
+                <param name="kRep" value="0.5" />
+                <param name="max_angular_velocity" value="0.5" />
+            </group>
+        </group>
+    </group>  
+</launch>
