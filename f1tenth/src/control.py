@@ -26,7 +26,7 @@ def recieveCommand(data):
 		steering_angle = math.atan(wheelbase/radius)
 		if data.linear.x < 0:
 			steering_angle *= -1
-	print(math.degrees(steering_angle))
+	#print(math.degrees(steering_angle))
 	msg = drive_param()
 	msg.velocity = data.linear.x
 	msg.angle = steering_angle
