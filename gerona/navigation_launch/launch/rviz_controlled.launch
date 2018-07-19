@@ -20,7 +20,10 @@ demonstrating the navigation framework.
     <arg name="use_karto_segmented" default="false" />
     <arg name="use_amcl" default="false" />
     <arg name="use_hector" default="false" />
-
+    <arg name="base_frame" default="base_link"/>
+  <arg name="odom_frame" default="odom"/>
+  <arg name="pub_map_odom_transform" default="true"/>
+<node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 /map /odom 100" />
     <node pkg="path_control" type="highlevel_dummy" name="highlevel_dummy" output="screen" respawn="true">
         <param name="target_speed" value="1.0" />
         <param name="failure_mode" value="replan" />
