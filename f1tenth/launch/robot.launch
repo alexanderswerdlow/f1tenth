@@ -1,116 +1,72 @@
 <launch>
-  <include file="$(find razor_imu_9dof)/launch/razor-pub.launch" />
-  <node name="pid_controller" pkg="race" type="control.py" output="screen" />
-  <include file="$(find rplidar_ros)/launch/rplidar.launch" />
-  <!--<node name="dist_finder" pkg="race" type="dist_finder.py" output="screen" />-->
-  <node name="serial_talker" pkg="race" type="talker.py" output="screen" />
-<!--<node pkg="rosbag" type="record" name="rosbag_record_standard_data" respawn="true" output="screen" args="-a -o /home/cyber-physical/Documents/logs/" /> -->
- <node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1" />
+	<!-- Start IMU, Lidar, and Teensy over Serial -->
+	<include file="$(find razor_imu_9dof)/launch/razor-pub.launch"/>
+	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+	<node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1"/>
 
+	<!-- Start control and talker nodes to process and send data to teensy-->
+	<node name="controller" pkg="race" type="control.py" output="screen"/>
+	<node name="serial_talker" pkg="race" type="talker.py" output="screen"/>
 
-  <arg name="use_laser_obstacles" default="false" />
-  <arg name="use_planner_cost" default="false" />
-  <arg name="use_planner_dynamic" default="false" />
-  <arg name="use_planner_static" default="false" />
-  <arg name="use_planner_goal" default="false" />
-  <arg name="use_planner_default" default="true" />
+	<!-- Log All Data to File -->
+	<node pkg="rosbag" type="record" name="rosbag_record_standard_data" respawn="true" output="screen"
+		  args="-a -o /home/cyber-physical/Documents/logs/"/>
 
-  <arg name="use_karto" default="false" />
-  <arg name="use_karto_segmented" default="false" />
-  <arg name="use_amcl" default="false" />
-  <arg name="use_hector" default="false" />
+	<node pkg="path_control" type="highlevel_dummy" name="highlevel_dummy" output="screen" respawn="true">
+		<param name="target_speed" value="1.0"/>
+		<param name="failure_mode" value="replan"/>
+		<remap from="rviz_goal" to="/move_base_simple/goal"/>
+	</node>
 
-  <node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 /map /odom 100" />
-  <node pkg="tf" type="static_transform_publisher" name="base_to_map" args="0 0 0 0 0 0 /base_link /map 100" />
-<node pkg="tf" type="static_transform_publisher" name="imu_to_base" args="0 0 0 0 0 0 /base_imu_link /base_link 100" />
+	<include file="$(find navigation_launch)/launch/navigation.launch">
+		<arg name="use_laser_obstacles" value="false"/>
 
-  <node pkg="path_control" type="highlevel_dummy" name="highlevel_dummy" output="screen" respawn="true">
-    <param name="target_speed" value="1.0" />
-    <param name="failure_mode" value="replan" />
-    <remap from="rviz_goal" to="/move_base_simple/goal" />
-  </node>
+		<arg name="use_karto" value="false"/>
+		<arg name="use_karto_segmented" value="false"/>
+		<arg name="use_amcl" value="false"/>
+		<arg name="use_hector" value="false"/>
 
-  <include file="$(find navigation_launch)/launch/navigation.launch">
-    <arg name="use_laser_obstacles" value="$(arg use_laser_obstacles)" />
+		<arg name="use_planner_cost" value="false"/>
+		<arg name="use_planner_dynamic" value="false"/>
+		<arg name="use_planner_static" value="false"/>
+		<arg name="use_planner_goal" value="false"/>
+		<arg name="use_planner_default" value="true"/>
 
-    <arg name="use_karto" value="$(arg use_karto)" />
-    <arg name="use_karto_segmented" value="$(arg use_karto_segmented)" />
-    <arg name="use_amcl" value="$(arg use_amcl)" />
-    <arg name="use_hector" value="$(arg use_hector)" />
+	</include>
 
-    <arg name="use_planner_cost" value="$(arg use_planner_cost)" />
-    <arg name="use_planner_dynamic" value="$(arg use_planner_dynamic)" />
-    <arg name="use_planner_static" value="$(arg use_planner_static)" />
-    <arg name="use_planner_goal" value="$(arg use_planner_goal)" />
-    <arg name="use_planner_default" value="$(arg use_planner_default)" />
+	<param name="path_follower/local_planner/algorithm" value="NULL"/>
 
-  </include>
+	<node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 /map /odom 100"/>
+	<node pkg="tf" type="static_transform_publisher" name="base_to_map" args="0 0 0 0 0 0 /base_link /map 100"/>
 
-  <param name="path_follower/local_planner/algorithm" value="NULL" />
+	<node pkg="tf" type="static_transform_publisher" name="imu_to_base"
+		  args="0 0 0 0 0 0 /base_imu_link /base_link 100"/>
 
-  <!-- default values:
-    <param name="path_follower/local_planner/c1" value="true" />
-    <param name="path_follower/local_planner/c2" value="true" />
+	<!-- Localize using Hector Mapping and EKF -->
 
-    <param name="path_follower/local_planner/s1" value="3.5" />
-    <param name="path_follower/local_planner/s2" value="1.5" />
-    <param name="path_follower/local_planner/s3" value="4.0" />
-    <param name="path_follower/local_planner/s4" value="3.0" />
-    <param name="path_follower/local_planner/s5" value="1.5" />
-    <param name="path_follower/local_planner/s6" value="5.0" />
+	<node pkg="tf" type="static_transform_publisher" name="laser_base" args="0 0 0 0 0 0 /scan /base_link 100"/>
 
-    <param name="path_follower/local_planner/nnodes" value="400" />
-    <param name="path_follower/local_planner/depth" value="10" />
-    <param name="path_follower/local_planner/ic" value="7" />
-    <param name="path_follower/local_planner/ia" value="0" />
-    <param name="path_follower/local_planner/uinterval" value="0.125" />
-    <param name="path_follower/local_planner/lmf" value="12.0" />
-    <param name="path_follower/local_planner/dis2p" value="1.8" />
-    <param name="path_follower/local_planner/adis" value="0.35" />
-    <param name="path_follower/local_planner/fdis" value="0.5" />
-    <param name="path_follower/local_planner/s_angle" value="35.0" />
-    <param name="path_follower/local_planner/mu" value="0.1" />
-    <param name="path_follower/local_planner/ef" value="2.0" />
-    <param name="path_follower/local_planner/use_v" value="true" />
-    -->
+	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+		<rosparam command="load" file="$(find robot_localization)/params/ekf_template.yaml"/>
+	</node>
 
+	<include file="$(find hector_mapping)/launch/mapping_default.launch"/>
 
-<include file="$(find hector_mapping)/launch/mapping_default.launch"/>
+	<!-- Localization using Laser Scan Matcher
+	<node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
+		  args="0.0 0.0 0.0 0.0 0.0 0.0 /base_link /laser 40"/>
 
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-    <rosparam command="load" file="$(find robot_localization)/params/ekf_template.yaml" />
-  </node>
+	<param name="laser_scan_matcher_node/do_compute_covariance" value="1"/>
+	<param name="laser_scan_matcher_node/publish_pose_with_covariance" value="true"/>
+	<param name="laser_scan_matcher_node/publish_pose_with_covariance_stamped" value="true"/>
 
+	<node pkg="laser_scan_matcher" type="laser_scan_matcher_node" name="laser_scan_matcher_node" output="screen">
+		<param name="publish_tf" value="true"/>
+		<param name="use_imu" value="true"/>
+		<remap from="imu" to="imu/data"/>
+		<param name="max_iterations" value="10"/>
+	</node>
 
-
-
-
-
-
-
-
-
-<!-- Option 2
-      <arg name="publish_covariance" default="false"/>
-
-      #### publish an example base_link -> laser transform ###########
-
-      <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
-       args="0.0 0.0 0.0 0.0 0.0 0.0 /base_link /laser 40" />
-
-      #### start the laser scan_matcher ##############################
-
-      <group if="$(arg publish_covariance)">
-        <param name="laser_scan_matcher_node/do_compute_covariance" value="1"/>
-        <param name="laser_scan_matcher_node/publish_pose_with_covariance" value="true"/>
-        <param name="laser_scan_matcher_node/publish_pose_with_covariance_stamped" value="true"/>
-      </group>
-      <node pkg="laser_scan_matcher" type="laser_scan_matcher_node"
-        name="laser_scan_matcher_node" output="screen">
-<param name="publish_tf" value = "true"/>
-<param name="use_imu" value = "true"/>
-<remap from="imu" to="imu/data"/>
-        <param name="max_iterations" value="10"/>
-      </node>  -->
+	-->
 
 </launch>
