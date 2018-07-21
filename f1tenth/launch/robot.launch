@@ -19,12 +19,12 @@
 	</node>
 
 	<include file="$(find navigation_launch)/launch/navigation.launch">
-		<arg name="use_laser_obstacles" value="false"/>
+		<arg name="use_laser_obstacles" value="true"/>
 
 		<arg name="use_karto" value="false"/>
 		<arg name="use_karto_segmented" value="false"/>
 		<arg name="use_amcl" value="false"/>
-		<arg name="use_hector" value="true"/>
+		<arg name="use_hector" value="false"/>
 
 		<arg name="use_planner_cost" value="false"/>
 		<arg name="use_planner_dynamic" value="false"/>
@@ -42,15 +42,16 @@
 	<node pkg="tf" type="static_transform_publisher" name="imu_to_base"
 		  args="0 0 0 0 0 0 /base_imu_link /base_link 100"/>
 
-	<!-- Localize using Hector Mapping and EKF -->
+	<!-- Localize using Hector Mapping and EKF
 
 	<node pkg="tf" type="static_transform_publisher" name="laser_base1" args="0 0 0 0 0 0 /base_link /laser 100"/>
 
-	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-		<rosparam command="load" file="$(find robot_localization)/params/ekf_template.yaml"/>
-	</node>
+	 <node pkg="robot_localization" type="ukf_localization_node" name="ukf_se" clear_params="true">
+		<rosparam command="load" file="$(find robot_localization)/params/ukf_template.yaml"/>
+	</node>  -->
 
-	<!-- Localization using Laser Scan Matcher
+	<!--Localization using Laser Scan Matcher-->
+
 	<node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
 		  args="0.0 0.0 0.0 0.0 0.0 0.0 /base_link /laser 40"/>
 
@@ -60,10 +61,14 @@
 
 	<node pkg="laser_scan_matcher" type="laser_scan_matcher_node" name="laser_scan_matcher_node" output="screen">
 		<param name="publish_tf" value="true"/>
+		<param name="fixed_frame" value="map"/>
+		<param name="publish_pose_stamped" value="map"/>
 		<param name="use_imu" value="true"/>
 		<remap from="imu" to="imu/data"/>
 		<param name="max_iterations" value="10"/>
-	</node> -->
+	</node>
+
+
 
 
 

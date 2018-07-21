@@ -4,8 +4,8 @@
 
    <!--  Placeholder for output topic remapping-->
     <remap from="map" to="base_link"/>
-   
-    
+
+
 
   </node>
 </launch>
