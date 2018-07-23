@@ -71,4 +71,7 @@
 		<param name="publish_pose_with_covariance_stamped" value="true"/>
 	</node>
 
+
+	<include file="$(find obstacle_detector)/launch/demo.launch"/>
+
 </launch>
