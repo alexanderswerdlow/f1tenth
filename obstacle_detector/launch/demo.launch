@@ -1,7 +1,7 @@
 <!-- Demonstation of obstacle detector -->
 <launch>
 
-  <node name="map_to_scanner_base" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 map robot"/>
+
 
   <node name="nodelet_manager" pkg="nodelet" type="nodelet" args="manager" output="screen">
     <param name="num_worker_threads" value="20"/>
@@ -66,6 +66,6 @@
     <param name="frame_id"         value="map"/>
   </node>
 
-  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/obstacle_detector.rviz"/>
+
 
 </launch>

@@ -1,16 +1,18 @@
 <launch>
-	<!-- Start IMU, Lidar, and Teensy over Serial -->
+	<param name="/use_sim_time" value="true"/>
+	<node name="scans_demo" pkg="rosbag" type="play" output="screen" args="--clock --loop /home/aswerdlow/catkin_ws/src/f1tenth/f1tenth/launch/_2018-07-23-17-45-02.bag"/>
+
+	<!-- Start IMU, Lidar, and Teensy over Serial
 	<include file="$(find razor_imu_9dof)/launch/razor-pub.launch"/>
 	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
-	<node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1"/>
+	<node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1"/>  -->
 
 	<!-- Start control and talker nodes to process and send data to teensy-->
 	<node name="controller" pkg="race" type="control.py" output="screen"/>
 	<node name="serial_talker" pkg="race" type="talker.py" output="screen"/>
-
 	<!-- Log All Data to File
 	<node pkg="rosbag" type="record" name="rosbag_record_standard_data" respawn="true" output="screen"
-		  args="-a -o /home/cyber-physical/Documents/logs/"/>-->
+		  args="scan imu -o /home/cyber-physical/Documents/logs/"/> -->
 
 	<node pkg="path_control" type="highlevel_dummy" name="highlevel_dummy" output="screen" respawn="true">
 		<param name="target_speed" value="1.0"/>
@@ -24,7 +26,7 @@
 		<arg name="use_karto" value="false"/>
 		<arg name="use_karto_segmented" value="false"/>
 		<arg name="use_amcl" value="false"/>
-		<arg name="use_hector" value="false"/>
+		<arg name="use_hector" value="true"/>
 
 		<arg name="use_planner_cost" value="false"/>
 		<arg name="use_planner_dynamic" value="false"/>
@@ -36,26 +38,23 @@
 
 	<param name="path_follower/local_planner/algorithm" value="NULL"/>
 
+
 	<node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 /map /odom 100"/>
 	<node pkg="tf" type="static_transform_publisher" name="base_to_map" args="0 0 0 0 0 0 /base_link /map 100"/>
 
-	<node pkg="tf" type="static_transform_publisher" name="imu_to_base"
-		  args="0 0 0 0 0 0 /base_imu_link /base_link 100"/>
+	<node pkg="tf" type="static_transform_publisher" name="imu_to_base" args="0 0 0 0 0 0 /base_imu_link /base_link 100"/>
 
-	<!-- Localize using Hector Mapping and EKF
 
-	<node pkg="tf" type="static_transform_publisher" name="laser_base1" args="0 0 0 0 0 0 /base_link /laser 100"/>
+	<node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0.0 0.0 0.0 0.0 0.0 0.0 /base_link /laser 40"/>
 
 	 <node pkg="robot_localization" type="ukf_localization_node" name="ukf_se" clear_params="true">
 		<rosparam command="load" file="$(find robot_localization)/params/ukf_template.yaml"/>
-	</node>  -->
+	</node>
+
 
 	<!--Localization using Laser Scan Matcher-->
 
-	<node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
-		  args="0.0 0.0 0.0 0.0 0.0 0.0 /base_link /laser 40"/>
-
-	<node pkg="laser_scan_matcher" type="laser_scan_matcher_node" name="laser_scan_matcher_node" output="screen">
+	<!-- <node pkg="laser_scan_matcher" type="laser_scan_matcher_node" name="laser_scan_matcher_node" output="screen">
 
 		<param name="max_iterations" value="10"/>
 
@@ -69,9 +68,9 @@
 		<param name="do_compute_covariance" value="1"/>
 		<param name="publish_pose_with_covariance" value="true"/>
 		<param name="publish_pose_with_covariance_stamped" value="true"/>
-	</node>
+	</node> -->
 
-
-	<include file="$(find obstacle_detector)/launch/demo.launch"/>
+	<!-- <node name="map_to_scanner_base" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 map robot"/>
+	<include file="$(find obstacle_detector)/launch/demo.launch"/> -->
 
 </launch>

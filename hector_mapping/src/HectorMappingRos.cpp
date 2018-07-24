@@ -299,6 +299,8 @@ void HectorMappingRos::scanCallback(const sensor_msgs::LaserScan& scan)
 
     }else{
       ROS_INFO("lookupTransform %s to %s timed out. Could not transform laser scan into base_frame.", p_base_frame_.c_str(), scan.header.frame_id.c_str());
+      std::cout << p_base_frame_.c_str();
+      std::cout << scan.header.frame_id.c_str();
       return;
     }
   }
