@@ -51,22 +51,22 @@ while key != ord('q'):
 	stdscr.refresh()
 #	signal.alarm(0)
 	if key == curses.KEY_UP: 
-		forward = forward + 0.1;
+		forward = forward + 1;
 		stdscr.addstr(2, 20, "Up  ")
 		stdscr.addstr(2, 25, '%.2f' % forward)
 		stdscr.addstr(5, 20, "    ")
 	elif key == curses.KEY_DOWN:
-		forward = forward - 0.1; 
+		forward = forward - 1;
 		stdscr.addstr(2, 20, "Down")
 		stdscr.addstr(2, 25, '%.2f' % forward)
 		stdscr.addstr(5, 20, "    ")
 	if key == curses.KEY_LEFT:
-		left = left - 0.1; 
+		left = left - 1;
 		stdscr.addstr(3, 20, "left")
 		stdscr.addstr(3, 25, '%.2f' % left)
 		stdscr.addstr(5, 20, "    ")
 	elif key == curses.KEY_RIGHT:
-		left = left + 0.1; 
+		left = left + 1;
 		stdscr.addstr(3, 20, "rgt ")
 		stdscr.addstr(3, 25, '%.2f' % left)
 		stdscr.addstr(5, 20, "    ")

@@ -1,15 +1,14 @@
 <launch>
 	<param name="/use_sim_time" value="true"/>
-	<node name="scans_demo" pkg="rosbag" type="play" output="screen" args="--clock --loop /home/aswerdlow/catkin_ws/src/f1tenth/f1tenth/launch/_2018-07-23-17-45-02.bag"/>
-
+	<node name="scans_demo" pkg="rosbag" type="play" output="screen" args="--clock --loop /home/aswerdlow/Documents/logs/_2018-07-25-10-32-49.bag"/>
 	<!-- Start IMU, Lidar, and Teensy over Serial
 	<include file="$(find razor_imu_9dof)/launch/razor-pub.launch"/>
 	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
-	<node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1"/>  -->
+	<node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1"/> -->
 
-	<!-- Start control and talker nodes to process and send data to teensy-->
+	<!-- Start control and talker nodes to process and send data to teensy
 	<node name="controller" pkg="race" type="control.py" output="screen"/>
-	<node name="serial_talker" pkg="race" type="talker.py" output="screen"/>
+	<node name="serial_talker" pkg="race" type="talker.py" output="screen"/> -->
 	<!-- Log All Data to File
 	<node pkg="rosbag" type="record" name="rosbag_record_standard_data" respawn="true" output="screen"
 		  args="scan imu -o /home/cyber-physical/Documents/logs/"/> -->

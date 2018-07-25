@@ -1,0 +1,7 @@
+<launch>
+
+	<include file="$(find razor_imu_9dof)/launch/razor-pub.launch"/>
+	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+	<node pkg="race" type="timed_roslaunch.sh" args="15 race save.launch" name="timed_roslaunch" output="screen" />
+
+</launch>

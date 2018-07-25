@@ -1,5 +1,5 @@
 <launch>
-  <!-- use sim time -->
+  <!-- use sim.launch time -->
   <param name="use_sim_time" value="true"/>
 
   <!-- Robot pose ekf -->
