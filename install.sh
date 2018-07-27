@@ -1,33 +1,12 @@
 #!/bin/bash
 # The BSD License
 # Copyright (c) 2014 OROCA and ROS Korea Users Group
+# wget --output-document install.sh https://gist.github.com/alexanderswerdlow/b7da86e3e885d947cccba2723207a885/raw && chmod 755 install.sh && bash install.sh
+# Go to update settings and change main server to mirrors.ocf.berkeley.edu
+set -x -e
 
-set -x
-
-function usage {
-    # Print out usage of this script.
-    echo >&2 "usage: $0 [catkin workspace name (default:catkin_ws)] [ROS distro (default: indigo)"
-    echo >&2 "          [-h|--help] Print help message."
-    exit 0
-}
-# Parse command line. If the number of argument differs from what is expected, call `usage` function.
-OPT=`getopt -o h -l help -- $*`
-if [ $# != 2 ]; then
-    usage
-fi
-eval set -- $OPT
-while [ -n "$1" ] ; do
-    case $1 in
-        -h|--help) usage ;;
-        --) shift; break;;
-        *) echo "Unknown option($1)"; usage;;
-    esac
-done
-
-name_catkinws=$1
-name_catkinws=${name_catkinws:="catkin_ws"}
-name_ros_distro=$2
-name_ros_distro=${name_ros_distro:="kinetic"}
+name_catkinws="catkin_ws"
+name_ros_distro="kinetic"
 
 version=`lsb_release -sc`
 
@@ -40,63 +19,55 @@ case $version in
     exit 0
 esac
 
-echo "[Update & upgrade the package]"
-sudo apt-get update
-sudo apt-get upgrade
+sudo sh -c "echo \"net.ipv6.conf.all.disable_ipv6 = 1\" >> /etc/sysctl.conf"
+sudo sh -c "echo \"net.ipv6.conf.default.disable_ipv6 = 1\" >> /etc/sysctl.conf"
+sudo sh -c "echo \"net.ipv6.conf.lo.disable_ipv6 = 1\" >> /etc/sysctl.conf"
+sudo service networking restart
 
-echo "[Check the 14.04.2 TLS issue]"
-relesenum=`grep DISTRIB_DESCRIPTION /etc/*-release | awk -F 'Ubuntu ' '{print $2}' | awk -F ' LTS' '{print $1}'`
-if [ "$relesenum" = "14.04.2" ]
-then
-  echo "Your ubuntu version is $relesenum"
-  echo "Intstall the libgl1-mesa-dev-lts-utopic package to solve the dependency issues for the ROS installation specifically on $relesenum"
-  sudo apt-get install -y libgl1-mesa-dev-lts-utopic
-else
-  echo "Your ubuntu version is $relesenum"
-fi
+echo "[Update & upgrade the package]"
+sudo apt -y update
+sudo apt -y upgrade
+
+
+echo "Your ubuntu version is $relesenum"
+
 
 echo "[Installing chrony and setting the ntpdate]"
-sudo apt-get install -y chrony
+sudo apt -y install chrony ntpdate
 sudo ntpdate ntp.ubuntu.com
 
-echo "[Add the ROS repository]"
-if [ ! -e /etc/apt/sources.list.d/ros-latest.list ]; then
-  sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu ${version} main\" > /etc/apt/sources.list.d/ros-latest.list"
-fi
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 
-echo "[Download the ROS keys]"
-roskey=`apt-key list | grep "ROS builder"`
-if [ -z "$roskey" ]; then
-  wget --quiet https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo apt-key add -
-fi
+sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
 
 echo "[Update & upgrade the package]"
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt -y update
+sudo apt -y upgrade
 
 echo "[Installing ROS]"
-sudo apt-get install -y ros-$name_ros_distro-desktop-full ros-$name_ros_distro-rqt-*
+sudo apt -y install ros-$name_ros_distro-desktop-full ros-$name_ros_distro-rqt-*
 
 echo "[rosdep init and python-rosinstall]"
 sudo sh -c "rosdep init"
 rosdep update
 . /opt/ros/$name_ros_distro/setup.sh
-sudo apt-get install -y python-rosinstall
+sudo apt -y install python-rosinstall libarmadillo6 libarmadillo-dev git
 
 echo "[Making the catkin workspace and testing the catkin_make]"
 mkdir -p ~/$name_catkinws/src
 cd ~/$name_catkinws/src
+
 catkin_init_workspace
 
-cd src
+git clone 'https://alexanderswerdlow:3eM29&il4T@github.com/alexanderswerdlow/f1tenth.git'
 
-git clone https://github.com/alexanderswerdlow/f1tenth.git
+cd f1tenth
+
+git config credential.helper store
 
 cd ~/$name_catkinws/
 
 rosdep install --from-paths -i -y src
-
-sudo apt install libarmadillo6 
 
 catkin_make
 
@@ -107,7 +78,20 @@ sh -c "echo \"#export ROS_MASTER_URI=http://localhost:11311\" >> ~/.bashrc"
 sh -c "echo \"#export ROS_HOSTNAME=localhost\" >> ~/.bashrc"
 sh -c "echo \"export ROS_MASTER_URI=http://192.168.1.1:11311\" >> ~/.bashrc"
 sh -c "echo \"export ROS_IP=192.168.1.110\" >> ~/.bashrc"
-sh -c "echo \"192.168.1.1      cyber-physical\" >> /etc/hosts"
+sudo sh -c "echo \"192.168.1.1      cyber-physical\" >> /etc/hosts"
+
+curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+
+sudo apt -y update
+sudo apt -y install code
+code --install-extension ms-vscode.cpptools 
+sudo apt -y install python-pip
+python -m pip install -U "pylint<2.0.0"
+code --install-extension ms-python.python
+sudo apt -y autoremove
+code ~/$name_catkinws/src/f1tenth/
 
 echo "[Complete!!!]"
 
