@@ -4,5 +4,3 @@
 		  args="scan imu -o /home/cyber-physical/Documents/logs/"/>
 
 </launch>
-<node name="scans_demo" pkg="rosbag" type="play" output="screen"
-	  args="--clock /home/aswerdlow/Documents/logs/_2018-07-25-10-42-19.bag"/>

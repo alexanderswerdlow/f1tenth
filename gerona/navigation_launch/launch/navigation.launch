@@ -19,13 +19,13 @@ pointcloud that is used for obstacle detection.
     <arg name="use_amcl" default="false" />
     <arg name="use_hector" default="false" />
 
-    <!-- obstacle cloud (simply converting laser scans to cloud) -->
+    <!-- obstacle cloud (simply converting laser scans to cloud)
     <node name="obstacle_cloud" type="scan2cloud_node" pkg="scan2cloud"
           output="screen" if="$(arg use_laser_obstacles)">
         <remap from="/scan" to="/scan_filtered" />
         <remap from="/scan" to="/scan/front/filtered" />
         <remap from="cloud/total" to="/obstacle_cloud" />
-    </node>
+    </node> -->
 
     <include file="$(find navigation_launch)/launch/mapping.launch">
         <arg name="use_karto" value="$(arg use_karto)" />
