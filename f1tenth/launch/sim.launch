@@ -43,7 +43,7 @@
 
 	<!-- Robot_Localization -->
 	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-		<rosparam command="load" file="$(find hypha_racecar)/param/hypha_ekf_params_bag.yaml"/>
+		<rosparam command="load" file="$(find race)/other/hypha_ekf_params_bag.yaml"/>
 	</node>
 
 	<!--Localization using Laser Scan Matcher
