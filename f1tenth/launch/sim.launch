@@ -5,14 +5,8 @@
 	<param name="/use_sim_time" value="true"/>
 	<param name="/stamped_vel" value="$(arg IS_TWISTSTAMPED)"/>
 
-	<!-- <node name="dist_finder" pkg="race" type="dist_finder.py" output="screen"/> -->
 	<node name="scans_demo" pkg="rosbag" type="play" output="screen"
-		  args="-r 1 -s 2 -u 100 --clock /home/aswerdlow/Documents/logs/_2018-07-26-15-49-45.bag"/>
-
-	<!-- Robot_Localization 73-77-->
-	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-		<rosparam command="load" file="$(find robot_localization)/params/ukf_template.yaml"/>
-	</node>
+		  args="-r 1 -s 2 -u 100 --clock  /home/aswerdlow/Documents/logs/_2018-07-26-15-49-45.bag "/>
 
 	<node pkg="path_control" type="highlevel_dummy" name="highlevel_dummy" output="screen" respawn="true">
 		<param name="target_speed" value="1.0"/>
@@ -26,7 +20,7 @@
 		<arg name="use_karto" value="false"/>
 		<arg name="use_karto_segmented" value="false"/>
 		<arg name="use_amcl" value="false"/>
-		<arg name="use_hector" value="true"/>
+		<arg name="use_hector" value="false"/>
 
 		<arg name="use_planner_cost" value="false"/>
 		<arg name="use_planner_dynamic" value="false"/>
@@ -37,14 +31,52 @@
 	</include>
 
 	<param name="path_follower/local_planner/algorithm" value="NULL"/>
-	<node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 /map /odom 10"/>
-	<!--	<node pkg="tf" type="static_transform_publisher" name="base_to_map" args="0 0 0 0 0 0 /base_link /map 100"/> -->
 
-	<!-- <node pkg="tf" type="static_transform_publisher" name="imu_to_base"
-		  args="0.19685 0 0 0 0 0 /base_imu_link /base_link 10"/> -->
+	<include file="$(find race)/params/tf.launch"/>
 
-	<node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
-		  args="-0.03175 0.0 0.0 -1.57079633 0.0 0.0 /base_link /laser 10"/>
+	<include file="$(find race)/params/rf2o_config.launch"/>
+
+	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+		<rosparam command="load" file="$(find race)/params/ekf_params.yaml"/>
+	</node>
+
+	<!-- gmapping -->
+	<node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+		<remap from="scan" to="scan"/>
+		<param name="map_update_interval" value="0.5"/>
+		<param name="maxUrange" value="16.0"/>
+		<param name="sigma" value="0.05"/>
+		<param name="kernelSize" value="1"/>
+		<param name="lstep" value="0.05"/>
+		<param name="astep" value="0.05"/>
+		<param name="iterations" value="5"/>
+		<param name="lsigma" value="0.075"/>
+		<param name="ogain" value="3.0"/>
+		<param name="lskip" value="0"/>
+		<param name="srr" value="0.1"/>
+		<param name="srt" value="0.2"/>
+		<param name="str" value="0.1"/>
+		<param name="stt" value="0.2"/>
+		<param name="linearUpdate" value="0.1"/>
+		<param name="angularUpdate" value="0.01"/>
+		<param name="temporalUpdate" value="3.0"/>
+		<param name="resampleThreshold" value="0.25"/>
+		<param name="particles" value="10"/>
+		<param name="xmin" value="-50.0"/>
+		<param name="ymin" value="-50.0"/>
+		<param name="xmax" value="50.0"/>
+		<param name="ymax" value="50.0"/>
+		<param name="delta" value="0.05"/>
+		<param name="llsamplerange" value="0.01"/>
+		<param name="llsamplestep" value="0.01"/>
+		<param name="lasamplerange" value="0.005"/>
+		<param name="lasamplestep" value="0.005"/>
+		<param name="odom_frame" value="odom"/>
+		<param name="base_frame" value="base_link"/>
+	</node>
+
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find race)/other/rviz/gmapping.rviz"/>
+
 	<!--Localization using Laser Scan Matcher
 	<group if="$(arg publish_covariance)">
 		<param name="laser_scan_matcher_node/do_compute_covariance" value="1"/>
@@ -57,10 +89,10 @@
 		<param name="use_odom" value="false"/>
 		<param name="max_iterations" value="10"/>
 	</node> -->
-	<!-- <node name="map_to_scanner_base" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 map robot"/> -->
-	<include file="$(find obstacle_detector)/launch/demo.launch"/>
+	<!-- <node name="map_to_scanner_base" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 map robot"/>
+	<include file="$(find obstacle_detector)/launch/demo.launch"/> -
 
-	<node pkg="rviz" type="rviz" name="rviz1" args="-d $(find hector_mapping)/rviz_cfg/mapping_demo.rviz"/>
+	<node pkg="rviz" type="rviz" name="rviz1" args="-d $(find hector_mapping)/rviz_cfg/mapping_demo.rviz"/>-->
 
 	<!--<node name="rviz" pkg="rviz" type="rviz" output="screen"
 		  args="-d $(find obstacle_detector)/resources/obstacle_detector.rviz"/> -->
