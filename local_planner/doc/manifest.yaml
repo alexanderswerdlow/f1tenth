@@ -1,0 +1,29 @@
+actions: []
+authors: ''
+brief: ''
+bugtracker: ''
+depends:
+- nav_msgs
+- tf_eigen
+- catkin
+- roscpp
+- std_msgs
+- message_runtime
+- sensor_msgs
+- tf_converions
+- eigen
+- geometry_msgs
+- visualization_msgs
+- tf
+- rospy
+- message_generation
+- tf_conversions
+- tf2
+description: The local_planner package
+license: TODO
+maintainers: adarsh <adarsh@todo.todo>
+msgs: []
+package_type: package
+repo_url: ''
+srvs: []
+url: ''

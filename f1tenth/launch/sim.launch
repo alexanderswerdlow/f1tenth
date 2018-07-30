@@ -7,7 +7,12 @@
 
 	<!-- <node name="dist_finder" pkg="race" type="dist_finder.py" output="screen"/> -->
 	<node name="scans_demo" pkg="rosbag" type="play" output="screen"
-		  args="-r 0.25 -s 2 -u 40 --clock /home/aswerdlow/Documents/logs/_2018-07-26-15-49-45.bag"/>
+		  args="-r 1 -s 2 -u 100 --clock /home/aswerdlow/Documents/logs/_2018-07-26-15-49-45.bag"/>
+
+	<!-- Robot_Localization 73-77-->
+	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+		<rosparam command="load" file="$(find robot_localization)/params/ukf_template.yaml"/>
+	</node>
 
 	<node pkg="path_control" type="highlevel_dummy" name="highlevel_dummy" output="screen" respawn="true">
 		<param name="target_speed" value="1.0"/>
@@ -40,15 +45,7 @@
 
 	<node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
 		  args="-0.03175 0.0 0.0 -1.57079633 0.0 0.0 /base_link /laser 10"/>
-
-	<!-- Robot_Localization -->
-	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-		<rosparam command="load" file="$(find race)/other/hypha_ekf_params_bag.yaml"/>
-	</node>
-
 	<!--Localization using Laser Scan Matcher
-
-
 	<group if="$(arg publish_covariance)">
 		<param name="laser_scan_matcher_node/do_compute_covariance" value="1"/>
 		<param name="laser_scan_matcher_node/publish_pose_with_covariance" value="true"/>
@@ -60,7 +57,6 @@
 		<param name="use_odom" value="false"/>
 		<param name="max_iterations" value="10"/>
 	</node> -->
-
 	<!-- <node name="map_to_scanner_base" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 map robot"/> -->
 	<include file="$(find obstacle_detector)/launch/demo.launch"/>
 
