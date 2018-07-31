@@ -78,6 +78,7 @@ sh -c "echo \"#export ROS_MASTER_URI=http://localhost:11311\" >> ~/.bashrc"
 sh -c "echo \"#export ROS_HOSTNAME=localhost\" >> ~/.bashrc"
 sh -c "echo \"export ROS_MASTER_URI=http://192.168.1.1:11311\" >> ~/.bashrc"
 sh -c "echo \"export ROS_IP=192.168.1.110\" >> ~/.bashrc"
+sh -c "echo \"alias tf='cd /var/tmp && rosrun tf view_frames && evince frames.pdf &'\" >> ~/.bashrc"
 sudo sh -c "echo \"192.168.1.1      cyber-physical\" >> /etc/hosts"
 
 curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg

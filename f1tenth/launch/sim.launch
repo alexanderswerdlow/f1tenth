@@ -1,18 +1,18 @@
 <launch>
-	<arg name="IS_TWISTSTAMPED" default="true"/>
+	<!-- <arg name="IS_TWISTSTAMPED" default="true"/>
 	<arg name="publish_covariance" default="false"/>
 
+
+	<param name="/stamped_vel" value="$(arg IS_TWISTSTAMPED)"/> -->
 	<param name="/use_sim_time" value="true"/>
-	<param name="/stamped_vel" value="$(arg IS_TWISTSTAMPED)"/>
-
 	<node name="scans_demo" pkg="rosbag" type="play" output="screen"
-		  args="-r 1 -s 2 -u 100 --clock  /home/aswerdlow/Documents/logs/_2018-07-26-15-49-45.bag "/>
+		  args="-r 1 --clock  /home/aswerdlow/Documents/logs/_2018-07-26-15-49-45.bag "/>
 
-	<node pkg="path_control" type="highlevel_dummy" name="highlevel_dummy" output="screen" respawn="true">
+	<!-- <node pkg="path_control" type="highlevel_dummy" name="highlevel_dummy" output="screen" respawn="true">
 		<param name="target_speed" value="1.0"/>
 		<param name="failure_mode" value="replan"/>
 		<remap from="rviz_goal" to="/move_base_simple/goal"/>
-	</node>
+	</node> -->
 
 	<!-- <include file="$(find navigation_launch)/launch/navigation.launch">
 		<arg name="use_laser_obstacles" value="true"/>
@@ -33,22 +33,6 @@
 	-->
 
 	<!-- move base -->
-	<node pkg="move_base" type="move_base" respawn="false" name="move_base_node">
-		<!-- params for move_base -->
-		<param name="planner_frequency" value="2"/>
-		<param name="controller_frequency" value="10.0"/>
-		<param name="controller_patience" value="3.0"/>
-		<param name="oscillation_timeout" value="30.0"/>
-		<param name="oscillation_distance" value="0.5"/>
-		<!-- params for local control (dwa) -->
-		<param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
-		<rosparam file="$(find hypha_racecar)/launch/Simulation/includes/dwa_local_planner_params.yaml" command="load"/>
-		<!-- params for costmap layers -->
-		<rosparam file="$(find hypha_racecar)/launch/Simulation/includes/local_costmap_params.yaml" command="load"/>
-		<rosparam file="$(find hypha_racecar)/launch/Simulation/includes/global_costmap_params.yaml" command="load"/>
-	</node>
-
-
 
 	<include file="$(find race)/params/tf.launch"/>
 
@@ -90,13 +74,27 @@
 		<param name="lasamplerange" value="0.005"/>
 		<param name="lasamplestep" value="0.005"/>
 		<param name="odom_frame" value="odom"/>
-		<param name="base_frame" value="base_link"/>
+		<param name="base_frame" value="base_footprint"/>
 	</node>
 
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base_node">
+		<!-- params for move_base -->
+		<param name="planner_frequency" value="2"/>
+		<param name="controller_frequency" value="10.0"/>
+		<param name="controller_patience" value="3.0"/>
+		<param name="oscillation_timeout" value="30.0"/>
+		<param name="oscillation_distance" value="0.5"/>
+		<!-- params for local control (dwa) -->
+		<param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
+		<rosparam file="$(find race)/params/dwa_local_planner_params.yaml" command="load"/>
+		<!-- params for costmap layers -->
+		<rosparam file="$(find race)/params/local_costmap_params.yaml" command="load"/>
+		<rosparam file="$(find race)/params/global_costmap_params.yaml" command="load"/>
+	</node>
 
-	<node pkg="hypha_racecar" type="L1_controller_v2" respawn="false" name="L1_controller_v2" output="screen">
+	<node pkg="race" type="L1_controller_v3" respawn="false" name="L1_controller_v3" output="screen">
 		<!-- L1 -->
-		<param name="Vcmd" value="1.0" /> <!-- speed of car m/s -->
+		<param name="Vcmd" value="1.0"/> <!-- speed of car m/s -->
 		<!-- ESC -->
 		<param name="baseSpeed" value="1425"/> <!-- pwm for motor constant speed, 1480: stop, 1440: ~0.5m/s, 1430: ~1.5m/s -->
 		<!-- Servo -->
@@ -104,10 +102,11 @@
 		<param name="AngleGain" value="-3.5"/> <!-- for tt02: >0, for hsp: <0 -->
 
 		<!-- remap from="/odometry/filtered" to="odom" / -->
-		<remap from="/move_base_node/NavfnROS/plan" to="/move_base/NavfnROS/plan" />
+		<remap from="/move_base_node/NavfnROS/plan" to="/move_base/NavfnROS/plan"/>
 	</node>
 
-	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find hypha_racecar)/rviz_cfg/hypha_stage_sim.rviz"/>
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/hypha_stage_sim.rviz"/>
+	<!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/gmapping.rviz"/> -->
 	<!--Localization using Laser Scan Matcher
 	<group if="$(arg publish_covariance)">
 		<param name="laser_scan_matcher_node/do_compute_covariance" value="1"/>

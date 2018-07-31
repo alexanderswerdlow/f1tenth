@@ -5,14 +5,16 @@ project(race)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  sensor_msgs
-  std_msgs
-  message_generation
-  geometry_msgs
-  tf
-)
+        roscpp
+        rospy
+        sensor_msgs
+        std_msgs
+        message_generation
+        geometry_msgs
+        tf
+        move_base
+        visualization_msgs
+        )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -48,13 +50,13 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-	add_message_files(
-		FILES
-		drive_param.msg
-		drive_values.msg
-    pid_input.msg
-    chatter_values.msg
-	)
+add_message_files(
+        FILES
+        drive_param.msg
+        drive_values.msg
+        pid_input.msg
+        chatter_values.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -71,10 +73,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages(
-   DEPENDENCIES
-   sensor_msgs#   std_msgs
- )
+generate_messages(
+        DEPENDENCIES
+        sensor_msgs#   std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -106,10 +108,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES race
-  CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs geometry_msgs
-#  DEPENDS system_lib
+        #  INCLUDE_DIRS include
+        #  LIBRARIES race
+        CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs geometry_msgs visualization_msgs
+        #  DEPENDS system_lib
 )
 
 ###########
@@ -120,7 +122,8 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
-  ${catkin_INCLUDE_DIRS}
+        include
+        ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -143,7 +146,6 @@ include_directories(
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(race_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
 
 
 ## Specify libraries to link a library or executable target against
@@ -207,6 +209,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-#add_executable(nav src/nav.cpp)
-#target_link_libraries(nav ${catkin_LIBRARIES})
-#add_dependencies(nav race)
+add_executable(L1_controller_v3 src/L1_controller_v3.cpp)
+target_link_libraries(L1_controller_v3 ${catkin_LIBRARIES})
+add_dependencies(L1_controller_v3 hypha_racecar_generate_messages_cpp)
