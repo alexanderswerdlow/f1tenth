@@ -14,7 +14,7 @@
 		<remap from="rviz_goal" to="/move_base_simple/goal"/>
 	</node>
 
-	<include file="$(find navigation_launch)/launch/navigation.launch">
+	<!-- <include file="$(find navigation_launch)/launch/navigation.launch">
 		<arg name="use_laser_obstacles" value="true"/>
 
 		<arg name="use_karto" value="false"/>
@@ -29,8 +29,26 @@
 		<arg name="use_planner_default" value="true"/>
 
 	</include>
+		<param name="path_follower/local_planner/algorithm" value="NULL"/>
+	-->
 
-	<param name="path_follower/local_planner/algorithm" value="NULL"/>
+	<!-- move base -->
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base_node">
+		<!-- params for move_base -->
+		<param name="planner_frequency" value="2"/>
+		<param name="controller_frequency" value="10.0"/>
+		<param name="controller_patience" value="3.0"/>
+		<param name="oscillation_timeout" value="30.0"/>
+		<param name="oscillation_distance" value="0.5"/>
+		<!-- params for local control (dwa) -->
+		<param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
+		<rosparam file="$(find hypha_racecar)/launch/Simulation/includes/dwa_local_planner_params.yaml" command="load"/>
+		<!-- params for costmap layers -->
+		<rosparam file="$(find hypha_racecar)/launch/Simulation/includes/local_costmap_params.yaml" command="load"/>
+		<rosparam file="$(find hypha_racecar)/launch/Simulation/includes/global_costmap_params.yaml" command="load"/>
+	</node>
+
+
 
 	<include file="$(find race)/params/tf.launch"/>
 
@@ -75,8 +93,21 @@
 		<param name="base_frame" value="base_link"/>
 	</node>
 
-	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find race)/other/rviz/gmapping.rviz"/>
 
+	<node pkg="hypha_racecar" type="L1_controller_v2" respawn="false" name="L1_controller_v2" output="screen">
+		<!-- L1 -->
+		<param name="Vcmd" value="1.0" /> <!-- speed of car m/s -->
+		<!-- ESC -->
+		<param name="baseSpeed" value="1425"/> <!-- pwm for motor constant speed, 1480: stop, 1440: ~0.5m/s, 1430: ~1.5m/s -->
+		<!-- Servo -->
+		<param name="baseAngle" value="90.0"/> <!-- the middle pos of servo, for tt02: 87, for hsp: ? -->
+		<param name="AngleGain" value="-3.5"/> <!-- for tt02: >0, for hsp: <0 -->
+
+		<!-- remap from="/odometry/filtered" to="odom" / -->
+		<remap from="/move_base_node/NavfnROS/plan" to="/move_base/NavfnROS/plan" />
+	</node>
+
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find hypha_racecar)/rviz_cfg/hypha_stage_sim.rviz"/>
 	<!--Localization using Laser Scan Matcher
 	<group if="$(arg publish_covariance)">
 		<param name="laser_scan_matcher_node/do_compute_covariance" value="1"/>
