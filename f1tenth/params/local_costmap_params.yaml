@@ -12,7 +12,7 @@ local_costmap:
     rolling_window: true
     width: 1.0
     height: 1.0
-    track_unknown_space: true
+    track_unknown_space: false
 
     plugins:            
         - {name: sensor,           type: "costmap_2d::ObstacleLayer"}

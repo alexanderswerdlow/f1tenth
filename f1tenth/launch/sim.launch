@@ -1,29 +1,46 @@
 <launch>
 	<param name="/use_sim_time" value="true"/>
 
+	<node name="scans_demo" pkg="rosbag" type="play" output="screen" args=" --clock -l /home/aswerdlow/Documents/1new_bag.bag"/>
+
 	<include file="$(find race)/params/tf.launch"/>
 
 	<include file="$(find race)/params/rf2o_config.launch"/>
 
 	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-		<remap from="cmd_vel" to="car/cmd_vel"/>
 		<rosparam command="load" file="$(find race)/params/ekf_params.yaml"/>
 	</node>
 
 	<include file="$(find race)/params/gmapping.launch"/>
 	<node pkg="move_base" type="move_base" respawn="false" name="move_base_node">
 
-		<param name="planner_frequency" value="2"/>
-		<param name="controller_frequency" value="10.0"/>
-		<param name="controller_patience" value="3.0"/>
-		<param name="oscillation_timeout" value="30.0"/>
+		<param name="planner_frequency" value="10"/>
+		<param name="controller_frequency" value="50.0"/>
+		<param name="controller_patience" value="1.0"/>
+		<param name="oscillation_timeout" value="1.0"/>
 		<param name="oscillation_distance" value="0.5"/>
 		<rosparam file="$(find race)/params/base_local_planner_params.yaml" command="load" />
 		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
-	<!--	<rosparam file="$(find race)/params/dwa_local_planner_params.yaml" command="load"/> -->
-
 		<rosparam file="$(find race)/params/local_costmap_params.yaml" command="load"/>
 		<rosparam file="$(find race)/params/global_costmap_params.yaml" command="load"/>
+	</node>
+
+	<!-- L1 controller -->
+	<node pkg="race" type="L1_controller_v3" respawn="false" name="L1_controller_v3" output="screen">
+		<!-- L1 -->
+		<param name="Vcmd" value="1.0" />
+		<!-- speed of car m/s -->
+		<!-- ESC -->
+		<param name="baseSpeed" value="1425"/>
+		<!-- pwm for motor constant speed, 1480: stop, 1440: ~0.5m/s, 1430: ~1.5m/s -->
+		<!-- Servo -->
+		<param name="baseAngle" value="90.0"/>
+		<!-- the middle pos of servo, for tt02: 87, for hsp: ? -->
+		<param name="AngleGain" value="-3.5"/>
+		<!-- for tt02: >0, for hsp: <0 -->
+
+		<!-- remap from="/odometry/filtered" to="odom" / -->
+		<remap from="/move_base_node/NavfnROS/plan" to="/move_base/NavfnROS/plan" />
 	</node>
 
 	<!--<node pkg="local_planner" type="local_planner_node" respawn="true" name="path_planner" output="screen"/>-->
