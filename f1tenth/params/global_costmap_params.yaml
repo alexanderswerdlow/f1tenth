@@ -11,6 +11,7 @@ global_costmap:
 
     rolling_window: false
     track_unknown_space: true
+    obstacle_layer: {enabled: true, lethal_cost_threshold: 100, track_unknown_space: true, unknown_cost_value: 0}
 
     plugins: 
         - {name: static,           type: "costmap_2d::StaticLayer"}            

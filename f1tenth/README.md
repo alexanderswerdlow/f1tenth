@@ -33,3 +33,9 @@
     	ros::Duration(1.0).sleep();
       }
       tf::TransformListener tf_listener;
+
+      -r 1 -u 32 --clock -l
+
+      	<param name="/use_sim_time" value="true"/>
+      	<node name="scans_demo" pkg="rosbag" type="play" output="screen"
+      		  args="rosbag --clock -l /home/aswerdlow/Documents/logs/_2018-08-01-13-09-18.bag"/>
