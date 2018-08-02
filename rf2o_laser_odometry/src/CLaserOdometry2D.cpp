@@ -307,74 +307,76 @@ void CLaserOdometry2D::createImagePyramid()
 
     unsigned int pyr_levels = round(log2(round(float(width)/float(cols)))) + ctf_levels;
 
-  //Generate levels
-  for (unsigned int i = 0; i<pyr_levels; i++)
-  {
-	unsigned int s = std::pow(2.f,int(i));
-	cols_i = std::ceil(float(width)/float(s));
+    //Generate levels
+    for (unsigned int i = 0; i<pyr_levels; i++)
+    {
+        unsigned int s = pow(2.f,int(i));
+        cols_i = ceil(float(width)/float(s));
+		
+		const unsigned int i_1 = i-1;
 
-	const unsigned int i_1 = i-1;
-
-	//First level -> Filter (not downsampling);
-	if (i == 0)
-	{
-	  for (unsigned int u = 0; u < cols_i; u++)
-	  {
-		const float dcenter = range_wf(u);
-
-		//Inner pixels
-		if ((u>1)&&(u<cols_i-2))
+		//First level -> Filter (not downsampling);
+        if (i == 0)
 		{
-		  if (std::isfinite(dcenter) && dcenter > 0.f)
-		  {
-			float sum = 0.f;
-			float weight = 0.f;
+			for (unsigned int u = 0; u < cols_i; u++)
+            {	
+				const float dcenter = range_wf(u);
+					
+				//Inner pixels
+                if ((u>1)&&(u<cols_i-2))
+                {
+				  if (std::isfinite(dcenter) && dcenter > 0.f)
+				  {
+						float sum = 0.f;
+						float weight = 0.f;
 
-			for (int l=-2; l<3; l++)
-			{
-			  const float abs_dif = std::abs(range_wf(u+l)-dcenter);
-			  if (abs_dif < max_range_dif)
-			  {
-				const float aux_w = g_mask[2+l]*(max_range_dif - abs_dif);
-				weight += aux_w;
-				sum += aux_w*range_wf(u+l);
-			  }
-			}
-			range[i](u) = sum/weight;
-		  }
-		  else
-			range[i](u) = 0.f;
+						for (int l=-2; l<3; l++)
+						{
+							const float abs_dif = abs(range_wf(u+l)-dcenter);
+							if (abs_dif < max_range_dif)
+							{
+								const float aux_w = g_mask[2+l]*(max_range_dif - abs_dif);
+								weight += aux_w;
+								sum += aux_w*range_wf(u+l);
+							}
+						}
+						range[i](u) = sum/weight;
+					}
+					else
+						range[i](u) = 0.f;
+
+                }
+
+                //Boundary
+                else
+                {
+				  if (std::isfinite(dcenter) && dcenter > 0.f)
+					{						
+						float sum = 0.f;
+						float weight = 0.f;
+
+						for (int l=-2; l<3; l++)	
+						{
+							const int indu = u+l;
+							if ((indu>=0)&&(indu<cols_i))
+							{
+								const float abs_dif = abs(range_wf(indu)-dcenter);										
+								if (abs_dif < max_range_dif)
+								{
+									const float aux_w = g_mask[2+l]*(max_range_dif - abs_dif);
+									weight += aux_w;
+									sum += aux_w*range_wf(indu);
+								}
+							}
+						}
+						range[i](u) = sum/weight;
+					}
+					else
+						range[i](u) = 0.f;
+
+                }
+            }
 		}
-
-		  //Boundary
-		else
-		{
-		  if (std::isfinite(dcenter) && dcenter > 0.f)
-		  {
-			float sum = 0.f;
-			float weight = 0.f;
-
-			for (int l=-2; l<3; l++)
-			{
-			  const int indu = u+l;
-			  if ((indu>=0)&&(indu<cols_i))
-			  {
-				const float abs_dif = std::abs(range_wf(indu)-dcenter);
-				if (abs_dif < max_range_dif)
-				{
-				  const float aux_w = g_mask[2+l]*(max_range_dif - abs_dif);
-				  weight += aux_w;
-				  sum += aux_w*range_wf(indu);
-				}
-			  }
-			}
-			range[i](u) = sum/weight;
-		  }
-		  else
-			range[i](u) = 0.f;
-		}
-	  }
-	}
 
         //                              Downsampling
         //-----------------------------------------------------------------------------

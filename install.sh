@@ -51,7 +51,7 @@ echo "[rosdep init and python-rosinstall]"
 sudo sh -c "rosdep init"
 rosdep update
 . /opt/ros/$name_ros_distro/setup.sh
-sudo apt -y install python-rosinstall libarmadillo6 libarmadillo-dev git
+sudo apt -y install python-rosinstall libarmadillo6 libarmadillo-dev git ros-kinetic-navigation ros-kinetic-gmapping
 
 echo "[Making the catkin workspace and testing the catkin_make]"
 mkdir -p ~/$name_catkinws/src

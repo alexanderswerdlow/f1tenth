@@ -6,7 +6,7 @@
 	<param name="/stamped_vel" value="$(arg IS_TWISTSTAMPED)"/> -->
 	<param name="/use_sim_time" value="true"/>
 	<node name="scans_demo" pkg="rosbag" type="play" output="screen"
-		  args="-r 1 --clock  /home/aswerdlow/Documents/logs/_2018-07-26-15-49-45.bag "/>
+		  args="-r 1 -u 32 --clock -l /home/aswerdlow/Documents/logs/_2018-08-01-13-09-18.bag "/>
 
 	<!-- <node pkg="path_control" type="highlevel_dummy" name="highlevel_dummy" output="screen" respawn="true">
 		<param name="target_speed" value="1.0"/>
@@ -38,7 +38,7 @@
 
 	<include file="$(find race)/params/rf2o_config.launch"/>
 
-	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+	 <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
 		<rosparam command="load" file="$(find race)/params/ekf_params.yaml"/>
 	</node>
 
@@ -92,21 +92,10 @@
 		<rosparam file="$(find race)/params/global_costmap_params.yaml" command="load"/>
 	</node>
 
-	<node pkg="race" type="L1_controller_v3" respawn="false" name="L1_controller_v3" output="screen">
-		<!-- L1 -->
-		<param name="Vcmd" value="1.0"/> <!-- speed of car m/s -->
-		<!-- ESC -->
-		<param name="baseSpeed" value="1425"/> <!-- pwm for motor constant speed, 1480: stop, 1440: ~0.5m/s, 1430: ~1.5m/s -->
-		<!-- Servo -->
-		<param name="baseAngle" value="90.0"/> <!-- the middle pos of servo, for tt02: 87, for hsp: ? -->
-		<param name="AngleGain" value="-3.5"/> <!-- for tt02: >0, for hsp: <0 -->
+	<!--<node pkg="local_planner" type="local_planner" respawn="false" name="path_planner" output="screen"/> -->
 
-		<!-- remap from="/odometry/filtered" to="odom" / -->
-		<remap from="/move_base_node/NavfnROS/plan" to="/move_base/NavfnROS/plan"/>
-	</node>
-
-	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/hypha_stage_sim.rviz"/>
-	<!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/gmapping.rviz"/> -->
+		<node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/hypha_stage_sim.rviz"/>
+	<!--	 <node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/gmapping.rviz"/> -->
 	<!--Localization using Laser Scan Matcher
 	<group if="$(arg publish_covariance)">
 		<param name="laser_scan_matcher_node/do_compute_covariance" value="1"/>
