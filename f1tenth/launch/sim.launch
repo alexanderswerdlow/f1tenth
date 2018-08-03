@@ -3,7 +3,7 @@
 
 	<rosparam file="$(find race)/params/car_constants.yaml" command="load"/>
 
-	<node name="Hallway_data" pkg="rosbag" type="play" output="screen" args="--clock -r 1 $(find race)/bags/hallway.bag"/>
+	<node name="hallway_data" pkg="rosbag" type="play" output="screen" args="--clock -r 1 $(find race)/bags/hallway.bag"/>
 
 	<include file="$(find race)/launch/tf.launch"/>
 
@@ -15,7 +15,7 @@
 
 	<include file="$(find race)/launch/gmapping.launch"/>
 
-	<node pkg="move_base" type="move_base" respawn="false" name="move_base_node">
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base">
 		<rosparam file="$(find race)/params/local_costmap_params.yaml" command="load"/>
 		<rosparam file="$(find race)/params/global_costmap_params.yaml" command="load"/>
 		<rosparam file="$(find race)/params/move_base_params.yaml" command="load"/>

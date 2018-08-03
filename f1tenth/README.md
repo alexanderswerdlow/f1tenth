@@ -39,3 +39,47 @@
       	<param name="/use_sim_time" value="true"/>
       	<node name="scans_demo" pkg="rosbag" type="play" output="screen"
       		  args="rosbag --clock -l /home/aswerdlow/Documents/logs/_2018-08-01-13-09-18.bag"/>
+
+
+
+
+
+
+
+
+      		    # Optimization
+
+                no_inner_iterations: 6
+                no_outer_iterations: 5
+                optimization_activate: True
+                optimization_verbose: False
+                penalty_epsilon: 0.1
+                weight_max_vel_x: 10
+                weight_max_vel_theta: 1
+                weight_acc_lim_x: 1
+                weight_acc_lim_theta: 1
+                weight_kinematics_nh: 1000
+                weight_kinematics_forward_drive: 1  #1
+                weight_kinematics_turning_radius: 15 #1
+                weight_optimaltime: 60
+                weight_obstacle: 50
+                weight_dynamic_obstacle: 1 # not in use yet
+                weight_viapoint: 50
+                # Homotopy Class Planner
+
+                enable_homotopy_class_planning: True #change to False 1003
+                enable_multithreading: True
+                simple_exploration: False
+                max_number_classes: 4
+                selection_cost_hysteresis: 1.0
+                selection_obst_cost_scale: 1.0
+                selection_alternative_time_cost: False
+                roadmap_graph_no_samples: 15
+                roadmap_graph_area_width: 5
+                h_signature_prescaler: 0.5
+                h_signature_threshold: 0.1
+                obstacle_keypoint_offset: 0.1
+                obstacle_heading_threshold: 0.45
+                visualize_hc_graph: False
+                
+         rosbag filter manytopics.bag fewtopics.bag 'topic=="/topic1","/topic2","/topic3"' Bag to CSV/Text
