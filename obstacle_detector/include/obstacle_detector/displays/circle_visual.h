@@ -45,29 +45,27 @@
 #include <rviz/ogre_helpers/shape.h>
 #endif
 
-namespace obstacles_display
-{
+namespace obstacles_display {
 
-class CircleVisual
-{
-public:
-  CircleVisual(Ogre::SceneManager* scene_manager, Ogre::SceneNode* parent_node);
+class CircleVisual {
+ public:
+  CircleVisual(Ogre::SceneManager *scene_manager, Ogre::SceneNode *parent_node);
 
   virtual ~CircleVisual();
 
-  void setData(const obstacle_detector::CircleObstacle& circle);
-  void setFramePosition(const Ogre::Vector3& position);
-  void setFrameOrientation(const Ogre::Quaternion& orientation);
+  void setData(const obstacle_detector::CircleObstacle &circle);
+  void setFramePosition(const Ogre::Vector3 &position);
+  void setFrameOrientation(const Ogre::Quaternion &orientation);
   void setMainColor(float r, float g, float b, float a);
   void setMarginColor(float r, float g, float b, float a);
 
-private:
+ private:
   boost::shared_ptr<rviz::Shape> obstacle_;
   boost::shared_ptr<rviz::Shape> margin_;
 
-  Ogre::SceneNode* frame_node_1_;
-  Ogre::SceneNode* frame_node_2_;
-  Ogre::SceneManager* scene_manager_;
+  Ogre::SceneNode *frame_node_1_;
+  Ogre::SceneNode *frame_node_2_;
+  Ogre::SceneManager *scene_manager_;
 };
 
 } // end namespace obstacles_display

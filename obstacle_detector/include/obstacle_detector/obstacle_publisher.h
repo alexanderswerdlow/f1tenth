@@ -39,20 +39,21 @@
 #include <std_srvs/Empty.h>
 #include <obstacle_detector/Obstacles.h>
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ObstaclePublisher
-{
-public:
+class ObstaclePublisher {
+ public:
   ObstaclePublisher(ros::NodeHandle &nh, ros::NodeHandle &nh_local);
   ~ObstaclePublisher();
 
-private:
-  bool updateParams(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
-  void timerCallback(const ros::TimerEvent& e);
+ private:
+  bool updateParams(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
+  void timerCallback(const ros::TimerEvent &e);
 
-  void initialize() { std_srvs::Empty empt; updateParams(empt.request, empt.response); }
+  void initialize() {
+	std_srvs::Empty empt;
+	updateParams(empt.request, empt.response);
+  }
 
   void calculateObstaclesPositions(double dt);
   void fusionExample(double t);

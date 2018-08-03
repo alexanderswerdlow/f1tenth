@@ -39,14 +39,12 @@
 
 #include "obstacle_detector/utilities/point.h"
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
 typedef std::list<Point>::iterator PointIterator;
 
-class PointSet
-{
-public:
+class PointSet {
+ public:
   PointSet() : num_points(0), is_visible(false) {}
 
   PointIterator begin, end;    // The iterators point to the list of points existing somewhere else

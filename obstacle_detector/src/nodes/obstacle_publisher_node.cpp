@@ -37,21 +37,21 @@
 
 using namespace obstacle_detector;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   ros::init(argc, argv, "obstacle_publisher", ros::init_options::NoRosout);
   ros::NodeHandle nh("");
   ros::NodeHandle nh_local("~");
 
   try {
-    ROS_INFO("[Obstacle Publisher]: Initializing node");
-    ObstaclePublisher op(nh, nh_local);
-    ros::spin();
+	ROS_INFO("[Obstacle Publisher]: Initializing node");
+	ObstaclePublisher op(nh, nh_local);
+	ros::spin();
   }
-  catch (const char* s) {
-    ROS_FATAL_STREAM("[Obstacle Publisher]: " << s);
+  catch (const char *s) {
+	ROS_FATAL_STREAM("[Obstacle Publisher]: " << s);
   }
   catch (...) {
-    ROS_FATAL_STREAM("[Obstacle Publisher]: Unexpected error");
+	ROS_FATAL_STREAM("[Obstacle Publisher]: Unexpected error");
   }
 
   return 0;

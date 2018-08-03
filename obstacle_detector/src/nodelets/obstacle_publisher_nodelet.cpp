@@ -38,33 +38,31 @@
 
 #include "obstacle_detector/obstacle_publisher.h"
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ObstaclePublisherNodelet : public nodelet::Nodelet
-{
-public:
+class ObstaclePublisherNodelet : public nodelet::Nodelet {
+ public:
   virtual void onInit() {
-    ros::NodeHandle nh = getNodeHandle();
-    ros::NodeHandle nh_local = getPrivateNodeHandle();
+	ros::NodeHandle nh = getNodeHandle();
+	ros::NodeHandle nh_local = getPrivateNodeHandle();
 
-    try {
-    NODELET_INFO("[Obstacle Publisher]: Initializing nodelet");
-    obstacle_publisher_ = std::shared_ptr<ObstaclePublisher>(new ObstaclePublisher(nh, nh_local));
-    }
-    catch (const char* s) {
-      NODELET_FATAL_STREAM("[Obstacle Publisher]: " << s);
-    }
-    catch (...) {
-      NODELET_FATAL_STREAM("[Obstacle Publisher]: Unexpected error");
-    }
+	try {
+	  NODELET_INFO("[Obstacle Publisher]: Initializing nodelet");
+	  obstacle_publisher_ = std::shared_ptr<ObstaclePublisher>(new ObstaclePublisher(nh, nh_local));
+	}
+	catch (const char *s) {
+	  NODELET_FATAL_STREAM("[Obstacle Publisher]: " << s);
+	}
+	catch (...) {
+	  NODELET_FATAL_STREAM("[Obstacle Publisher]: Unexpected error");
+	}
   }
 
   virtual ~ObstaclePublisherNodelet() {
-    NODELET_INFO("[Obstacle Publisher]: Shutdown");
+	NODELET_INFO("[Obstacle Publisher]: Shutdown");
   }
 
-private:
+ private:
   std::shared_ptr<ObstaclePublisher> obstacle_publisher_;
 };
 

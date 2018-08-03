@@ -38,7 +38,7 @@
 using namespace obstacle_detector;
 using namespace std;
 
-ScansMergerPanel::ScansMergerPanel(QWidget* parent) : rviz::Panel(parent), nh_(""), nh_local_("scans_merger") {
+ScansMergerPanel::ScansMergerPanel(QWidget *parent) : rviz::Panel(parent), nh_(""), nh_local_("scans_merger") {
   params_cli_ = nh_local_.serviceClient<std_srvs::Empty>("params");
   getParams();
 
@@ -66,29 +66,29 @@ ScansMergerPanel::ScansMergerPanel(QWidget* parent) : rviz::Panel(parent), nh_("
   fixed_frame_id_input_->setAlignment(Qt::AlignRight);
   target_frame_id_input_->setAlignment(Qt::AlignRight);
 
-  QFrame* lines[5];
-  for (auto& line : lines) {
-    line = new QFrame();
-    line->setFrameShape(QFrame::HLine);
-    line->setFrameShadow(QFrame::Sunken);
+  QFrame *lines[5];
+  for (auto &line : lines) {
+	line = new QFrame();
+	line->setFrameShape(QFrame::HLine);
+	line->setFrameShadow(QFrame::Sunken);
   }
 
-  QSpacerItem* margin = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  QSpacerItem *margin = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-  QHBoxLayout* scan_pcl_layout = new QHBoxLayout;
+  QHBoxLayout *scan_pcl_layout = new QHBoxLayout;
   scan_pcl_layout->addItem(margin);
   scan_pcl_layout->addWidget(scan_checkbox_);
   scan_pcl_layout->addItem(margin);
   scan_pcl_layout->addWidget(pcl_checkbox_);
   scan_pcl_layout->addItem(margin);
 
-  QHBoxLayout* beams_num_layout = new QHBoxLayout;
+  QHBoxLayout *beams_num_layout = new QHBoxLayout;
   beams_num_layout->addItem(margin);
   beams_num_layout->addWidget(new QLabel("Number of beams:"));
   beams_num_layout->addWidget(n_input_);
   beams_num_layout->addItem(margin);
 
-  QHBoxLayout* ranges_lim_layout = new QHBoxLayout;
+  QHBoxLayout *ranges_lim_layout = new QHBoxLayout;
   ranges_lim_layout->addItem(margin);
   ranges_lim_layout->addWidget(new QLabel("r<sub>min</sub>:"), 0, Qt::AlignRight);
   ranges_lim_layout->addWidget(r_min_input_);
@@ -98,14 +98,14 @@ ScansMergerPanel::ScansMergerPanel(QWidget* parent) : rviz::Panel(parent), nh_("
   ranges_lim_layout->addWidget(new QLabel("m"), 0, Qt::AlignLeft);
   ranges_lim_layout->addItem(margin);
 
-  QVBoxLayout* beams_layout = new QVBoxLayout;
+  QVBoxLayout *beams_layout = new QVBoxLayout;
   beams_layout->addLayout(beams_num_layout);
   beams_layout->addLayout(ranges_lim_layout);
 
-  QGroupBox* scan_box = new QGroupBox("Beams limits:");
+  QGroupBox *scan_box = new QGroupBox("Beams limits:");
   scan_box->setLayout(beams_layout);
 
-  QHBoxLayout* x_lim_layout = new QHBoxLayout;
+  QHBoxLayout *x_lim_layout = new QHBoxLayout;
   x_lim_layout->addItem(margin);
   x_lim_layout->addWidget(new QLabel("x<sub>min</sub>:"), 0, Qt::AlignRight);
   x_lim_layout->addWidget(x_min_input_);
@@ -115,7 +115,7 @@ ScansMergerPanel::ScansMergerPanel(QWidget* parent) : rviz::Panel(parent), nh_("
   x_lim_layout->addWidget(new QLabel("m"), 0, Qt::AlignLeft);
   x_lim_layout->addItem(margin);
 
-  QHBoxLayout* y_lim_layout = new QHBoxLayout;
+  QHBoxLayout *y_lim_layout = new QHBoxLayout;
   y_lim_layout->addItem(margin);
   y_lim_layout->addWidget(new QLabel("y<sub>min</sub>:"), 0, Qt::AlignRight);
   y_lim_layout->addWidget(y_min_input_);
@@ -125,33 +125,33 @@ ScansMergerPanel::ScansMergerPanel(QWidget* parent) : rviz::Panel(parent), nh_("
   y_lim_layout->addWidget(new QLabel("m"), 0, Qt::AlignLeft);
   y_lim_layout->addItem(margin);
 
-  QVBoxLayout* xy_lim_layout = new QVBoxLayout;
+  QVBoxLayout *xy_lim_layout = new QVBoxLayout;
   xy_lim_layout->addLayout(x_lim_layout);
   xy_lim_layout->addLayout(y_lim_layout);
 
-  QGroupBox* xy_lim_box = new QGroupBox("Coordinates limits:");
+  QGroupBox *xy_lim_box = new QGroupBox("Coordinates limits:");
   xy_lim_box->setLayout(xy_lim_layout);
 
-  QHBoxLayout* fixed_frame_layout = new QHBoxLayout;
+  QHBoxLayout *fixed_frame_layout = new QHBoxLayout;
   fixed_frame_layout->addItem(margin);
   fixed_frame_layout->addWidget(new QLabel("Fixed frame:"));
   fixed_frame_layout->addWidget(fixed_frame_id_input_, 0, Qt::AlignLeft);
   fixed_frame_layout->addItem(margin);
 
-  QHBoxLayout* target_frame_layout = new QHBoxLayout;
+  QHBoxLayout *target_frame_layout = new QHBoxLayout;
   target_frame_layout->addItem(margin);
   target_frame_layout->addWidget(new QLabel("Target frame:"));
   target_frame_layout->addWidget(target_frame_id_input_, 0, Qt::AlignLeft);
   target_frame_layout->addItem(margin);
 
-  QVBoxLayout* frames_layout = new QVBoxLayout;
+  QVBoxLayout *frames_layout = new QVBoxLayout;
   frames_layout->addLayout(fixed_frame_layout);
   frames_layout->addLayout(target_frame_layout);
 
-  QGroupBox* frames_box = new QGroupBox("Frames:");
+  QGroupBox *frames_box = new QGroupBox("Frames:");
   frames_box->setLayout(frames_layout);
 
-  QVBoxLayout* layout = new QVBoxLayout;
+  QVBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(activate_checkbox_);
   layout->addWidget(lines[0]);
   layout->addLayout(scan_pcl_layout);
@@ -194,25 +194,46 @@ void ScansMergerPanel::verifyInputs() {
   p_publish_pcl_ = pcl_checkbox_->isChecked();
 
   try { p_ranges_num_ = boost::lexical_cast<int>(n_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_ranges_num_ = 0; n_input_->setText("0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_ranges_num_ = 0;
+	n_input_->setText("0");
+  }
 
   try { p_min_scanner_range_ = boost::lexical_cast<double>(r_min_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_min_scanner_range_ = 0.0; r_min_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_min_scanner_range_ = 0.0;
+	r_min_input_->setText("0.0");
+  }
 
   try { p_max_scanner_range_ = boost::lexical_cast<double>(r_max_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_max_scanner_range_ = 0.0; r_max_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_max_scanner_range_ = 0.0;
+	r_max_input_->setText("0.0");
+  }
 
   try { p_min_x_range_ = boost::lexical_cast<double>(x_min_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_min_x_range_ = 0.0; x_min_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_min_x_range_ = 0.0;
+	x_min_input_->setText("0.0");
+  }
 
   try { p_max_x_range_ = boost::lexical_cast<double>(x_max_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_max_x_range_ = 0.0; x_max_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_max_x_range_ = 0.0;
+	x_max_input_->setText("0.0");
+  }
 
   try { p_min_y_range_ = boost::lexical_cast<double>(y_min_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_min_y_range_ = 0.0; y_min_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_min_y_range_ = 0.0;
+	y_min_input_->setText("0.0");
+  }
 
   try { p_max_y_range_ = boost::lexical_cast<double>(y_max_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_max_y_range_ = 0.0; y_max_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_max_y_range_ = 0.0;
+	y_max_input_->setText("0.0");
+  }
 
   p_fixed_frame_id_ = fixed_frame_id_input_->text().toStdString();
   p_target_frame_id_ = target_frame_id_input_->text().toStdString();
@@ -290,9 +311,9 @@ void ScansMergerPanel::evaluateParams() {
 void ScansMergerPanel::notifyParamsUpdate() {
   std_srvs::Empty empty;
   if (!params_cli_.call(empty)) {
-    p_active_ = false;
-    setParams();
-    evaluateParams();
+	p_active_ = false;
+	setParams();
+	evaluateParams();
   }
 }
 
@@ -300,7 +321,7 @@ void ScansMergerPanel::save(rviz::Config config) const {
   rviz::Panel::save(config);
 }
 
-void ScansMergerPanel::load(const rviz::Config& config) {
+void ScansMergerPanel::load(const rviz::Config &config) {
   rviz::Panel::load(config);
 }
 

@@ -47,15 +47,13 @@
 #define RF_DEBUG(msg) if (filter_.getDebug()) { debugStream_ << msg; }
 
 // Handy methods for debug output
-std::ostream& operator<<(std::ostream& os, const tf2::Vector3 &vec);
-std::ostream& operator<<(std::ostream& os, const tf2::Quaternion &quat);
-std::ostream& operator<<(std::ostream& os, const tf2::Transform &trans);
-std::ostream& operator<<(std::ostream& os, const std::vector<double> &vec);
+std::ostream &operator<<(std::ostream &os, const tf2::Vector3 &vec);
+std::ostream &operator<<(std::ostream &os, const tf2::Quaternion &quat);
+std::ostream &operator<<(std::ostream &os, const tf2::Transform &trans);
+std::ostream &operator<<(std::ostream &os, const std::vector<double> &vec);
 
-namespace RobotLocalization
-{
-namespace RosFilterUtilities
-{
+namespace RobotLocalization {
+namespace RosFilterUtilities {
 
 double getYaw(const tf2::Quaternion quat);
 
@@ -78,12 +76,12 @@ double getYaw(const tf2::Quaternion quat);
 //! and returns true, otherwise it returns false.
 //!
 bool lookupTransformSafe(const tf2_ros::Buffer &buffer,
-                         const std::string &targetFrame,
-                         const std::string &sourceFrame,
-                         const ros::Time &time,
-                         const ros::Duration &timeout,
-                         tf2::Transform &targetFrameTrans,
-                         const bool silent = false);
+						 const std::string &targetFrame,
+						 const std::string &sourceFrame,
+						 const ros::Time &time,
+						 const ros::Duration &timeout,
+						 tf2::Transform &targetFrameTrans,
+						 const bool silent = false);
 
 //! @brief Method for safely obtaining transforms.
 //! @param[in] buffer - tf buffer object to use for looking up the transform
@@ -103,11 +101,11 @@ bool lookupTransformSafe(const tf2_ros::Buffer &buffer,
 //! and returns true, otherwise it returns false.
 //!
 bool lookupTransformSafe(const tf2_ros::Buffer &buffer,
-                         const std::string &targetFrame,
-                         const std::string &sourceFrame,
-                         const ros::Time &time,
-                         tf2::Transform &targetFrameTrans,
-                         const bool silent = false);
+						 const std::string &targetFrame,
+						 const std::string &sourceFrame,
+						 const ros::Time &time,
+						 tf2::Transform &targetFrameTrans,
+						 const bool silent = false);
 
 //! @brief Utility method for converting quaternion to RPY
 //! @param[in] quat - The quaternion to convert

@@ -38,33 +38,31 @@
 
 #include "obstacle_detector/obstacle_extractor.h"
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ObstacleExtractorNodelet : public nodelet::Nodelet
-{
-public:
+class ObstacleExtractorNodelet : public nodelet::Nodelet {
+ public:
   virtual void onInit() {
-    ros::NodeHandle nh = getNodeHandle();
-    ros::NodeHandle nh_local = getPrivateNodeHandle();
+	ros::NodeHandle nh = getNodeHandle();
+	ros::NodeHandle nh_local = getPrivateNodeHandle();
 
-    try {
-      NODELET_INFO("[Obstacle Extractor]: Initializing nodelet");
-      obstacle_extractor_ = std::shared_ptr<ObstacleExtractor>(new ObstacleExtractor(nh, nh_local));
-    }
-    catch (const char* s) {
-      NODELET_FATAL_STREAM("[Obstacle Extractor]: " << s);
-    }
-    catch (...) {
-      NODELET_FATAL_STREAM("[Obstacle Extractor]: Unexpected error");
-    }
+	try {
+	  NODELET_INFO("[Obstacle Extractor]: Initializing nodelet");
+	  obstacle_extractor_ = std::shared_ptr<ObstacleExtractor>(new ObstacleExtractor(nh, nh_local));
+	}
+	catch (const char *s) {
+	  NODELET_FATAL_STREAM("[Obstacle Extractor]: " << s);
+	}
+	catch (...) {
+	  NODELET_FATAL_STREAM("[Obstacle Extractor]: Unexpected error");
+	}
   }
 
   virtual ~ObstacleExtractorNodelet() {
-    NODELET_INFO("[Obstacle Extractor]: Shutdown");
+	NODELET_INFO("[Obstacle Extractor]: Shutdown");
   }
 
-private:
+ private:
   std::shared_ptr<ObstacleExtractor> obstacle_extractor_;
 };
 

@@ -37,21 +37,21 @@
 
 using namespace obstacle_detector;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   ros::init(argc, argv, "scans_merger", ros::init_options::NoRosout);
   ros::NodeHandle nh("");
   ros::NodeHandle nh_local("~");
 
   try {
-    ROS_INFO("[Scans Merger]: Initializing node");
-    ScansMerger sm(nh, nh_local);
-    ros::spin();
+	ROS_INFO("[Scans Merger]: Initializing node");
+	ScansMerger sm(nh, nh_local);
+	ros::spin();
   }
-  catch (const char* s) {
-    ROS_FATAL_STREAM("[Scans Merger]: " << s);
+  catch (const char *s) {
+	ROS_FATAL_STREAM("[Scans Merger]: " << s);
   }
   catch (...) {
-    ROS_FATAL_STREAM("[Scans Merger]: Unexpected error");
+	ROS_FATAL_STREAM("[Scans Merger]: Unexpected error");
   }
 
   return 0;

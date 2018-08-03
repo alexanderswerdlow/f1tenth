@@ -49,38 +49,36 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ObstacleTrackerPanel : public rviz::Panel
-{
-Q_OBJECT
-public:
-  ObstacleTrackerPanel(QWidget* parent = 0);
+class ObstacleTrackerPanel : public rviz::Panel {
+ Q_OBJECT
+ public:
+  ObstacleTrackerPanel(QWidget *parent = 0);
 
-  virtual void load(const rviz::Config& config);
+  virtual void load(const rviz::Config &config);
   virtual void save(rviz::Config config) const;
 
-private Q_SLOTS:
+ private Q_SLOTS:
   void processInputs();
 
-private:
+ private:
   void verifyInputs();
   void setParams();
   void getParams();
   void evaluateParams();
   void notifyParamsUpdate();
 
-private:
-  QCheckBox* activate_checkbox_;
+ private:
+  QCheckBox *activate_checkbox_;
 
-  QLineEdit* tracking_duration_input_;
-  QLineEdit* loop_rate_input_;
-  QLineEdit* min_corr_cost_input_;
-  QLineEdit* std_corr_dev_input_;
-  QLineEdit* process_var_input_;
-  QLineEdit* process_rate_var_input_;
-  QLineEdit* measure_var_input_;
+  QLineEdit *tracking_duration_input_;
+  QLineEdit *loop_rate_input_;
+  QLineEdit *min_corr_cost_input_;
+  QLineEdit *std_corr_dev_input_;
+  QLineEdit *process_var_input_;
+  QLineEdit *process_rate_var_input_;
+  QLineEdit *measure_var_input_;
 
   ros::NodeHandle nh_;
   ros::NodeHandle nh_local_;

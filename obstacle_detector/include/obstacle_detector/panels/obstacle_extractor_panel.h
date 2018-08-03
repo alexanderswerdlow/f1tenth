@@ -49,46 +49,44 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ObstacleExtractorPanel : public rviz::Panel
-{
-Q_OBJECT
-public:
-  ObstacleExtractorPanel(QWidget* parent = 0);
+class ObstacleExtractorPanel : public rviz::Panel {
+ Q_OBJECT
+ public:
+  ObstacleExtractorPanel(QWidget *parent = 0);
 
-  virtual void load(const rviz::Config& config);
+  virtual void load(const rviz::Config &config);
   virtual void save(rviz::Config config) const;
 
-private Q_SLOTS:
+ private Q_SLOTS:
   void processInputs();
 
-private:
+ private:
   void verifyInputs();
   void setParams();
   void getParams();
   void evaluateParams();
   void notifyParamsUpdate();
 
-private:
-  QCheckBox* activate_checkbox_;
-  QCheckBox* use_scan_checkbox_;
-  QCheckBox* use_pcl_checkbox_;
-  QCheckBox* use_split_merge_checkbox_;
-  QCheckBox* circ_from_visib_checkbox_;
-  QCheckBox* discard_segments_checkbox_;
-  QCheckBox* transform_coords_checkbox_;
+ private:
+  QCheckBox *activate_checkbox_;
+  QCheckBox *use_scan_checkbox_;
+  QCheckBox *use_pcl_checkbox_;
+  QCheckBox *use_split_merge_checkbox_;
+  QCheckBox *circ_from_visib_checkbox_;
+  QCheckBox *discard_segments_checkbox_;
+  QCheckBox *transform_coords_checkbox_;
 
-  QLineEdit* min_n_input_;
-  QLineEdit* dist_prop_input_;
-  QLineEdit* group_dist_input_;
-  QLineEdit* split_dist_input_;
-  QLineEdit* merge_sep_input_;
-  QLineEdit* merge_spread_input_;
-  QLineEdit* max_radius_input_;
-  QLineEdit* radius_enl_input_;
-  QLineEdit* frame_id_input_;
+  QLineEdit *min_n_input_;
+  QLineEdit *dist_prop_input_;
+  QLineEdit *group_dist_input_;
+  QLineEdit *split_dist_input_;
+  QLineEdit *merge_sep_input_;
+  QLineEdit *merge_spread_input_;
+  QLineEdit *max_radius_input_;
+  QLineEdit *radius_enl_input_;
+  QLineEdit *frame_id_input_;
 
   ros::NodeHandle nh_;
   ros::NodeHandle nh_local_;

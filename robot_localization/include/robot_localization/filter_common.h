@@ -33,13 +33,11 @@
 #ifndef ROBOT_LOCALIZATION_FILTER_COMMON_H
 #define ROBOT_LOCALIZATION_FILTER_COMMON_H
 
-namespace RobotLocalization
-{
+namespace RobotLocalization {
 
 //! @brief Enumeration that defines the state vector
 //!
-enum StateMembers
-{
+enum StateMembers {
   StateMemberX = 0,
   StateMemberY,
   StateMemberZ,
@@ -59,8 +57,7 @@ enum StateMembers
 
 //! @brief Enumeration that defines the control vector
 //!
-enum ControlMembers
-{
+enum ControlMembers {
   ControlMemberVx,
   ControlMemberVy,
   ControlMemberVz,

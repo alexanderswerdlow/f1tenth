@@ -14,5 +14,5 @@
 #endif
 #else
 #error assert.h cannot identify your platform
-#endif 
+#endif
 #endif

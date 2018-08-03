@@ -38,33 +38,31 @@
 
 #include "obstacle_detector/obstacle_tracker.h"
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ObstacleTrackerNodelet : public nodelet::Nodelet
-{
-public:
+class ObstacleTrackerNodelet : public nodelet::Nodelet {
+ public:
   virtual void onInit() {
-    ros::NodeHandle nh = getNodeHandle();
-    ros::NodeHandle nh_local = getPrivateNodeHandle();
+	ros::NodeHandle nh = getNodeHandle();
+	ros::NodeHandle nh_local = getPrivateNodeHandle();
 
-    try {
-      NODELET_INFO("[Obstacle Tracker]: Initializing nodelet");
-      obstacle_tracker_ = std::shared_ptr<ObstacleTracker>(new ObstacleTracker(nh, nh_local));
-    }
-    catch (const char* s) {
-      NODELET_FATAL_STREAM("[Obstacle Tracker]: " << s);
-    }
-    catch (...) {
-      NODELET_FATAL_STREAM("[Obstacle Tracker]: Unexpected error");
-    }
+	try {
+	  NODELET_INFO("[Obstacle Tracker]: Initializing nodelet");
+	  obstacle_tracker_ = std::shared_ptr<ObstacleTracker>(new ObstacleTracker(nh, nh_local));
+	}
+	catch (const char *s) {
+	  NODELET_FATAL_STREAM("[Obstacle Tracker]: " << s);
+	}
+	catch (...) {
+	  NODELET_FATAL_STREAM("[Obstacle Tracker]: Unexpected error");
+	}
   }
 
   virtual ~ObstacleTrackerNodelet() {
-    NODELET_INFO("[Obstacle Tracker]: Shutdown");
+	NODELET_INFO("[Obstacle Tracker]: Shutdown");
   }
 
-private:
+ private:
   std::shared_ptr<ObstacleTracker> obstacle_tracker_;
 };
 

@@ -51,51 +51,49 @@
 #include <QListWidget>
 #include <QGroupBox>
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ObstaclePublisherPanel : public rviz::Panel
-{
-Q_OBJECT
-public:
-  ObstaclePublisherPanel(QWidget* parent = 0);
+class ObstaclePublisherPanel : public rviz::Panel {
+ Q_OBJECT
+ public:
+  ObstaclePublisherPanel(QWidget *parent = 0);
 
-  virtual void load(const rviz::Config& config);
+  virtual void load(const rviz::Config &config);
   virtual void save(rviz::Config config) const;
 
-private Q_SLOTS:
+ private Q_SLOTS:
   void processInputs();
   void addObstacle();
   void removeObstacles();
   void reset();
 
-private:
+ private:
   void verifyInputs();
   void setParams();
   void getParams();
   void evaluateParams();
   void notifyParamsUpdate();
 
-private:
-  QCheckBox* activate_checkbox_;
-  QCheckBox* fusion_example_checkbox_;
-  QCheckBox* fission_example_checkbox_;
+ private:
+  QCheckBox *activate_checkbox_;
+  QCheckBox *fusion_example_checkbox_;
+  QCheckBox *fission_example_checkbox_;
 
-  QListWidget* obstacles_list_;
-  std::vector<QListWidgetItem*> obstacles_list_items_;
+  QListWidget *obstacles_list_;
+  std::vector<QListWidgetItem *> obstacles_list_items_;
 
-  QPushButton* add_button_;
-  QPushButton* remove_button_;
-  QPushButton* reset_button_;
+  QPushButton *add_button_;
+  QPushButton *remove_button_;
+  QPushButton *reset_button_;
 
-  QLineEdit* x_input_;
-  QLineEdit* y_input_;
-  QLineEdit* r_input_;
+  QLineEdit *x_input_;
+  QLineEdit *y_input_;
+  QLineEdit *r_input_;
 
-  QLineEdit* vx_input_;
-  QLineEdit* vy_input_;
+  QLineEdit *vx_input_;
+  QLineEdit *vy_input_;
 
-  QLineEdit* frame_input_;
+  QLineEdit *frame_input_;
 
   ros::NodeHandle nh_;
   ros::NodeHandle nh_local_;

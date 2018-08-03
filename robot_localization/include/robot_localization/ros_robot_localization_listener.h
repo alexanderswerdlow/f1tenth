@@ -44,8 +44,7 @@
 #include <geometry_msgs/AccelWithCovarianceStamped.h>
 #include <tf2_ros/transform_listener.h>
 
-namespace RobotLocalization
-{
+namespace RobotLocalization {
 
 //! @brief RosRobotLocalizationListener class
 //!
@@ -55,9 +54,8 @@ namespace RobotLocalization
 //! listener without the need to run a separate node. If you do wish to run this functionality in a separate node,
 //! consider the robot localization listener node.
 //!
-class RosRobotLocalizationListener
-{
-public:
+class RosRobotLocalizationListener {
+ public:
   //! @brief Constructor
   //!
   //! The RosRobotLocalizationListener constructor initializes nodehandles, subscribers, a filter for synchronized
@@ -82,9 +80,9 @@ public:
   //!
   //! @return false if buffer is empty, true otherwise
   //!
-  bool getState(const double time, const std::string& frame_id,
-                Eigen::VectorXd& state, Eigen::MatrixXd& covariance,
-                std::string world_frame_id = "") const;
+  bool getState(const double time, const std::string &frame_id,
+				Eigen::VectorXd &state, Eigen::MatrixXd &covariance,
+				std::string world_frame_id = "") const;
 
   //! @brief Get a state from the localization estimator
   //!
@@ -97,23 +95,23 @@ public:
   //!
   //! @return false if buffer is empty, true otherwise
   //!
-  bool getState(const ros::Time& ros_time, const std::string& frame_id,
-                Eigen::VectorXd& state, Eigen::MatrixXd& covariance,
-                const std::string& world_frame_id = "") const;
+  bool getState(const ros::Time &ros_time, const std::string &frame_id,
+				Eigen::VectorXd &state, Eigen::MatrixXd &covariance,
+				const std::string &world_frame_id = "") const;
 
   //!
   //! \brief getBaseFrameId Returns the base frame id of the localization listener
   //! \return The base frame id
   //!
-  const std::string& getBaseFrameId() const;
+  const std::string &getBaseFrameId() const;
 
   //!
   //! \brief getWorldFrameId Returns the world frame id of the localization listener
   //! \return The world frame id
   //!
-  const std::string& getWorldFrameId() const;
+  const std::string &getWorldFrameId() const;
 
-private:
+ private:
   //! @brief Callback for odom and accel
   //!
   //! Puts the information from the odom and accel messages in a Robot Localization Estimator state and sets the most
@@ -122,12 +120,12 @@ private:
   //! @param[in] odometry message
   //! @param[in] accel message
   //!
-  void odomAndAccelCallback(const nav_msgs::Odometry& odom, const geometry_msgs::AccelWithCovarianceStamped& accel);
+  void odomAndAccelCallback(const nav_msgs::Odometry &odom, const geometry_msgs::AccelWithCovarianceStamped &accel);
 
   //! @brief The core state estimator that facilitates inter- and
   //! extrapolation between buffered states.
   //!
-  RobotLocalizationEstimator* estimator_;
+  RobotLocalizationEstimator *estimator_;
 
   //! @brief A public handle to the ROS node
   //!

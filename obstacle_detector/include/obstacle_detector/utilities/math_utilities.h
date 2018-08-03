@@ -41,30 +41,29 @@
 
 #include "obstacle_detector/utilities/point.h"
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
 inline double signum(double x) { return (x < 0.0) ? -1.0 : 1.0; }
 inline double abs(double x) { return (x < 0.0) ? -x : x; }
 inline double max(double x, double y) { return (x > y) ? x : y; }
 
-inline double length(const geometry_msgs::Point& point) {
+inline double length(const geometry_msgs::Point &point) {
   return sqrt(point.x * point.x + point.y * point.y);
 }
 
-inline double squaredLength(const geometry_msgs::Point& point) {
+inline double squaredLength(const geometry_msgs::Point &point) {
   return point.x * point.x + point.y * point.y;
 }
 
-inline double length(const geometry_msgs::Vector3& vec) {
+inline double length(const geometry_msgs::Vector3 &vec) {
   return sqrt(vec.x * vec.x + vec.y * vec.y);
 }
 
-inline double squaredLength(const geometry_msgs::Vector3& vec) {
+inline double squaredLength(const geometry_msgs::Vector3 &vec) {
   return vec.x * vec.x + vec.y * vec.y;
 }
 
-inline geometry_msgs::Point transformPoint(const geometry_msgs::Point& point, double x, double y, double theta) {
+inline geometry_msgs::Point transformPoint(const geometry_msgs::Point &point, double x, double y, double theta) {
   geometry_msgs::Point p;
 
   p.x = point.x * cos(theta) - point.y * sin(theta) + x;
@@ -73,7 +72,7 @@ inline geometry_msgs::Point transformPoint(const geometry_msgs::Point& point, do
   return p;
 }
 
-inline geometry_msgs::Point32 transformPoint(const geometry_msgs::Point32& point, double x, double y, double theta) {
+inline geometry_msgs::Point32 transformPoint(const geometry_msgs::Point32 &point, double x, double y, double theta) {
   geometry_msgs::Point32 p;
 
   p.x = point.x * cos(theta) - point.y * sin(theta) + x;
@@ -91,18 +90,18 @@ inline Point transformPoint(const Point point, double x, double y, double theta)
   return p;
 }
 
-inline Point transformPoint(const Point& point, const tf::StampedTransform& transform) {
+inline Point transformPoint(const Point &point, const tf::StampedTransform &transform) {
   tf::Vector3 v(point.x, point.y, 0);
   v = transform * v;
 
   return {v.x(), v.y()};
 }
 
-inline bool checkPointInLimits(const geometry_msgs::Point32& p, double x_min, double x_max, double y_min, double y_max) {
+inline bool checkPointInLimits(const geometry_msgs::Point32 &p, double x_min, double x_max, double y_min, double y_max) {
   if ((p.x > x_max) || (p.x < x_min) || (p.y > y_max) || (p.y < y_min))
-    return false;
+	return false;
   else
-    return true;
+	return true;
 }
 
 } // namespace obstacle_detector

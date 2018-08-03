@@ -1,24 +1,24 @@
 {
-    "configurations": [
-        {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**",
-                "/home/aswerdlow/catkin_ws/devel/include",
-                "/opt/ros/kinetic/include",
-                "/usr/include"
-            ],
-            "browse": {
-                "path": [
-                    "${workspaceFolder}"
-                ]
-            },
-            "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c11",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/home/aswerdlow/catkin_ws/devel/include",
+        "/opt/ros/kinetic/include",
+        "/usr/include"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}"
+        ]
+      },
+      "defines": [],
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "clang-x64"
+    }
+  ],
+  "version": 4
 }

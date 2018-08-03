@@ -43,21 +43,22 @@
 #include <tf/transform_listener.h>
 #include <laser_geometry/laser_geometry.h>
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ScansMerger
-{
-public:
-  ScansMerger(ros::NodeHandle& nh, ros::NodeHandle& nh_local);
+class ScansMerger {
+ public:
+  ScansMerger(ros::NodeHandle &nh, ros::NodeHandle &nh_local);
   ~ScansMerger();
 
-private:
-  bool updateParams(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+ private:
+  bool updateParams(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
   void frontScanCallback(const sensor_msgs::LaserScan::ConstPtr front_scan);
   void rearScanCallback(const sensor_msgs::LaserScan::ConstPtr rear_scan);
 
-  void initialize() { std_srvs::Empty empt; updateParams(empt.request, empt.response); }
+  void initialize() {
+	std_srvs::Empty empt;
+	updateParams(empt.request, empt.response);
+  }
 
   void publishMessages();
 

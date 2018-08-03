@@ -11,7 +11,6 @@ from race.msg import pid_input
 pub = rospy.Publisher('error', pid_input, queue_size=10)
 
 
-
 def callback(data):
     dist1 = 0
     dist2 = 0
@@ -20,7 +19,7 @@ def callback(data):
     c1 = 0
     c2 = 0
     for x in data.segments:
-        dist = math.sqrt(math.pow(x.first_point.x - x.last_point.x,2) + math.pow(x.first_point.y - x.last_point.y,2))
+        dist = math.sqrt(math.pow(x.first_point.x - x.last_point.x, 2) + math.pow(x.first_point.y - x.last_point.y, 2))
         if dist > dist1:
             dist1 = dist
             slope1 = (x.first_point.y - x.last_point.y) / (x.first_point.x - x.last_point.x)
@@ -37,6 +36,6 @@ def callback(data):
 
 if __name__ == '__main__':
     print("Started Finding Goal")
-    rospy.init_node('dist_finder',anonymous = True)
-    rospy.Subscriber("raw_obstacles",Obstacles,callback)
+    rospy.init_node('dist_finder', anonymous=True)
+    rospy.Subscriber("raw_obstacles", Obstacles, callback)
     rospy.spin()

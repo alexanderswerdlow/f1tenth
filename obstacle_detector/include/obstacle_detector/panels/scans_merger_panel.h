@@ -48,44 +48,42 @@
 #include <QPushButton>
 #include <QLabel>
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ScansMergerPanel : public rviz::Panel
-{
-Q_OBJECT
-public:
-  ScansMergerPanel(QWidget* parent = 0);
+class ScansMergerPanel : public rviz::Panel {
+ Q_OBJECT
+ public:
+  ScansMergerPanel(QWidget *parent = 0);
 
-  virtual void load(const rviz::Config& config);
+  virtual void load(const rviz::Config &config);
   virtual void save(rviz::Config config) const;
 
-private Q_SLOTS:
+ private Q_SLOTS:
   void processInputs();
 
-private:
+ private:
   void verifyInputs();
   void setParams();
   void getParams();
   void evaluateParams();
   void notifyParamsUpdate();
 
-private:
-  QCheckBox* activate_checkbox_;
-  QCheckBox* scan_checkbox_;
-  QCheckBox* pcl_checkbox_;
+ private:
+  QCheckBox *activate_checkbox_;
+  QCheckBox *scan_checkbox_;
+  QCheckBox *pcl_checkbox_;
 
-  QLineEdit* n_input_;
-  QLineEdit* r_min_input_;
-  QLineEdit* r_max_input_;
+  QLineEdit *n_input_;
+  QLineEdit *r_min_input_;
+  QLineEdit *r_max_input_;
 
-  QLineEdit* x_min_input_;
-  QLineEdit* x_max_input_;
-  QLineEdit* y_min_input_;
-  QLineEdit* y_max_input_;
+  QLineEdit *x_min_input_;
+  QLineEdit *x_max_input_;
+  QLineEdit *y_min_input_;
+  QLineEdit *y_max_input_;
 
-  QLineEdit* fixed_frame_id_input_;
-  QLineEdit* target_frame_id_input_;
+  QLineEdit *fixed_frame_id_input_;
+  QLineEdit *target_frame_id_input_;
 
   ros::NodeHandle nh_;
   ros::NodeHandle nh_local_;

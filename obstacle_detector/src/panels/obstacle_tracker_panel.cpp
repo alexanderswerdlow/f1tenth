@@ -38,7 +38,7 @@
 using namespace obstacle_detector;
 using namespace std;
 
-ObstacleTrackerPanel::ObstacleTrackerPanel(QWidget* parent) : rviz::Panel(parent), nh_(""), nh_local_("obstacle_tracker") {
+ObstacleTrackerPanel::ObstacleTrackerPanel(QWidget *parent) : rviz::Panel(parent), nh_(""), nh_local_("obstacle_tracker") {
   params_cli_ = nh_local_.serviceClient<std_srvs::Empty>("params");
   getParams();
 
@@ -60,17 +60,17 @@ ObstacleTrackerPanel::ObstacleTrackerPanel(QWidget* parent) : rviz::Panel(parent
   process_rate_var_input_->setAlignment(Qt::AlignRight);
   measure_var_input_->setAlignment(Qt::AlignRight);
 
-  QSpacerItem* margin = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  QSpacerItem *margin = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-  QFrame* lines[4];
-  for (auto& line : lines) {
-    line = new QFrame();
-    line->setFrameShape(QFrame::HLine);
-    line->setFrameShadow(QFrame::Sunken);
+  QFrame *lines[4];
+  for (auto &line : lines) {
+	line = new QFrame();
+	line->setFrameShape(QFrame::HLine);
+	line->setFrameShadow(QFrame::Sunken);
   }
 
-  QGroupBox* tracking_box = new QGroupBox("General:");
-  QGridLayout* tracking_layout = new QGridLayout;
+  QGroupBox *tracking_box = new QGroupBox("General:");
+  QGridLayout *tracking_layout = new QGridLayout;
   tracking_layout->addWidget(new QLabel("Tracking rate:"), 0, 0, Qt::AlignRight);
   tracking_layout->addWidget(loop_rate_input_, 0, 1, Qt::AlignLeft);
   tracking_layout->addWidget(new QLabel("Hz"), 0, 2, Qt::AlignLeft);
@@ -79,8 +79,8 @@ ObstacleTrackerPanel::ObstacleTrackerPanel(QWidget* parent) : rviz::Panel(parent
   tracking_layout->addWidget(new QLabel("s"), 1, 2, Qt::AlignLeft);
   tracking_box->setLayout(tracking_layout);
 
-  QGroupBox* corr_box = new QGroupBox("Correspondence:");
-  QGridLayout* corr_layout = new QGridLayout;
+  QGroupBox *corr_box = new QGroupBox("Correspondence:");
+  QGridLayout *corr_layout = new QGridLayout;
   corr_layout->addWidget(new QLabel("Minimal cost:"), 0, 0, Qt::AlignRight);
   corr_layout->addWidget(min_corr_cost_input_, 0, 1, Qt::AlignLeft);
   corr_layout->addWidget(new QLabel("m"), 0, 2, Qt::AlignLeft);
@@ -89,8 +89,8 @@ ObstacleTrackerPanel::ObstacleTrackerPanel(QWidget* parent) : rviz::Panel(parent
   corr_layout->addWidget(new QLabel("m"), 1, 2, Qt::AlignLeft);
   corr_box->setLayout(corr_layout);
 
-  QGroupBox* kf_box = new QGroupBox("Kalman Filter:");
-  QGridLayout* kf_layout = new QGridLayout;
+  QGroupBox *kf_box = new QGroupBox("Kalman Filter:");
+  QGridLayout *kf_layout = new QGridLayout;
   kf_layout->addWidget(new QLabel("Process variance:"), 0, 0, Qt::AlignRight);
   kf_layout->addWidget(process_var_input_, 0, 1, Qt::AlignLeft);
   kf_layout->addWidget(new QLabel("m<sup>2</sup>"), 0, 2, Qt::AlignLeft);
@@ -102,7 +102,7 @@ ObstacleTrackerPanel::ObstacleTrackerPanel(QWidget* parent) : rviz::Panel(parent
   kf_layout->addWidget(new QLabel("m<sup>2</sup>"), 2, 2, Qt::AlignLeft);
   kf_box->setLayout(kf_layout);
 
-  QVBoxLayout* layout = new QVBoxLayout;
+  QVBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(activate_checkbox_);
   layout->addWidget(lines[0]);
   layout->addWidget(tracking_box);
@@ -137,25 +137,46 @@ void ObstacleTrackerPanel::verifyInputs() {
   p_active_ = activate_checkbox_->isChecked();
 
   try { p_loop_rate_ = boost::lexical_cast<double>(loop_rate_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_loop_rate_ = 1.0; loop_rate_input_->setText("1.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_loop_rate_ = 1.0;
+	loop_rate_input_->setText("1.0");
+  }
 
   try { p_tracking_duration_ = boost::lexical_cast<double>(tracking_duration_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_tracking_duration_ = 0.0; tracking_duration_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_tracking_duration_ = 0.0;
+	tracking_duration_input_->setText("0.0");
+  }
 
   try { p_min_correspondence_cost_ = boost::lexical_cast<double>(min_corr_cost_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_min_correspondence_cost_ = 0.0; min_corr_cost_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_min_correspondence_cost_ = 0.0;
+	min_corr_cost_input_->setText("0.0");
+  }
 
   try { p_std_correspondence_dev_ = boost::lexical_cast<double>(std_corr_dev_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_std_correspondence_dev_ = 0.0; std_corr_dev_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_std_correspondence_dev_ = 0.0;
+	std_corr_dev_input_->setText("0.0");
+  }
 
   try { p_process_variance_ = boost::lexical_cast<double>(process_var_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_process_variance_ = 0.0; process_var_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_process_variance_ = 0.0;
+	process_var_input_->setText("0.0");
+  }
 
   try { p_process_rate_variance_ = boost::lexical_cast<double>(process_rate_var_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_process_rate_variance_ = 0.0; process_rate_var_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_process_rate_variance_ = 0.0;
+	process_rate_var_input_->setText("0.0");
+  }
 
   try { p_measurement_variance_ = boost::lexical_cast<double>(measure_var_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_measurement_variance_ = 0.0; measure_var_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_measurement_variance_ = 0.0;
+	measure_var_input_->setText("0.0");
+  }
 }
 
 void ObstacleTrackerPanel::setParams() {
@@ -210,9 +231,9 @@ void ObstacleTrackerPanel::evaluateParams() {
 void ObstacleTrackerPanel::notifyParamsUpdate() {
   std_srvs::Empty empty;
   if (!params_cli_.call(empty)) {
-    p_active_ = false;
-    setParams();
-    evaluateParams();
+	p_active_ = false;
+	setParams();
+	evaluateParams();
   }
 }
 
@@ -220,7 +241,7 @@ void ObstacleTrackerPanel::save(rviz::Config config) const {
   rviz::Panel::save(config);
 }
 
-void ObstacleTrackerPanel::load(const rviz::Config& config) {
+void ObstacleTrackerPanel::load(const rviz::Config &config) {
   rviz::Panel::load(config);
 }
 

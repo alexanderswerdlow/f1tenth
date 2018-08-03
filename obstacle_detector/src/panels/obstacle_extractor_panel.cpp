@@ -38,7 +38,7 @@
 using namespace obstacle_detector;
 using namespace std;
 
-ObstacleExtractorPanel::ObstacleExtractorPanel(QWidget* parent) : rviz::Panel(parent), nh_(""), nh_local_("obstacle_extractor") {
+ObstacleExtractorPanel::ObstacleExtractorPanel(QWidget *parent) : rviz::Panel(parent), nh_(""), nh_local_("obstacle_extractor") {
   params_cli_ = nh_local_.serviceClient<std_srvs::Empty>("params");
   getParams();
 
@@ -70,24 +70,24 @@ ObstacleExtractorPanel::ObstacleExtractorPanel(QWidget* parent) : rviz::Panel(pa
   radius_enl_input_->setAlignment(Qt::AlignRight);
   frame_id_input_->setAlignment(Qt::AlignRight);
 
-  QFrame* lines[5];
-  for (auto& line : lines) {
-    line = new QFrame();
-    line->setFrameShape(QFrame::HLine);
-    line->setFrameShadow(QFrame::Sunken);
+  QFrame *lines[5];
+  for (auto &line : lines) {
+	line = new QFrame();
+	line->setFrameShape(QFrame::HLine);
+	line->setFrameShadow(QFrame::Sunken);
   }
 
-  QSpacerItem* margin = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  QSpacerItem *margin = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-  QHBoxLayout* scan_pcl_layout = new QHBoxLayout;
+  QHBoxLayout *scan_pcl_layout = new QHBoxLayout;
   scan_pcl_layout->addItem(margin);
   scan_pcl_layout->addWidget(use_scan_checkbox_);
   scan_pcl_layout->addItem(margin);
   scan_pcl_layout->addWidget(use_pcl_checkbox_);
   scan_pcl_layout->addItem(margin);
 
-  QGroupBox* segmentation_box = new QGroupBox("Segmentation:");
-  QGridLayout* segmentation_layout = new QGridLayout;
+  QGroupBox *segmentation_box = new QGroupBox("Segmentation:");
+  QGridLayout *segmentation_layout = new QGridLayout;
   segmentation_layout->addWidget(new QLabel("N<sub>min</sub>:"), 0, 0, Qt::AlignRight);
   segmentation_layout->addWidget(min_n_input_, 0, 1);
   segmentation_layout->addWidget(new QLabel("   "), 0, 2);
@@ -112,8 +112,8 @@ ObstacleExtractorPanel::ObstacleExtractorPanel(QWidget* parent) : rviz::Panel(pa
   segmentation_layout->addWidget(use_split_merge_checkbox_, 3, 0, 1, 6, Qt::AlignCenter);
   segmentation_box->setLayout(segmentation_layout);
 
-  QGroupBox* circle_box = new QGroupBox("Circularization:");
-  QGridLayout* circ_limits_layout = new QGridLayout;
+  QGroupBox *circle_box = new QGroupBox("Circularization:");
+  QGridLayout *circ_limits_layout = new QGridLayout;
   circ_limits_layout->addWidget(new QLabel("r<sub>max</sub>:"), 0, 0, Qt::AlignRight);
   circ_limits_layout->addWidget(max_radius_input_, 0, 1);
   circ_limits_layout->addWidget(new QLabel("m "), 0, 2, Qt::AlignLeft);
@@ -121,17 +121,17 @@ ObstacleExtractorPanel::ObstacleExtractorPanel(QWidget* parent) : rviz::Panel(pa
   circ_limits_layout->addWidget(radius_enl_input_, 0, 4);
   circ_limits_layout->addWidget(new QLabel("m"), 0, 5, Qt::AlignLeft);
 
-  QHBoxLayout* circ_checks_layout = new QHBoxLayout;
+  QHBoxLayout *circ_checks_layout = new QHBoxLayout;
   circ_checks_layout->addWidget(discard_segments_checkbox_, 0, Qt::AlignCenter);
   circ_checks_layout->addWidget(circ_from_visib_checkbox_, 0, Qt::AlignCenter);
 
-  QVBoxLayout* circ_layout = new QVBoxLayout;
+  QVBoxLayout *circ_layout = new QVBoxLayout;
   circ_layout->addLayout(circ_limits_layout);
   circ_layout->addLayout(circ_checks_layout);
   circle_box->setLayout(circ_layout);
 
-  QGroupBox* frame_box = new QGroupBox("Frames:");
-  QGridLayout* layout_4 = new QGridLayout;
+  QGroupBox *frame_box = new QGroupBox("Frames:");
+  QGridLayout *layout_4 = new QGridLayout;
   layout_4->addItem(margin, 0, 0, 2, 1);
   layout_4->addWidget(new QLabel("Target frame:"), 0, 1, Qt::AlignRight);
   layout_4->addWidget(frame_id_input_, 0, 2, Qt::AlignLeft);
@@ -139,7 +139,7 @@ ObstacleExtractorPanel::ObstacleExtractorPanel(QWidget* parent) : rviz::Panel(pa
   layout_4->addItem(margin, 0, 3, 2, 1);
   frame_box->setLayout(layout_4);
 
-  QVBoxLayout* layout = new QVBoxLayout;
+  QVBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(activate_checkbox_);
   layout->addWidget(lines[0]);
   layout->addLayout(scan_pcl_layout);
@@ -191,28 +191,52 @@ void ObstacleExtractorPanel::verifyInputs() {
   p_transform_coordinates_ = transform_coords_checkbox_->isChecked();
 
   try { p_min_group_points_ = boost::lexical_cast<int>(min_n_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_min_group_points_ = 0; min_n_input_->setText("0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_min_group_points_ = 0;
+	min_n_input_->setText("0");
+  }
 
   try { p_distance_proportion_ = boost::lexical_cast<double>(dist_prop_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_distance_proportion_ = 0.0; dist_prop_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_distance_proportion_ = 0.0;
+	dist_prop_input_->setText("0.0");
+  }
 
   try { p_max_group_distance_ = boost::lexical_cast<double>(group_dist_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_max_group_distance_ = 0.0; group_dist_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_max_group_distance_ = 0.0;
+	group_dist_input_->setText("0.0");
+  }
 
   try { p_max_split_distance_ = boost::lexical_cast<double>(split_dist_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_max_split_distance_ = 0.0; split_dist_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_max_split_distance_ = 0.0;
+	split_dist_input_->setText("0.0");
+  }
 
   try { p_max_merge_separation_ = boost::lexical_cast<double>(merge_sep_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_max_merge_separation_ = 0.0; merge_sep_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_max_merge_separation_ = 0.0;
+	merge_sep_input_->setText("0.0");
+  }
 
   try { p_max_merge_spread_ = boost::lexical_cast<double>(merge_spread_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_max_merge_spread_ = 0.0; merge_spread_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_max_merge_spread_ = 0.0;
+	merge_spread_input_->setText("0.0");
+  }
 
   try { p_max_circle_radius_ = boost::lexical_cast<double>(max_radius_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_max_circle_radius_ = 0.0; max_radius_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_max_circle_radius_ = 0.0;
+	max_radius_input_->setText("0.0");
+  }
 
   try { p_radius_enlargement_ = boost::lexical_cast<double>(radius_enl_input_->text().toStdString()); }
-  catch(boost::bad_lexical_cast &) { p_radius_enlargement_ = 0.0; radius_enl_input_->setText("0.0"); }
+  catch (boost::bad_lexical_cast &) {
+	p_radius_enlargement_ = 0.0;
+	radius_enl_input_->setText("0.0");
+  }
 
   p_frame_id_ = frame_id_input_->text().toStdString();
 }
@@ -316,9 +340,9 @@ void ObstacleExtractorPanel::evaluateParams() {
 void ObstacleExtractorPanel::notifyParamsUpdate() {
   std_srvs::Empty empty;
   if (!params_cli_.call(empty)) {
-    p_active_ = false;
-    setParams();
-    evaluateParams();
+	p_active_ = false;
+	setParams();
+	evaluateParams();
   }
 }
 
@@ -326,7 +350,7 @@ void ObstacleExtractorPanel::save(rviz::Config config) const {
   rviz::Panel::save(config);
 }
 
-void ObstacleExtractorPanel::load(const rviz::Config& config) {
+void ObstacleExtractorPanel::load(const rviz::Config &config) {
   rviz::Panel::load(config);
 }
 

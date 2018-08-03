@@ -45,35 +45,44 @@
 #include "obstacle_detector/utilities/tracked_obstacle.h"
 #include "obstacle_detector/utilities/math_utilities.h"
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
 class ObstacleTracker {
-public:
-  ObstacleTracker(ros::NodeHandle& nh, ros::NodeHandle& nh_local);
+ public:
+  ObstacleTracker(ros::NodeHandle &nh, ros::NodeHandle &nh_local);
   ~ObstacleTracker();
 
-private:
-  bool updateParams(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
-  void timerCallback(const ros::TimerEvent&);
+ private:
+  bool updateParams(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
+  void timerCallback(const ros::TimerEvent &);
   void obstaclesCallback(const obstacle_detector::Obstacles::ConstPtr new_obstacles);
 
-  void initialize() { std_srvs::Empty empt; updateParams(empt.request, empt.response); }
+  void initialize() {
+	std_srvs::Empty empt;
+	updateParams(empt.request, empt.response);
+  }
 
-  double obstacleCostFunction(const CircleObstacle& new_obstacle, const CircleObstacle& old_obstacle);
-  void calculateCostMatrix(const std::vector<CircleObstacle>& new_obstacles, arma::mat& cost_matrix);
-  void calculateRowMinIndices(const arma::mat& cost_matrix, std::vector<int>& row_min_indices);
-  void calculateColMinIndices(const arma::mat& cost_matrix, std::vector<int>& col_min_indices);
+  double obstacleCostFunction(const CircleObstacle &new_obstacle, const CircleObstacle &old_obstacle);
+  void calculateCostMatrix(const std::vector<CircleObstacle> &new_obstacles, arma::mat &cost_matrix);
+  void calculateRowMinIndices(const arma::mat &cost_matrix, std::vector<int> &row_min_indices);
+  void calculateColMinIndices(const arma::mat &cost_matrix, std::vector<int> &col_min_indices);
 
-  bool fusionObstacleUsed(const int idx, const std::vector<int>& col_min_indices, const std::vector<int>& used_new, const std::vector<int>& used_old);
-  bool fusionObstaclesCorrespond(const int idx, const int jdx, const std::vector<int>& col_min_indices, const std::vector<int>& used_old);
-  bool fissionObstacleUsed(const int idx, const int T, const std::vector<int>& row_min_indices, const std::vector<int>& used_new, const std::vector<int>& used_old);
-  bool fissionObstaclesCorrespond(const int idx, const int jdx, const std::vector<int>& row_min_indices, const std::vector<int>& used_new);
+  bool fusionObstacleUsed(const int idx,
+						  const std::vector<int> &col_min_indices,
+						  const std::vector<int> &used_new,
+						  const std::vector<int> &used_old);
+  bool fusionObstaclesCorrespond(const int idx, const int jdx, const std::vector<int> &col_min_indices, const std::vector<int> &used_old);
+  bool fissionObstacleUsed(const int idx,
+						   const int T,
+						   const std::vector<int> &row_min_indices,
+						   const std::vector<int> &used_new,
+						   const std::vector<int> &used_old);
+  bool fissionObstaclesCorrespond(const int idx, const int jdx, const std::vector<int> &row_min_indices, const std::vector<int> &used_new);
 
-  void fuseObstacles(const std::vector<int>& fusion_indices, const std::vector<int>& col_min_indices,
-                     std::vector<TrackedObstacle>& new_tracked, const Obstacles::ConstPtr& new_obstacles);
-  void fissureObstacle(const std::vector<int>& fission_indices, const std::vector<int>& row_min_indices,
-                       std::vector<TrackedObstacle>& new_tracked, const Obstacles::ConstPtr& new_obstacles);
+  void fuseObstacles(const std::vector<int> &fusion_indices, const std::vector<int> &col_min_indices,
+					 std::vector<TrackedObstacle> &new_tracked, const Obstacles::ConstPtr &new_obstacles);
+  void fissureObstacle(const std::vector<int> &fission_indices, const std::vector<int> &row_min_indices,
+					   std::vector<TrackedObstacle> &new_tracked, const Obstacles::ConstPtr &new_obstacles);
 
   void updateObstacles();
   void publishObstacles();

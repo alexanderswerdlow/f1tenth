@@ -35,10 +35,9 @@
 
 #include "obstacle_detector/displays/circle_visual.h"
 
-namespace obstacles_display
-{
+namespace obstacles_display {
 
-CircleVisual::CircleVisual(Ogre::SceneManager* scene_manager, Ogre::SceneNode* parent_node) {
+CircleVisual::CircleVisual(Ogre::SceneManager *scene_manager, Ogre::SceneNode *parent_node) {
   scene_manager_ = scene_manager;
   frame_node_1_ = parent_node->createChildSceneNode();
   frame_node_2_ = parent_node->createChildSceneNode();
@@ -52,7 +51,7 @@ CircleVisual::~CircleVisual() {
   scene_manager_->destroySceneNode(frame_node_2_);
 }
 
-void CircleVisual::setData(const obstacle_detector::CircleObstacle& circle) {
+void CircleVisual::setData(const obstacle_detector::CircleObstacle &circle) {
   Ogre::Vector3 pos(circle.center.x, circle.center.y, 0.25);
   obstacle_->setPosition(pos);
 
@@ -72,12 +71,12 @@ void CircleVisual::setData(const obstacle_detector::CircleObstacle& circle) {
   margin_->setOrientation(q);
 }
 
-void CircleVisual::setFramePosition(const Ogre::Vector3& position) {
+void CircleVisual::setFramePosition(const Ogre::Vector3 &position) {
   frame_node_1_->setPosition(position);
   frame_node_2_->setPosition(position);
 }
 
-void CircleVisual::setFrameOrientation(const Ogre::Quaternion& orientation) {
+void CircleVisual::setFrameOrientation(const Ogre::Quaternion &orientation) {
   frame_node_1_->setOrientation(orientation);
   frame_node_2_->setOrientation(orientation);
 }

@@ -378,8 +378,8 @@ boolean DEBUG__NO_DRIFT_CORRECTION = false;
 
 // Check if hardware version code is defined
 #ifndef HW__VERSION_CODE
-  // Generate compile error
-  #error YOU HAVE TO SELECT THE HARDWARE YOU ARE USING! See "HARDWARE OPTIONS" in "USER SETUP AREA" at top of Razor_AHRS.ino!
+// Generate compile error
+#error YOU HAVE TO SELECT THE HARDWARE YOU ARE USING! See "HARDWARE OPTIONS" in "USER SETUP AREA" at top of Razor_AHRS.ino!
 #endif
 
 #if HW__VERSION_CODE == 14001
@@ -428,8 +428,6 @@ float MAGN_X_SCALE = (100.0f / (MAGN_X_MAX - MAGN_X_OFFSET));
 float MAGN_Y_SCALE = (100.0f / (MAGN_Y_MAX - MAGN_Y_OFFSET));
 float MAGN_Z_SCALE = (100.0f / (MAGN_Z_MAX - MAGN_Z_OFFSET));
 
-
-
 #if HW__VERSION_CODE == 14001
 #define GYRO_SCALED_RAD(x) (x) // Calculate the scaled gyro readings in radians per second
 #else
@@ -465,12 +463,12 @@ int gyro_num_samples = 0;
 
 // DCM variables
 float MAG_Heading = 0;
-float Accel_Vector[3]= {0, 0, 0}; // Store the acceleration in a vector
-float Gyro_Vector[3]= {0, 0, 0}; // Store the gyros turn rate in a vector
-float Omega_Vector[3]= {0, 0, 0}; // Corrected Gyro_Vector data
-float Omega_P[3]= {0, 0, 0}; // Omega Proportional correction
-float Omega_I[3]= {0, 0, 0}; // Omega Integrator
-float Omega[3]= {0, 0, 0};
+float Accel_Vector[3] = {0, 0, 0}; // Store the acceleration in a vector
+float Gyro_Vector[3] = {0, 0, 0}; // Store the gyros turn rate in a vector
+float Omega_Vector[3] = {0, 0, 0}; // Corrected Gyro_Vector data
+float Omega_P[3] = {0, 0, 0}; // Omega Proportional correction
+float Omega_I[3] = {0, 0, 0}; // Omega Integrator
+float Omega[3] = {0, 0, 0};
 float errorRollPitch[3] = {0, 0, 0};
 float errorYaw[3] = {0, 0, 0};
 float DCM_Matrix[3][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
@@ -529,29 +527,26 @@ void recalculateMagnCalibration() {
 
 // Apply calibration to raw sensor readings
 void compensate_sensor_errors() {
-    // Compensate accelerometer error
-    accel[0] = (accel[0] - ACCEL_X_OFFSET) * ACCEL_X_SCALE;
-    accel[1] = (accel[1] - ACCEL_Y_OFFSET) * ACCEL_Y_SCALE;
-    accel[2] = (accel[2] - ACCEL_Z_OFFSET) * ACCEL_Z_SCALE;
+  // Compensate accelerometer error
+  accel[0] = (accel[0] - ACCEL_X_OFFSET) * ACCEL_X_SCALE;
+  accel[1] = (accel[1] - ACCEL_Y_OFFSET) * ACCEL_Y_SCALE;
+  accel[2] = (accel[2] - ACCEL_Z_OFFSET) * ACCEL_Z_SCALE;
 
-    // Compensate magnetometer error
-    if (CALIBRATION__MAGN_USE_EXTENDED)
-    {
-      for (int i = 0; i < 3; i++)
-        magnetom_tmp[i] = magnetom[i] - magn_ellipsoid_center[i];
-      Matrix_Vector_Multiply(magn_ellipsoid_transform, magnetom_tmp, magnetom);
-    } 
-    else 
-    {
-      magnetom[0] = (magnetom[0] - MAGN_X_OFFSET) * MAGN_X_SCALE;
-      magnetom[1] = (magnetom[1] - MAGN_Y_OFFSET) * MAGN_Y_SCALE;
-      magnetom[2] = (magnetom[2] - MAGN_Z_OFFSET) * MAGN_Z_SCALE;
-    }
+  // Compensate magnetometer error
+  if (CALIBRATION__MAGN_USE_EXTENDED) {
+	for (int i = 0; i < 3; i++)
+	  magnetom_tmp[i] = magnetom[i] - magn_ellipsoid_center[i];
+	Matrix_Vector_Multiply(magn_ellipsoid_transform, magnetom_tmp, magnetom);
+  } else {
+	magnetom[0] = (magnetom[0] - MAGN_X_OFFSET) * MAGN_X_SCALE;
+	magnetom[1] = (magnetom[1] - MAGN_Y_OFFSET) * MAGN_Y_SCALE;
+	magnetom[2] = (magnetom[2] - MAGN_Z_OFFSET) * MAGN_Z_SCALE;
+  }
 
-    // Compensate gyroscope error
-    gyro[0] -= GYRO_AVERAGE_OFFSET_X;
-    gyro[1] -= GYRO_AVERAGE_OFFSET_Y;
-    gyro[2] -= GYRO_AVERAGE_OFFSET_Z;
+  // Compensate gyroscope error
+  gyro[0] -= GYRO_AVERAGE_OFFSET_X;
+  gyro[1] -= GYRO_AVERAGE_OFFSET_Y;
+  gyro[2] -= GYRO_AVERAGE_OFFSET_Z;
 }
 
 // Read every sensor and record a time stamp
@@ -565,11 +560,11 @@ void reset_sensor_fusion() {
   read_sensors();
   compensate_sensor_errors();
   timestamp = millis();
-  
+
   // GET PITCH
   // Using y-z-plane-component/x-component of gravity vector
   pitch = -atan2(accel[0], sqrt(accel[1] * accel[1] + accel[2] * accel[2]));
-	
+
   // GET ROLL
   // Compensate pitch of gravity vector 
   Vector_Cross_Product(temp1, accel, xAxis);
@@ -578,62 +573,57 @@ void reset_sensor_fusion() {
   // roll = atan2(temp2[1], sqrt(temp2[0] * temp2[0] + temp2[2] * temp2[2]));
   // Since we compensated for pitch, x-z-plane-component equals z-component:
   roll = atan2(temp2[1], temp2[2]);
-  
+
   // GET YAW
   Compass_Heading();
   yaw = MAG_Heading;
-  
+
   // Init rotation matrix
   init_rotation_matrix(DCM_Matrix, yaw, pitch, roll);
 }
 
 // Reset calibration session if reset_calibration_session_flag is set
-void check_reset_calibration_session()
-{
+void check_reset_calibration_session() {
   // Raw sensor values have to be read already, but no error compensation applied
 
   // Reset this calibration session?
   if (!reset_calibration_session_flag) return;
-  
+
   // Reset acc and mag calibration variables
   for (int i = 0; i < 3; i++) {
-    accel_min[i] = accel_max[i] = accel[i];
-    magnetom_min[i] = magnetom_max[i] = magnetom[i];
+	accel_min[i] = accel_max[i] = accel[i];
+	magnetom_min[i] = magnetom_max[i] = magnetom[i];
   }
 
   // Reset gyro calibration variables
   gyro_num_samples = 0;  // Reset gyro calibration averaging
   gyro_average[0] = gyro_average[1] = gyro_average[2] = 0.0f;
-  
+
   reset_calibration_session_flag = false;
 }
 
-void turn_output_stream_on()
-{
+void turn_output_stream_on() {
   output_stream_on = true;
   digitalWrite(STATUS_LED_PIN, HIGH);
 }
 
-void turn_output_stream_off()
-{
+void turn_output_stream_off() {
   output_stream_on = false;
   digitalWrite(STATUS_LED_PIN, LOW);
 }
 
 // Blocks until another byte is available on serial port
-char readChar()
-{
-  while (LOG_PORT.available() < 1) { } // Block
+char readChar() {
+  while (LOG_PORT.available() < 1) {} // Block
   return LOG_PORT.read();
 }
 
-void setup()
-{
+void setup() {
   // Init serial output
   LOG_PORT.begin(OUTPUT__BAUD_RATE);
-  
+
   // Init status LED
-  pinMode (STATUS_LED_PIN, OUTPUT);
+  pinMode(STATUS_LED_PIN, OUTPUT);
   digitalWrite(STATUS_LED_PIN, LOW);
 
   // Init sensors
@@ -650,7 +640,7 @@ void setup()
   Magn_Init();
   Gyro_Init();
 #endif // HW__VERSION_CODE
-  
+
   // Read sensors, init DCM algorithm
 #if HW__VERSION_CODE == 14001
   delay(400);  // Give sensors enough time to collect data
@@ -668,273 +658,269 @@ void setup()
 }
 
 // Main loop
-void loop()
-{
+void loop() {
   // Read incoming control messages
- #if HW__VERSION_CODE == 14001
+#if HW__VERSION_CODE == 14001
   // Compatibility fix : if bytes are sent 1 by 1 without being read, available() might never return more than 1...
   // Therefore, we need to read bytes 1 by 1 and the command byte needs to be a blocking read...
-  if (LOG_PORT.available() >= 1)
-  {
-    if (LOG_PORT.read() == '#') // Start of new control message
-    {
-      int command = readChar(); // Commands
+  if (LOG_PORT.available() >= 1) {
+	if (LOG_PORT.read() == '#') // Start of new control message
+	{
+	  int command = readChar(); // Commands
 #else
-  if (LOG_PORT.available() >= 2)
-  {
-    if (LOG_PORT.read() == '#') // Start of new control message
-    {
-      int command = LOG_PORT.read(); // Commands
+	  if (LOG_PORT.available() >= 2)
+	  {
+		if (LOG_PORT.read() == '#') // Start of new control message
+		{
+		  int command = LOG_PORT.read(); // Commands
 #endif // HW__VERSION_CODE
-      if (command == 'f') // request one output _f_rame
-        output_single_on = true;
-      else if (command == 's') // _s_ynch request
-      {
-        // Read ID
-        byte id[2];
-        id[0] = readChar();
-        id[1] = readChar();
-        
-        // Reply with synch message
-        LOG_PORT.print("#SYNCH");
-        LOG_PORT.write(id, 2);
-        LOG_PORT.println();
-      }
-      else if (command == 'o') // Set _o_utput mode
-      {
-        char output_param = readChar();
-        if (output_param == 'n')  // Calibrate _n_ext sensor
-        {
-          curr_calibration_sensor = (curr_calibration_sensor + 1) % 3;
-          reset_calibration_session_flag = true;
-        }
-        else if (output_param == 't') // Output angles as _t_ext
-        {
-          output_mode = OUTPUT__MODE_ANGLES;
-          output_format = OUTPUT__FORMAT_TEXT;
-        }
-        else if (output_param == 'b') // Output angles in _b_inary format
-        {
-          output_mode = OUTPUT__MODE_ANGLES;
-          output_format = OUTPUT__FORMAT_BINARY;
-        }
-        else if (output_param == 'c') // Go to _c_alibration mode
-        {
-          output_mode = OUTPUT__MODE_CALIBRATE_SENSORS;
-          reset_calibration_session_flag = true;
-        }
-        else if (output_param == 'x') // Output angles + accel + rot. vel as te_x_t
-        {
-          output_mode = OUTPUT__MODE_ANGLES_AG_SENSORS;
-          output_format = OUTPUT__FORMAT_TEXT;
-        }
-        else if (output_param == 's') // Output _s_ensor values
-        {
-          char values_param = readChar();
-          char format_param = readChar();
-          if (values_param == 'r')  // Output _r_aw sensor values
-            output_mode = OUTPUT__MODE_SENSORS_RAW;
-          else if (values_param == 'c')  // Output _c_alibrated sensor values
-            output_mode = OUTPUT__MODE_SENSORS_CALIB;
-          else if (values_param == 'b')  // Output _b_oth sensor values (raw and calibrated)
-            output_mode = OUTPUT__MODE_SENSORS_BOTH;
+	  if (command == 'f') // request one output _f_rame
+		output_single_on = true;
+	  else if (command == 's') // _s_ynch request
+	  {
+		// Read ID
+		byte id[2];
+		id[0] = readChar();
+		id[1] = readChar();
 
-          if (format_param == 't') // Output values as _t_text
-            output_format = OUTPUT__FORMAT_TEXT;
-          else if (format_param == 'b') // Output values in _b_inary format
-            output_format = OUTPUT__FORMAT_BINARY;
-        }
-        else if (output_param == '0') // Disable continuous streaming output
-        {
-          turn_output_stream_off();
-          reset_calibration_session_flag = true;
-        }
-        else if (output_param == '1') // Enable continuous streaming output
-        {
-          reset_calibration_session_flag = true;
-          turn_output_stream_on();
-        }
-        else if (output_param == 'e') // _e_rror output settings
-        {
-          char error_param = readChar();
-          if (error_param == '0') output_errors = false;
-          else if (error_param == '1') output_errors = true;
-          else if (error_param == 'c') // get error _c_ount
-          {
-            LOG_PORT.print("#AMG-ERR:");
-            LOG_PORT.print(num_accel_errors); LOG_PORT.print(",");
-            LOG_PORT.print(num_magn_errors); LOG_PORT.print(",");
-            LOG_PORT.println(num_gyro_errors);
-          }
-          else if (error_param == 'm') // get _m_ath error count
-          {
-            LOG_PORT.print("#MATH-ERR:");
-            LOG_PORT.println(num_math_errors);
-          }
-        }
-      }
-      else if (command == 'p') // Set _p_rint calibration values
-      {
-         LOG_PORT.print("ACCEL_X_MIN:");LOG_PORT.println(ACCEL_X_MIN);
-         LOG_PORT.print("ACCEL_X_MAX:");LOG_PORT.println(ACCEL_X_MAX);
-         LOG_PORT.print("ACCEL_Y_MIN:");LOG_PORT.println(ACCEL_Y_MIN);
-         LOG_PORT.print("ACCEL_Y_MAX:");LOG_PORT.println(ACCEL_Y_MAX);
-         LOG_PORT.print("ACCEL_Z_MIN:");LOG_PORT.println(ACCEL_Z_MIN);
-         LOG_PORT.print("ACCEL_Z_MAX:");LOG_PORT.println(ACCEL_Z_MAX);
-         LOG_PORT.println(""); 
-         LOG_PORT.print("MAGN_X_MIN:");LOG_PORT.println(MAGN_X_MIN);
-         LOG_PORT.print("MAGN_X_MAX:");LOG_PORT.println(MAGN_X_MAX);
-         LOG_PORT.print("MAGN_Y_MIN:");LOG_PORT.println(MAGN_Y_MIN);
-         LOG_PORT.print("MAGN_Y_MAX:");LOG_PORT.println(MAGN_Y_MAX);
-         LOG_PORT.print("MAGN_Z_MIN:");LOG_PORT.println(MAGN_Z_MIN);
-         LOG_PORT.print("MAGN_Z_MAX:");LOG_PORT.println(MAGN_Z_MAX);
-         LOG_PORT.println("");
-         LOG_PORT.print("MAGN_USE_EXTENDED:");
-         if (CALIBRATION__MAGN_USE_EXTENDED) 
-           LOG_PORT.println("true");
-         else
-           LOG_PORT.println("false");
-         LOG_PORT.print("magn_ellipsoid_center:[");LOG_PORT.print(magn_ellipsoid_center[0],4);LOG_PORT.print(",");
-         LOG_PORT.print(magn_ellipsoid_center[1],4);LOG_PORT.print(",");
-         LOG_PORT.print(magn_ellipsoid_center[2],4);LOG_PORT.println("]");
-         LOG_PORT.print("magn_ellipsoid_transform:[");
-         for(int i = 0; i < 3; i++){
-           LOG_PORT.print("[");
-           for(int j = 0; j < 3; j++){
-             LOG_PORT.print(magn_ellipsoid_transform[i][j],7);
-             if (j < 2) LOG_PORT.print(",");
-           }
-           LOG_PORT.print("]");
-           if (i < 2) LOG_PORT.print(",");
-         }
-         LOG_PORT.println("]");
-         LOG_PORT.println(""); 
-         LOG_PORT.print("GYRO_AVERAGE_OFFSET_X:");LOG_PORT.println(GYRO_AVERAGE_OFFSET_X);
-         LOG_PORT.print("GYRO_AVERAGE_OFFSET_Y:");LOG_PORT.println(GYRO_AVERAGE_OFFSET_Y);
-         LOG_PORT.print("GYRO_AVERAGE_OFFSET_Z:");LOG_PORT.println(GYRO_AVERAGE_OFFSET_Z);
-      }
-	  else if (command == 'c') // Set _i_nput mode
-      {
-        char input_param = readChar();
-        if (input_param == 'a')  // Calibrate _a_ccelerometer
-        {
-          char axis_param = readChar();
-          char type_param = readChar();
-          float value_param = LOG_PORT.parseFloat();
-          if (axis_param == 'x')  // x value
-          {
-            if (type_param == 'm')
-              ACCEL_X_MIN = value_param;
-            else if (type_param == 'M')
-              ACCEL_X_MAX = value_param;
-          }
-          else if (axis_param == 'y')  // y value
-          {
-            if (type_param == 'm')
-              ACCEL_Y_MIN = value_param;
-            else if (type_param == 'M')
-              ACCEL_Y_MAX = value_param;
-          }
-          else if (axis_param == 'z')  // z value
-          {
-            if (type_param == 'm')
-              ACCEL_Z_MIN = value_param;
-            else if (type_param == 'M')
-              ACCEL_Z_MAX = value_param;
-          }
-          recalculateAccelCalibration();
-        }
-        else if (input_param == 'm')  // Calibrate _m_agnetometer (basic)
-        {
-          //disable extended magnetometer calibration
-          CALIBRATION__MAGN_USE_EXTENDED = false;
-          char axis_param = readChar();
-          char type_param = readChar();
-          float value_param = LOG_PORT.parseFloat();
-          if (axis_param == 'x')  // x value
-          {
-            if (type_param == 'm')
-              MAGN_X_MIN = value_param;
-            else if (type_param == 'M')
-              MAGN_X_MAX = value_param;
-          }
-          else if (axis_param == 'y')  // y value
-          {
-            if (type_param == 'm')
-              MAGN_Y_MIN = value_param;
-            else if (type_param == 'M')
-              MAGN_Y_MAX = value_param;
-          }
-          else if (axis_param == 'z')  // z value
-          {
-            if (type_param == 'm')
-              MAGN_Z_MIN = value_param;
-            else if (type_param == 'M')
-              MAGN_Z_MAX = value_param;
-          }
-          recalculateMagnCalibration();
-        }
-        else if (input_param == 'c')  // Calibrate magnetometerellipsoid_c_enter (extended)
-        {
-          //enable extended magnetometer calibration
-          CALIBRATION__MAGN_USE_EXTENDED = true;
-          char axis_param = readChar();
-          float value_param = LOG_PORT.parseFloat();
-          if (axis_param == 'x')  // x value
-              magn_ellipsoid_center[0] = value_param;
-          else if (axis_param == 'y')  // y value
-              magn_ellipsoid_center[1] = value_param;
-          else if (axis_param == 'z')  // z value
-              magn_ellipsoid_center[2] = value_param;
-        }
-        else if (input_param == 't')  // Calibrate magnetometerellipsoid_t_ransform (extended)
-        {
-          //enable extended magnetometer calibration
-          CALIBRATION__MAGN_USE_EXTENDED = true;
-          char axis_param = readChar();
-          char type_param = readChar();
-          float value_param = LOG_PORT.parseFloat();
-          if (axis_param == 'x')  // x value
-          {
-            if (type_param == 'X')
-              magn_ellipsoid_transform[0][0] = value_param;
-            else if (type_param == 'Y')
-              magn_ellipsoid_transform[0][1] = value_param;
-            else if (type_param == 'Z')
-              magn_ellipsoid_transform[0][2] = value_param;
-          }
-          else if (axis_param == 'y')  // y value
-          {
-            if (type_param == 'X')
-              magn_ellipsoid_transform[1][0] = value_param;
-            else if (type_param == 'Y')
-              magn_ellipsoid_transform[1][1] = value_param;
-            else if (type_param == 'Z')
-              magn_ellipsoid_transform[1][2] = value_param;
-          }
-          else if (axis_param == 'z')  // z value
-          {
-            if (type_param == 'X')
-              magn_ellipsoid_transform[2][0] = value_param;
-            else if (type_param == 'Y')
-              magn_ellipsoid_transform[2][1] = value_param;
-            else if (type_param == 'Z')
-              magn_ellipsoid_transform[2][2] = value_param;
-          }
-        }
-        else if (input_param == 'g')  // Calibrate _g_yro 
-        {
-          char axis_param = readChar();
-          float value_param = LOG_PORT.parseFloat();
-          if (axis_param == 'x')  // x value
-              GYRO_AVERAGE_OFFSET_X = value_param;
-          else if (axis_param == 'y')  // y value
-              GYRO_AVERAGE_OFFSET_Y = value_param;
-          else if (axis_param == 'z')  // z value
-              GYRO_AVERAGE_OFFSET_Z = value_param;
-        }
-      }
-	  else if (command == 'I') // Toggle _i_nertial-only mode for yaw computation
+		// Reply with synch message
+		LOG_PORT.print("#SYNCH");
+		LOG_PORT.write(id, 2);
+		LOG_PORT.println();
+	  } else if (command == 'o') // Set _o_utput mode
+	  {
+		char output_param = readChar();
+		if (output_param == 'n')  // Calibrate _n_ext sensor
+		{
+		  curr_calibration_sensor = (curr_calibration_sensor + 1) % 3;
+		  reset_calibration_session_flag = true;
+		} else if (output_param == 't') // Output angles as _t_ext
+		{
+		  output_mode = OUTPUT__MODE_ANGLES;
+		  output_format = OUTPUT__FORMAT_TEXT;
+		} else if (output_param == 'b') // Output angles in _b_inary format
+		{
+		  output_mode = OUTPUT__MODE_ANGLES;
+		  output_format = OUTPUT__FORMAT_BINARY;
+		} else if (output_param == 'c') // Go to _c_alibration mode
+		{
+		  output_mode = OUTPUT__MODE_CALIBRATE_SENSORS;
+		  reset_calibration_session_flag = true;
+		} else if (output_param == 'x') // Output angles + accel + rot. vel as te_x_t
+		{
+		  output_mode = OUTPUT__MODE_ANGLES_AG_SENSORS;
+		  output_format = OUTPUT__FORMAT_TEXT;
+		} else if (output_param == 's') // Output _s_ensor values
+		{
+		  char values_param = readChar();
+		  char format_param = readChar();
+		  if (values_param == 'r')  // Output _r_aw sensor values
+			output_mode = OUTPUT__MODE_SENSORS_RAW;
+		  else if (values_param == 'c')  // Output _c_alibrated sensor values
+			output_mode = OUTPUT__MODE_SENSORS_CALIB;
+		  else if (values_param == 'b')  // Output _b_oth sensor values (raw and calibrated)
+			output_mode = OUTPUT__MODE_SENSORS_BOTH;
+
+		  if (format_param == 't') // Output values as _t_text
+			output_format = OUTPUT__FORMAT_TEXT;
+		  else if (format_param == 'b') // Output values in _b_inary format
+			output_format = OUTPUT__FORMAT_BINARY;
+		} else if (output_param == '0') // Disable continuous streaming output
+		{
+		  turn_output_stream_off();
+		  reset_calibration_session_flag = true;
+		} else if (output_param == '1') // Enable continuous streaming output
+		{
+		  reset_calibration_session_flag = true;
+		  turn_output_stream_on();
+		} else if (output_param == 'e') // _e_rror output settings
+		{
+		  char error_param = readChar();
+		  if (error_param == '0') output_errors = false;
+		  else if (error_param == '1') output_errors = true;
+		  else if (error_param == 'c') // get error _c_ount
+		  {
+			LOG_PORT.print("#AMG-ERR:");
+			LOG_PORT.print(num_accel_errors);
+			LOG_PORT.print(",");
+			LOG_PORT.print(num_magn_errors);
+			LOG_PORT.print(",");
+			LOG_PORT.println(num_gyro_errors);
+		  } else if (error_param == 'm') // get _m_ath error count
+		  {
+			LOG_PORT.print("#MATH-ERR:");
+			LOG_PORT.println(num_math_errors);
+		  }
+		}
+	  } else if (command == 'p') // Set _p_rint calibration values
+	  {
+		LOG_PORT.print("ACCEL_X_MIN:");
+		LOG_PORT.println(ACCEL_X_MIN);
+		LOG_PORT.print("ACCEL_X_MAX:");
+		LOG_PORT.println(ACCEL_X_MAX);
+		LOG_PORT.print("ACCEL_Y_MIN:");
+		LOG_PORT.println(ACCEL_Y_MIN);
+		LOG_PORT.print("ACCEL_Y_MAX:");
+		LOG_PORT.println(ACCEL_Y_MAX);
+		LOG_PORT.print("ACCEL_Z_MIN:");
+		LOG_PORT.println(ACCEL_Z_MIN);
+		LOG_PORT.print("ACCEL_Z_MAX:");
+		LOG_PORT.println(ACCEL_Z_MAX);
+		LOG_PORT.println("");
+		LOG_PORT.print("MAGN_X_MIN:");
+		LOG_PORT.println(MAGN_X_MIN);
+		LOG_PORT.print("MAGN_X_MAX:");
+		LOG_PORT.println(MAGN_X_MAX);
+		LOG_PORT.print("MAGN_Y_MIN:");
+		LOG_PORT.println(MAGN_Y_MIN);
+		LOG_PORT.print("MAGN_Y_MAX:");
+		LOG_PORT.println(MAGN_Y_MAX);
+		LOG_PORT.print("MAGN_Z_MIN:");
+		LOG_PORT.println(MAGN_Z_MIN);
+		LOG_PORT.print("MAGN_Z_MAX:");
+		LOG_PORT.println(MAGN_Z_MAX);
+		LOG_PORT.println("");
+		LOG_PORT.print("MAGN_USE_EXTENDED:");
+		if (CALIBRATION__MAGN_USE_EXTENDED)
+		  LOG_PORT.println("true");
+		else
+		  LOG_PORT.println("false");
+		LOG_PORT.print("magn_ellipsoid_center:[");
+		LOG_PORT.print(magn_ellipsoid_center[0], 4);
+		LOG_PORT.print(",");
+		LOG_PORT.print(magn_ellipsoid_center[1], 4);
+		LOG_PORT.print(",");
+		LOG_PORT.print(magn_ellipsoid_center[2], 4);
+		LOG_PORT.println("]");
+		LOG_PORT.print("magn_ellipsoid_transform:[");
+		for (int i = 0; i < 3; i++) {
+		  LOG_PORT.print("[");
+		  for (int j = 0; j < 3; j++) {
+			LOG_PORT.print(magn_ellipsoid_transform[i][j], 7);
+			if (j < 2) LOG_PORT.print(",");
+		  }
+		  LOG_PORT.print("]");
+		  if (i < 2) LOG_PORT.print(",");
+		}
+		LOG_PORT.println("]");
+		LOG_PORT.println("");
+		LOG_PORT.print("GYRO_AVERAGE_OFFSET_X:");
+		LOG_PORT.println(GYRO_AVERAGE_OFFSET_X);
+		LOG_PORT.print("GYRO_AVERAGE_OFFSET_Y:");
+		LOG_PORT.println(GYRO_AVERAGE_OFFSET_Y);
+		LOG_PORT.print("GYRO_AVERAGE_OFFSET_Z:");
+		LOG_PORT.println(GYRO_AVERAGE_OFFSET_Z);
+	  } else if (command == 'c') // Set _i_nput mode
+	  {
+		char input_param = readChar();
+		if (input_param == 'a')  // Calibrate _a_ccelerometer
+		{
+		  char axis_param = readChar();
+		  char type_param = readChar();
+		  float value_param = LOG_PORT.parseFloat();
+		  if (axis_param == 'x')  // x value
+		  {
+			if (type_param == 'm')
+			  ACCEL_X_MIN = value_param;
+			else if (type_param == 'M')
+			  ACCEL_X_MAX = value_param;
+		  } else if (axis_param == 'y')  // y value
+		  {
+			if (type_param == 'm')
+			  ACCEL_Y_MIN = value_param;
+			else if (type_param == 'M')
+			  ACCEL_Y_MAX = value_param;
+		  } else if (axis_param == 'z')  // z value
+		  {
+			if (type_param == 'm')
+			  ACCEL_Z_MIN = value_param;
+			else if (type_param == 'M')
+			  ACCEL_Z_MAX = value_param;
+		  }
+		  recalculateAccelCalibration();
+		} else if (input_param == 'm')  // Calibrate _m_agnetometer (basic)
+		{
+		  //disable extended magnetometer calibration
+		  CALIBRATION__MAGN_USE_EXTENDED = false;
+		  char axis_param = readChar();
+		  char type_param = readChar();
+		  float value_param = LOG_PORT.parseFloat();
+		  if (axis_param == 'x')  // x value
+		  {
+			if (type_param == 'm')
+			  MAGN_X_MIN = value_param;
+			else if (type_param == 'M')
+			  MAGN_X_MAX = value_param;
+		  } else if (axis_param == 'y')  // y value
+		  {
+			if (type_param == 'm')
+			  MAGN_Y_MIN = value_param;
+			else if (type_param == 'M')
+			  MAGN_Y_MAX = value_param;
+		  } else if (axis_param == 'z')  // z value
+		  {
+			if (type_param == 'm')
+			  MAGN_Z_MIN = value_param;
+			else if (type_param == 'M')
+			  MAGN_Z_MAX = value_param;
+		  }
+		  recalculateMagnCalibration();
+		} else if (input_param == 'c')  // Calibrate magnetometerellipsoid_c_enter (extended)
+		{
+		  //enable extended magnetometer calibration
+		  CALIBRATION__MAGN_USE_EXTENDED = true;
+		  char axis_param = readChar();
+		  float value_param = LOG_PORT.parseFloat();
+		  if (axis_param == 'x')  // x value
+			magn_ellipsoid_center[0] = value_param;
+		  else if (axis_param == 'y')  // y value
+			magn_ellipsoid_center[1] = value_param;
+		  else if (axis_param == 'z')  // z value
+			magn_ellipsoid_center[2] = value_param;
+		} else if (input_param == 't')  // Calibrate magnetometerellipsoid_t_ransform (extended)
+		{
+		  //enable extended magnetometer calibration
+		  CALIBRATION__MAGN_USE_EXTENDED = true;
+		  char axis_param = readChar();
+		  char type_param = readChar();
+		  float value_param = LOG_PORT.parseFloat();
+		  if (axis_param == 'x')  // x value
+		  {
+			if (type_param == 'X')
+			  magn_ellipsoid_transform[0][0] = value_param;
+			else if (type_param == 'Y')
+			  magn_ellipsoid_transform[0][1] = value_param;
+			else if (type_param == 'Z')
+			  magn_ellipsoid_transform[0][2] = value_param;
+		  } else if (axis_param == 'y')  // y value
+		  {
+			if (type_param == 'X')
+			  magn_ellipsoid_transform[1][0] = value_param;
+			else if (type_param == 'Y')
+			  magn_ellipsoid_transform[1][1] = value_param;
+			else if (type_param == 'Z')
+			  magn_ellipsoid_transform[1][2] = value_param;
+		  } else if (axis_param == 'z')  // z value
+		  {
+			if (type_param == 'X')
+			  magn_ellipsoid_transform[2][0] = value_param;
+			else if (type_param == 'Y')
+			  magn_ellipsoid_transform[2][1] = value_param;
+			else if (type_param == 'Z')
+			  magn_ellipsoid_transform[2][2] = value_param;
+		  }
+		} else if (input_param == 'g')  // Calibrate _g_yro
+		{
+		  char axis_param = readChar();
+		  float value_param = LOG_PORT.parseFloat();
+		  if (axis_param == 'x')  // x value
+			GYRO_AVERAGE_OFFSET_X = value_param;
+		  else if (axis_param == 'y')  // y value
+			GYRO_AVERAGE_OFFSET_Y = value_param;
+		  else if (axis_param == 'z')  // z value
+			GYRO_AVERAGE_OFFSET_Z = value_param;
+		}
+	  } else if (command == 'I') // Toggle _i_nertial-only mode for yaw computation
 	  {
 		DEBUG__NO_DRIFT_CORRECTION = !DEBUG__NO_DRIFT_CORRECTION;
 #if DEBUG__USE_ONLY_DMP_M0 == true
@@ -944,91 +930,86 @@ void loop()
 #endif // DEBUG__USE_ONLY_DMP_M0
 	  }
 #if OUTPUT__HAS_RN_BLUETOOTH == true
-      // Read messages from bluetooth module
-      // For this to work, the connect/disconnect message prefix of the module has to be set to "#".
-      else if (command == 'C') // Bluetooth "#CONNECT" message (does the same as "#o1")
-        turn_output_stream_on();
-      else if (command == 'D') // Bluetooth "#DISCONNECT" message (does the same as "#o0")
-        turn_output_stream_off();
+	  // Read messages from bluetooth module
+	  // For this to work, the connect/disconnect message prefix of the module has to be set to "#".
+	  else if (command == 'C') // Bluetooth "#CONNECT" message (does the same as "#o1")
+		turn_output_stream_on();
+	  else if (command == 'D') // Bluetooth "#DISCONNECT" message (does the same as "#o0")
+		turn_output_stream_off();
 #endif // OUTPUT__HAS_RN_BLUETOOTH == true
-    }
-    else
-    { } // Skip character
+	} else {} // Skip character
   }
 
   // Time to read the sensors again?
-  if((millis() - timestamp) >= OUTPUT__DATA_INTERVAL)
-  {
+  if ((millis() - timestamp) >= OUTPUT__DATA_INTERVAL) {
 #if DEBUG__PRINT_LOOP_TIME_2 == true
-    LOG_PORT.print("loop time (ms) = ");
-    LOG_PORT.println(millis() - timestamp);
+	LOG_PORT.print("loop time (ms) = ");
+	LOG_PORT.println(millis() - timestamp);
 #endif // DEBUG__PRINT_LOOP_TIME_2
-    timestamp_old = timestamp;
-    timestamp = millis();
-    if (timestamp > timestamp_old)
-      G_Dt = (float) (timestamp - timestamp_old) / 1000.0f; // Real time of loop run. We use this on the DCM algorithm (gyro integration time)
-    else G_Dt = 0;
+	timestamp_old = timestamp;
+	timestamp = millis();
+	if (timestamp > timestamp_old)
+	  G_Dt =
+		  (float) (timestamp - timestamp_old) / 1000.0f; // Real time of loop run. We use this on the DCM algorithm (gyro integration time)
+	else G_Dt = 0;
 
-    // Update sensor readings
-    read_sensors();
+	// Update sensor readings
+	read_sensors();
 
-    if (output_mode == OUTPUT__MODE_CALIBRATE_SENSORS)  // We're in calibration mode
-    {
-      check_reset_calibration_session();  // Check if this session needs a reset
-      if (output_stream_on || output_single_on) output_calibration(curr_calibration_sensor);
-    }
-    else if (output_mode == OUTPUT__MODE_ANGLES)  // Output angles
-    {
-      // Apply sensor calibration
-      compensate_sensor_errors();
+	if (output_mode == OUTPUT__MODE_CALIBRATE_SENSORS)  // We're in calibration mode
+	{
+	  check_reset_calibration_session();  // Check if this session needs a reset
+	  if (output_stream_on || output_single_on) output_calibration(curr_calibration_sensor);
+	} else if (output_mode == OUTPUT__MODE_ANGLES)  // Output angles
+	{
+	  // Apply sensor calibration
+	  compensate_sensor_errors();
 
 #if DEBUG__USE_ONLY_DMP_M0 == true
 	  Euler_angles_only_DMP_M0();
 #else
-      // Run DCM algorithm
-      Compass_Heading(); // Calculate magnetic heading
-      Matrix_update();
-      Normalize();
-      Drift_correction();
-      Euler_angles();
+	  // Run DCM algorithm
+	  Compass_Heading(); // Calculate magnetic heading
+	  Matrix_update();
+	  Normalize();
+	  Drift_correction();
+	  Euler_angles();
 #endif // DEBUG__USE_ONLY_DMP_M0
-      
-      if (output_stream_on || output_single_on) output_angles();
-    }
-    else if (output_mode == OUTPUT__MODE_ANGLES_AG_SENSORS)  // Output angles + accel + rot. vel
-    {
-      // Apply sensor calibration
-      compensate_sensor_errors();
-    
+
+	  if (output_stream_on || output_single_on) output_angles();
+	} else if (output_mode == OUTPUT__MODE_ANGLES_AG_SENSORS)  // Output angles + accel + rot. vel
+	{
+	  // Apply sensor calibration
+	  compensate_sensor_errors();
+
 #if DEBUG__USE_ONLY_DMP_M0 == true
 	  Euler_angles_only_DMP_M0();
 #else
-      // Run DCM algorithm
-      Compass_Heading(); // Calculate magnetic heading
-      Matrix_update();
-      Normalize();
-      Drift_correction();
-      Euler_angles();
+	  // Run DCM algorithm
+	  Compass_Heading(); // Calculate magnetic heading
+	  Matrix_update();
+	  Normalize();
+	  Drift_correction();
+	  Euler_angles();
 #endif // DEBUG__USE_ONLY_DMP_M0
-      
-      if (output_stream_on || output_single_on) output_both_angles_and_sensors_text();
-    }
-    else  // Output sensor values
-    {      
-      if (output_stream_on || output_single_on) output_sensors();
-    }
-    
-    output_single_on = false;
-    
+
+	  if (output_stream_on || output_single_on) output_both_angles_and_sensors_text();
+	} else  // Output sensor values
+	{
+	  if (output_stream_on || output_single_on) output_sensors();
+	}
+
+	output_single_on = false;
+
 #if DEBUG__PRINT_LOOP_TIME == true
-    LOG_PORT.print("loop time (ms) = ");
-    LOG_PORT.println(millis() - timestamp);
+	LOG_PORT.print("loop time (ms) = ");
+	LOG_PORT.println(millis() - timestamp);
 #endif
   }
 #if DEBUG__PRINT_LOOP_TIME == true
   else
   {
-    LOG_PORT.println("waiting...");
+	LOG_PORT.println("waiting...");
   }
 #else
 #if DEBUG__ADD_LOOP_DELAY == true

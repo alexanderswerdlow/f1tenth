@@ -25,289 +25,289 @@ import six
 
 
 class Vector(object):
-  """
-  A three-dimensional vector.
-  """
-
-  __slots__ = ('x', 'y', 'z')
-
-  def __init__(self, x, y, z):
-    super(Vector, self).__init__()
-    self.x = float(x)
-    self.y = float(y)
-    self.z = float(z)
-
-  def __mul__(self, rhs):
     """
-    Multiplies the vector with *rhs* which can be either a scalar
-    to retrieve a new Vector or another vector to compute the dot
-    product.
+    A three-dimensional vector.
     """
 
-    if isinstance(rhs, (six.integer_types, float)):
-      return Vector(self.x * rhs, self.y * rhs, self.z * rhs)
-    else:
-      return self.dot(rhs)
+    __slots__ = ('x', 'y', 'z')
 
-  def __add__(self, rhs):
-    """
-    Adds *self* to *rhs* and returns a new vector.
-    """
+    def __init__(self, x, y, z):
+        super(Vector, self).__init__()
+        self.x = float(x)
+        self.y = float(y)
+        self.z = float(z)
 
-    if isinstance(rhs, (six.integer_types, float)):
-      return Vector(self.x + rhs, self.y + rhs, self.z + rhs)
-    else:
-      return Vector(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
+    def __mul__(self, rhs):
+        """
+        Multiplies the vector with *rhs* which can be either a scalar
+        to retrieve a new Vector or another vector to compute the dot
+        product.
+        """
 
-  def __sub__(self, rhs):
-    """
-    Substracts *self* from *rhs* and returns a new vector.
-    """
+        if isinstance(rhs, (six.integer_types, float)):
+            return Vector(self.x * rhs, self.y * rhs, self.z * rhs)
+        else:
+            return self.dot(rhs)
 
-    if isinstance(rhs, (six.integer_types, float)):
-      return Vector(self.x - rhs, self.y - rhs, self.z - rhs)
-    else:
-      return Vector(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
+    def __add__(self, rhs):
+        """
+        Adds *self* to *rhs* and returns a new vector.
+        """
 
-  def __iter__(self):
-    return iter((self.x, self.y, self.z))
+        if isinstance(rhs, (six.integer_types, float)):
+            return Vector(self.x + rhs, self.y + rhs, self.z + rhs)
+        else:
+            return Vector(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
 
-  def __repr__(self):
-    return 'Vector({0}, {1}, {2})'.format(self.x, self.y, self.z)
+    def __sub__(self, rhs):
+        """
+        Substracts *self* from *rhs* and returns a new vector.
+        """
 
-  def __invert__(self):
-    """
-    Returns the inversion of the vector.
-    """
+        if isinstance(rhs, (six.integer_types, float)):
+            return Vector(self.x - rhs, self.y - rhs, self.z - rhs)
+        else:
+            return Vector(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
 
-    return Vector(-self.x, -self.y, -self.z)
+    def __iter__(self):
+        return iter((self.x, self.y, self.z))
 
-  def __getitem__(self, index):
-    return (self.x, self.y, self.z)[index]
+    def __repr__(self):
+        return 'Vector({0}, {1}, {2})'.format(self.x, self.y, self.z)
 
-  def copy(self):
-    """
-    Returns a shallow copy of the vector.
-    """
+    def __invert__(self):
+        """
+        Returns the inversion of the vector.
+        """
 
-    return Vector(self.x, self.y, self.z)
+        return Vector(-self.x, -self.y, -self.z)
 
-  def magnitude(self):
-    """
-    Return the magnitude of this vector.
-    """
+    def __getitem__(self, index):
+        return (self.x, self.y, self.z)[index]
 
-    return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2)
+    def copy(self):
+        """
+        Returns a shallow copy of the vector.
+        """
 
-  def normalized(self):
-    """
-    Returns a normalized copy of this vector.
-    """
+        return Vector(self.x, self.y, self.z)
 
-    norm = self.magnitude()
-    return Vector(self.x / norm, self.y / norm, self.z / norm)
+    def magnitude(self):
+        """
+        Return the magnitude of this vector.
+        """
 
-  def dot(self, rhs):
-    """
-    Return the dot product of this vector and *rhs*.
-    """
+        return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2)
 
-    return self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
+    def normalized(self):
+        """
+        Returns a normalized copy of this vector.
+        """
 
-  def cross(self, rhs):
-    """
-    Return the cross product of this vector and *rhs*.
-    """
+        norm = self.magnitude()
+        return Vector(self.x / norm, self.y / norm, self.z / norm)
 
-    return Vector(
-      self.y * rhs.z - self.z * rhs.y,
-      self.z * rhs.x - self.x * rhs.z,
-      self.x * rhs.y - self.y * rhs.x)
+    def dot(self, rhs):
+        """
+        Return the dot product of this vector and *rhs*.
+        """
 
-  def angle_to(self, rhs):
-    """
-    Return the angle between this vector and *rhs* in radians.
-    """
+        return self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
 
-    return math.acos(self.dot(rhs) / (self.magnitude() * rhs.magnitude()))
+    def cross(self, rhs):
+        """
+        Return the cross product of this vector and *rhs*.
+        """
 
-  __abs__ = magnitude
+        return Vector(
+            self.y * rhs.z - self.z * rhs.y,
+            self.z * rhs.x - self.x * rhs.z,
+            self.x * rhs.y - self.y * rhs.x)
+
+    def angle_to(self, rhs):
+        """
+        Return the angle between this vector and *rhs* in radians.
+        """
+
+        return math.acos(self.dot(rhs) / (self.magnitude() * rhs.magnitude()))
+
+    __abs__ = magnitude
 
 
 class Quaternion(object):
-  """
-  This class represents a quaternion which can be used to represent
-  gimbal-lock free rotations.
-
-  This implementation can work with any vector type that has members
-  x, y and z and it has a constructor that accepts values for these
-  members in order. This is convenient when combining the Myo SDK
-  with other 3D APIs that provide a vector class.
-  """
-
-  __slots__ = ('x', 'y', 'z', 'w')
-
-  def __init__(self, x, y, z, w):
-    super(Quaternion, self).__init__()
-    self.x = float(x)
-    self.y = float(y)
-    self.z = float(z)
-    self.w = float(w)
-
-  def __mul__(self, rhs):
     """
-    Multiplies *self* with the #Quaternion *rhs* and returns a new #Quaternion.
+    This class represents a quaternion which can be used to represent
+    gimbal-lock free rotations.
+
+    This implementation can work with any vector type that has members
+    x, y and z and it has a constructor that accepts values for these
+    members in order. This is convenient when combining the Myo SDK
+    with other 3D APIs that provide a vector class.
     """
 
-    if not isinstance(rhs, Quaternion):
-      raise TypeError('can only multiply with Quaternion')
-    return Quaternion(
-      self.w * rhs.x + self.x * rhs.w + self.y * rhs.z - self.z * rhs.y,
-      self.w * rhs.y - self.x * rhs.z + self.y * rhs.w + self.z * rhs.x,
-      self.w * rhs.z + self.x * rhs.y - self.y * rhs.x + self.z * rhs.w,
-      self.w * rhs.w - self.x * rhs.x - self.y * rhs.y - self.z * rhs.z)
+    __slots__ = ('x', 'y', 'z', 'w')
 
-  def __iter__(self):
-    return iter((self.x, self.y, self.z, self.w))
+    def __init__(self, x, y, z, w):
+        super(Quaternion, self).__init__()
+        self.x = float(x)
+        self.y = float(y)
+        self.z = float(z)
+        self.w = float(w)
 
-  def __repr__(self):
-    return 'Quaternion({0}, {1}, {2}, {3})'.format(
-      self.x, self.y, self.z, self.w)
+    def __mul__(self, rhs):
+        """
+        Multiplies *self* with the #Quaternion *rhs* and returns a new #Quaternion.
+        """
 
-  def __invert__(self):
-    """
-    Returns this Quaternion's conjugate.
-    """
+        if not isinstance(rhs, Quaternion):
+            raise TypeError('can only multiply with Quaternion')
+        return Quaternion(
+            self.w * rhs.x + self.x * rhs.w + self.y * rhs.z - self.z * rhs.y,
+            self.w * rhs.y - self.x * rhs.z + self.y * rhs.w + self.z * rhs.x,
+            self.w * rhs.z + self.x * rhs.y - self.y * rhs.x + self.z * rhs.w,
+            self.w * rhs.w - self.x * rhs.x - self.y * rhs.y - self.z * rhs.z)
 
-    return Quaternion(-self.x, -self.y, -self.z, self.w)
+    def __iter__(self):
+        return iter((self.x, self.y, self.z, self.w))
 
-  def __getitem__(self, index):
-    return (self.x, self.y, self.z, self.w)[index]
+    def __repr__(self):
+        return 'Quaternion({0}, {1}, {2}, {3})'.format(
+            self.x, self.y, self.z, self.w)
 
-  def copy(self):
-    """
-    Returns a shallow copy of the quaternion.
-    """
+    def __invert__(self):
+        """
+        Returns this Quaternion's conjugate.
+        """
 
-    return Quaternion(self.x, self.y, self.z, self.w)
+        return Quaternion(-self.x, -self.y, -self.z, self.w)
 
-  def magnitude(self):
-    """
-    Returns the magnitude of the quaternion.
-    """
+    def __getitem__(self, index):
+        return (self.x, self.y, self.z, self.w)[index]
 
-    return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2)
+    def copy(self):
+        """
+        Returns a shallow copy of the quaternion.
+        """
 
-  def normalized(self):
-    """
-    Returns the unit quaternion corresponding to the same rotation
-    as this one.
-    """
+        return Quaternion(self.x, self.y, self.z, self.w)
 
-    magnitude = self.magnitude()
-    return Quaternion(
-      self.x / magnitude, self.y / magnitude,
-      self.z / magnitude, self.w / magnitude)
+    def magnitude(self):
+        """
+        Returns the magnitude of the quaternion.
+        """
 
-  conjugate = __invert__
+        return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2)
 
-  def from_axis_angle(self, axis, angle):
-    """
-    Returns a #Quaternion that represents the right-handed
-    rotation of *angle* radians about the givne *axis*.
+    def normalized(self):
+        """
+        Returns the unit quaternion corresponding to the same rotation
+        as this one.
+        """
 
-    :param axis: The unit vector representing the axis of rotation.
-    :param angle: The angle of rotation, in radians.
-    """
+        magnitude = self.magnitude()
+        return Quaternion(
+            self.x / magnitude, self.y / magnitude,
+            self.z / magnitude, self.w / magnitude)
 
-    sincomp = math.sin(angle / 2.0)
-    return Quaternion(
-      axis.x * sincomp, axis.y * sincomp,
-      axis.z * sincomp, math.cos(angle / 2.0))
+    conjugate = __invert__
 
-  def rotate(self, vec):
-    """
-    Returns *vec* rotated by this #Quaternion.
+    def from_axis_angle(self, axis, angle):
+        """
+        Returns a #Quaternion that represents the right-handed
+        rotation of *angle* radians about the givne *axis*.
 
-    :param vec: A vector object.
-    :return: object of type of *vec*
-    """
+        :param axis: The unit vector representing the axis of rotation.
+        :param angle: The angle of rotation, in radians.
+        """
 
-    qvec = self * Quaternion(vec.x, vec.y, vec.z, 0) * ~self
-    return type(vec)(qvec.x, qvec.y, qvec.z)
+        sincomp = math.sin(angle / 2.0)
+        return Quaternion(
+            axis.x * sincomp, axis.y * sincomp,
+            axis.z * sincomp, math.cos(angle / 2.0))
 
-  # Reference:
-  # http://answers.unity3d.com/questions/416169/finding-pitchrollyaw-from-quaternions.html
+    def rotate(self, vec):
+        """
+        Returns *vec* rotated by this #Quaternion.
 
-  @property
-  def roll(self):
-    """ Calculates the Roll of the Quaternion. """
+        :param vec: A vector object.
+        :return: object of type of *vec*
+        """
 
-    x, y, z, w = self.x, self.y, self.z, self.w
-    return math.atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z)
+        qvec = self * Quaternion(vec.x, vec.y, vec.z, 0) * ~self
+        return type(vec)(qvec.x, qvec.y, qvec.z)
 
-  @property
-  def pitch(self):
-    """ Calculates the Pitch of the Quaternion. """
+    # Reference:
+    # http://answers.unity3d.com/questions/416169/finding-pitchrollyaw-from-quaternions.html
 
-    x, y, z, w = self.x, self.y, self.z, self.w
-    return math.atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z)
+    @property
+    def roll(self):
+        """ Calculates the Roll of the Quaternion. """
 
-  @property
-  def yaw(self):
-    """ Calculates the Yaw of the Quaternion. """
+        x, y, z, w = self.x, self.y, self.z, self.w
+        return math.atan2(2 * y * w - 2 * x * z, 1 - 2 * y * y - 2 * z * z)
 
-    x, y, z, w = self.x, self.y, self.z, self.w
-    return math.asin(2*x*y + 2*z*w)
+    @property
+    def pitch(self):
+        """ Calculates the Pitch of the Quaternion. """
 
-  @property
-  def rpy(self):
-    """ Calculates the Roll, Pitch and Yaw of the Quaternion. """
+        x, y, z, w = self.x, self.y, self.z, self.w
+        return math.atan2(2 * x * w - 2 * y * z, 1 - 2 * x * x - 2 * z * z)
 
-    x, y, z, w = self.x, self.y, self.z, self.w
-    roll = math.atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z)
-    pitch = math.atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z)
-    yaw = math.asin(2*x*y + 2*z*w)
-    return (roll, pitch, yaw)
+    @property
+    def yaw(self):
+        """ Calculates the Yaw of the Quaternion. """
 
-  @staticmethod
-  def identity():
-    """
-    Returns the identity #Quaternion.
-    """
+        x, y, z, w = self.x, self.y, self.z, self.w
+        return math.asin(2 * x * y + 2 * z * w)
 
-    return Quaternion(0, 0, 0, 1)
+    @property
+    def rpy(self):
+        """ Calculates the Roll, Pitch and Yaw of the Quaternion. """
 
-  @staticmethod
-  def rotation_of(source, dest):
-    """
-    Returns a #Quaternion that represents a rotation from vector
-    *source* to *dest*.
-    """
+        x, y, z, w = self.x, self.y, self.z, self.w
+        roll = math.atan2(2 * y * w - 2 * x * z, 1 - 2 * y * y - 2 * z * z)
+        pitch = math.atan2(2 * x * w - 2 * y * z, 1 - 2 * x * x - 2 * z * z)
+        yaw = math.asin(2 * x * y + 2 * z * w)
+        return (roll, pitch, yaw)
 
-    source = Vector(source.x, source.y, source.z)
-    dest = Vector(dest.x, dest.y, dest.z)
-    cross = source.cross(dest)
-    cos_theta = source.dot(dest)
+    @staticmethod
+    def identity():
+        """
+        Returns the identity #Quaternion.
+        """
 
-    # Return identity if the vectors are the same direction.
-    if cos_theta >= 1.0:
-      return Quaternion.identity()
+        return Quaternion(0, 0, 0, 1)
 
-    # Product of the square of the magnitudes.
-    k = math.sqrt(source.dot(source), dest.dot(dest))
+    @staticmethod
+    def rotation_of(source, dest):
+        """
+        Returns a #Quaternion that represents a rotation from vector
+        *source* to *dest*.
+        """
 
-    # Return identity in the degenerate case.
-    if k <= 0.0:
-      return Quaternion.identity()
+        source = Vector(source.x, source.y, source.z)
+        dest = Vector(dest.x, dest.y, dest.z)
+        cross = source.cross(dest)
+        cos_theta = source.dot(dest)
 
-    # Special handling for vectors facing opposite directions.
-    if cos_theta / k <= -1:
-      x_axis = Vector(1, 0, 0)
-      y_axis = Vector(0, 1, 1)
-      if abs(source.dot(x_ais)) < 1.0:
-        cross = source.cross(x_axis)
-      else:
-        cross = source.cross(y_axis)
+        # Return identity if the vectors are the same direction.
+        if cos_theta >= 1.0:
+            return Quaternion.identity()
 
-    return Quaternion(cross.x, cross.y, cross.z, k + cos_theta)
+        # Product of the square of the magnitudes.
+        k = math.sqrt(source.dot(source), dest.dot(dest))
+
+        # Return identity in the degenerate case.
+        if k <= 0.0:
+            return Quaternion.identity()
+
+        # Special handling for vectors facing opposite directions.
+        if cos_theta / k <= -1:
+            x_axis = Vector(1, 0, 0)
+            y_axis = Vector(0, 1, 1)
+            if abs(source.dot(x_ais)) < 1.0:
+                cross = source.cross(x_axis)
+            else:
+                cross = source.cross(y_axis)
+
+        return Quaternion(cross.x, cross.y, cross.z, k + cos_theta)

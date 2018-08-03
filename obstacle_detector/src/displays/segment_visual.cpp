@@ -35,10 +35,9 @@
 
 #include "obstacle_detector/displays/segment_visual.h"
 
-namespace obstacles_display
-{
+namespace obstacles_display {
 
-SegmentVisual::SegmentVisual(Ogre::SceneManager* scene_manager, Ogre::SceneNode* parent_node) {
+SegmentVisual::SegmentVisual(Ogre::SceneManager *scene_manager, Ogre::SceneNode *parent_node) {
   scene_manager_ = scene_manager;
   frame_node_ = parent_node->createChildSceneNode();
 
@@ -49,18 +48,18 @@ SegmentVisual::~SegmentVisual() {
   scene_manager_->destroySceneNode(frame_node_);
 }
 
-void SegmentVisual::setData(const obstacle_detector::SegmentObstacle& segment) {
+void SegmentVisual::setData(const obstacle_detector::SegmentObstacle &segment) {
   Ogre::Vector3 p1(segment.first_point.x, segment.first_point.y, 0.0);
   Ogre::Vector3 p2(segment.last_point.x, segment.last_point.y, 0.0);
   line_->addPoint(p1);
   line_->addPoint(p2);
 }
 
-void SegmentVisual::setFramePosition(const Ogre::Vector3& position) {
+void SegmentVisual::setFramePosition(const Ogre::Vector3 &position) {
   frame_node_->setPosition(position);
 }
 
-void SegmentVisual::setFrameOrientation(const Ogre::Quaternion& orientation) {
+void SegmentVisual::setFrameOrientation(const Ogre::Quaternion &orientation) {
   frame_node_->setOrientation(orientation);
 }
 

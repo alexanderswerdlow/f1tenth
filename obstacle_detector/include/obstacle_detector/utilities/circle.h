@@ -38,28 +38,28 @@
 #include "obstacle_detector/utilities/point.h"
 #include "obstacle_detector/utilities/segment.h"
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class Circle
-{
-public:
-  Circle(const Point& p = Point(), const double r = 0.0) : center(p), radius(r) { }
+class Circle {
+ public:
+  Circle(const Point &p = Point(), const double r = 0.0) : center(p), radius(r) {}
 
   /*
    * Create a circle by taking the segment as a base of equilateral
    * triangle. The circle is circumscribed on this triangle.
    */
-  Circle(const Segment& s) {
-    radius = 0.5773502 * s.length();  // sqrt(3)/3 * length
-    center = (s.first_point + s.last_point - radius * s.normal()) / 2.0;
-    point_sets = s.point_sets;
+  Circle(const Segment &s) {
+	radius = 0.5773502 * s.length();  // sqrt(3)/3 * length
+	center = (s.first_point + s.last_point - radius * s.normal()) / 2.0;
+	point_sets = s.point_sets;
   }
 
-  double distanceTo(const Point& p) { return (p - center).length() - radius; }
+  double distanceTo(const Point &p) { return (p - center).length() - radius; }
 
-  friend std::ostream& operator<<(std::ostream& out, const Circle& c)
-  { out << "C: " << c.center << ", R: " << c.radius; return out; }
+  friend std::ostream &operator<<(std::ostream &out, const Circle &c) {
+	out << "C: " << c.center << ", R: " << c.radius;
+	return out;
+  }
 
   Point center;
   double radius;

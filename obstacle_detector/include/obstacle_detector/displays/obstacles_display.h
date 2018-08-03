@@ -52,37 +52,35 @@
 #include "obstacle_detector/displays/segment_visual.h"
 #endif
 
-namespace obstacles_display
-{
+namespace obstacles_display {
 
-class ObstaclesDisplay: public rviz::MessageFilterDisplay<obstacle_detector::Obstacles>
-{
-Q_OBJECT
-public:
+class ObstaclesDisplay : public rviz::MessageFilterDisplay<obstacle_detector::Obstacles> {
+ Q_OBJECT
+ public:
   ObstaclesDisplay();
   virtual ~ObstaclesDisplay();
 
-protected:
+ protected:
   virtual void onInitialize();
   virtual void reset();
 
-private Q_SLOTS:
+ private Q_SLOTS:
   void updateCircleColor();
   void updateSegmentColor();
   void updateAlpha();
   void updateThickness();
 
-private:
-  void processMessage(const obstacle_detector::Obstacles::ConstPtr& obstacles_msg);
+ private:
+  void processMessage(const obstacle_detector::Obstacles::ConstPtr &obstacles_msg);
 
-  std::vector< boost::shared_ptr<CircleVisual> > circle_visuals_;
-  std::vector< boost::shared_ptr<SegmentVisual> > segment_visuals_;
+  std::vector<boost::shared_ptr<CircleVisual> > circle_visuals_;
+  std::vector<boost::shared_ptr<SegmentVisual> > segment_visuals_;
 
-  rviz::ColorProperty* circle_color_property_;
-  rviz::ColorProperty* margin_color_property_;
-  rviz::ColorProperty* segment_color_property_;
-  rviz::FloatProperty* alpha_property_;
-  rviz::FloatProperty* thickness_property_;
+  rviz::ColorProperty *circle_color_property_;
+  rviz::ColorProperty *margin_color_property_;
+  rviz::ColorProperty *segment_color_property_;
+  rviz::FloatProperty *alpha_property_;
+  rviz::FloatProperty *thickness_property_;
 };
 
 } // end namespace obstacles_display

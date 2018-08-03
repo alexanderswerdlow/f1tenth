@@ -47,35 +47,36 @@
 #include "obstacle_detector/utilities/circle.h"
 #include "obstacle_detector/utilities/point_set.h"
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ObstacleExtractor
-{
-public:
-  ObstacleExtractor(ros::NodeHandle& nh, ros::NodeHandle& nh_local);
+class ObstacleExtractor {
+ public:
+  ObstacleExtractor(ros::NodeHandle &nh, ros::NodeHandle &nh_local);
   ~ObstacleExtractor();
 
-private:
-  bool updateParams(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+ private:
+  bool updateParams(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
   void scanCallback(const sensor_msgs::LaserScan::ConstPtr scan_msg);
   void pclCallback(const sensor_msgs::PointCloud::ConstPtr pcl_msg);
 
-  void initialize() { std_srvs::Empty empt; updateParams(empt.request, empt.response); }
+  void initialize() {
+	std_srvs::Empty empt;
+	updateParams(empt.request, empt.response);
+  }
 
   void processPoints();
   void groupPoints();
   void publishObstacles();
 
-  void detectSegments(const PointSet& point_set);
+  void detectSegments(const PointSet &point_set);
   void mergeSegments();
-  bool compareSegments(const Segment& s1, const Segment& s2, Segment& merged_segment);
-  bool checkSegmentsProximity(const Segment& s1, const Segment& s2);
-  bool checkSegmentsCollinearity(const Segment& segment, const Segment& s1, const Segment& s2);
+  bool compareSegments(const Segment &s1, const Segment &s2, Segment &merged_segment);
+  bool checkSegmentsProximity(const Segment &s1, const Segment &s2);
+  bool checkSegmentsCollinearity(const Segment &segment, const Segment &s1, const Segment &s2);
 
   void detectCircles();
   void mergeCircles();
-  bool compareCircles(const Circle& c1, const Circle& c2, Circle& merged_circle);
+  bool compareCircles(const Circle &c1, const Circle &c2, Circle &merged_circle);
 
   ros::NodeHandle nh_;
   ros::NodeHandle nh_local_;

@@ -38,7 +38,6 @@ import vector
 
 
 class Quaternion(object):
-
     __slots__ = ('x', 'y', 'z', 'w')
 
     def __init__(self, x, y, z, w):

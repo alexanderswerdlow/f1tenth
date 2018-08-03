@@ -41,21 +41,17 @@ using RobotLocalization::Ukf;
 using RobotLocalization::RosUkf;
 using RobotLocalization::STATE_SIZE;
 
-class RosUkfPassThrough : public RosUkf
-{
-  public:
-    explicit RosUkfPassThrough(std::vector<double> &args) : RosUkf(args)
-    {
-    }
+class RosUkfPassThrough : public RosUkf {
+ public:
+  explicit RosUkfPassThrough(std::vector<double> &args) : RosUkf(args) {
+  }
 
-    Ukf &getFilter()
-    {
-      return filter_;
-    }
+  Ukf &getFilter() {
+	return filter_;
+  }
 };
 
-TEST(UkfTest, Measurements)
-{
+TEST(UkfTest, Measurements) {
   std::vector<double> args;
   args.push_back(0.001);
   args.push_back(0);
@@ -71,16 +67,14 @@ TEST(UkfTest, Measurements)
   EXPECT_EQ(ukf.getFilter().getEstimateErrorCovariance(), initialCovar);
 
   Eigen::VectorXd measurement(STATE_SIZE);
-  for (size_t i = 0; i < STATE_SIZE; ++i)
-  {
-    measurement[i] = i * 0.01 * STATE_SIZE;
+  for (size_t i = 0; i < STATE_SIZE; ++i) {
+	measurement[i] = i * 0.01 * STATE_SIZE;
   }
 
   Eigen::MatrixXd measurementCovariance(STATE_SIZE, STATE_SIZE);
   measurementCovariance.setIdentity();
-  for (size_t i = 0; i < STATE_SIZE; ++i)
-  {
-    measurementCovariance(i, i) = 1e-9;
+  for (size_t i = 0; i < STATE_SIZE; ++i) {
+	measurementCovariance(i, i) = 1e-9;
   }
 
   std::vector<int> updateVector(STATE_SIZE, true);
@@ -89,11 +83,11 @@ TEST(UkfTest, Measurements)
   ros::Time time;
   time.fromSec(1000);
   ukf.enqueueMeasurement("odom0",
-                         measurement,
-                         measurementCovariance,
-                         updateVector,
-                         std::numeric_limits<double>::max(),
-                         time);
+						 measurement,
+						 measurementCovariance,
+						 updateVector,
+						 std::numeric_limits<double>::max(),
+						 time);
 
   ukf.integrateMeasurements(ros::Time(1001));
 
@@ -110,30 +104,27 @@ TEST(UkfTest, Measurements)
 
   measurement2 *= 2.0;
 
-  for (size_t i = 0; i < STATE_SIZE; ++i)
-  {
-    measurementCovariance(i, i) = 1e-9;
+  for (size_t i = 0; i < STATE_SIZE; ++i) {
+	measurementCovariance(i, i) = 1e-9;
   }
 
   time.fromSec(1002);
   ukf.enqueueMeasurement("odom0",
-                         measurement2,
-                         measurementCovariance,
-                         updateVector,
-                         std::numeric_limits<double>::max(),
-                         time);
+						 measurement2,
+						 measurementCovariance,
+						 updateVector,
+						 std::numeric_limits<double>::max(),
+						 time);
 
   ukf.integrateMeasurements(ros::Time(1003));
 
   measurement = measurement2.eval() - ukf.getFilter().getState();
-  for (size_t i = 0; i < STATE_SIZE; ++i)
-  {
-    EXPECT_LT(::fabs(measurement[i]), 0.001);
+  for (size_t i = 0; i < STATE_SIZE; ++i) {
+	EXPECT_LT(::fabs(measurement[i]), 0.001);
   }
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   ros::init(argc, argv, "ukf");
 
   testing::InitGoogleTest(&argc, argv);

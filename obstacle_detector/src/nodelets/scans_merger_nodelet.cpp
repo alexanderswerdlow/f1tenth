@@ -38,33 +38,31 @@
 
 #include "obstacle_detector/scans_merger.h"
 
-namespace obstacle_detector
-{
+namespace obstacle_detector {
 
-class ScansMergerNodelet : public nodelet::Nodelet
-{
-public:
+class ScansMergerNodelet : public nodelet::Nodelet {
+ public:
   virtual void onInit() {
-    ros::NodeHandle nh = getNodeHandle();
-    ros::NodeHandle nh_local = getPrivateNodeHandle();
+	ros::NodeHandle nh = getNodeHandle();
+	ros::NodeHandle nh_local = getPrivateNodeHandle();
 
-    try {
-      NODELET_INFO("[Scans Merger]: Initializing nodelet");
-      scans_merger_ = std::shared_ptr<ScansMerger>(new ScansMerger(nh, nh_local));
-    }
-    catch (const char* s) {
-      NODELET_FATAL_STREAM("[Scans Merger]: " << s);
-    }
-    catch (...) {
-      NODELET_FATAL_STREAM("[Scans Merger]: Unexpected error");
-    }
+	try {
+	  NODELET_INFO("[Scans Merger]: Initializing nodelet");
+	  scans_merger_ = std::shared_ptr<ScansMerger>(new ScansMerger(nh, nh_local));
+	}
+	catch (const char *s) {
+	  NODELET_FATAL_STREAM("[Scans Merger]: " << s);
+	}
+	catch (...) {
+	  NODELET_FATAL_STREAM("[Scans Merger]: Unexpected error");
+	}
   }
 
   virtual ~ScansMergerNodelet() {
-    NODELET_INFO("[Scans Merger]: Shutdown");
+	NODELET_INFO("[Scans Merger]: Shutdown");
   }
 
-private:
+ private:
   std::shared_ptr<ScansMerger> scans_merger_;
 };
 
