@@ -33,6 +33,6 @@ def cmd_callback(data):
 
 if __name__ == '__main__':
     rospy.init_node('Control', anonymous=True)
-    rospy.get_param('wheelbase', 0.25)
+    rospy.get_param('wheelbase', 0.32385)
     rospy.Subscriber("cmd_vel", Twist, cmd_callback)
     rospy.spin()

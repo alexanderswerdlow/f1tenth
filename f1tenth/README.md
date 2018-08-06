@@ -83,3 +83,5 @@
                 visualize_hc_graph: False
                 
          rosbag filter manytopics.bag fewtopics.bag 'topic=="/topic1","/topic2","/topic3"' Bag to CSV/Text
+         
+         <node name="hallway_data" pkg="rosbag" type="play" output="screen" args="--clock -r 1 /home/aswerdlow/Documents/logs/_2018-08-06-12-09-07.bag"/>````

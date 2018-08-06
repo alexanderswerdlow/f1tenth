@@ -1,0 +1,8 @@
+lookahead_distance: 6.0
+max_linear_velocity: 0.5
+max_rotational_velocity: 3.0
+position_tolerance: 0.05
+map_frame_id: map
+robot_frame_id: base_footprint
+lookahead_frame_id: lookahead
+ackermann_frame_id: base_link

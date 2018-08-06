@@ -18,7 +18,7 @@ std_msgs::Int32 str_msg;          // creater a ROS Publisher called chatter of t
 ros::Publisher chatter("chatter", &str_msg);
 
 void messageDrive(const race::drive_values &pwm) {
-  str_msg.data = pwm_value;
+
   chatter.publish(&str_msg);
 
   if (flagStop == false) {
@@ -67,6 +67,7 @@ void setup() {
   analogWrite(6, pwm_center_value);
   attachInterrupt(2, rising, RISING);
   attachInterrupt(3, rising1, RISING);
+  str_msg.data = 0;
   nh.initNode();  // intialize ROS node
   nh.subscribe(sub_drive); // start the subscribers.
   nh.subscribe(sub_stop);
@@ -89,6 +90,7 @@ void rising1() {
 void falling1() {
   attachInterrupt(3, rising1, RISING);
   pwm_value1 = micros() - prev_time1;
+
   if (pwm_value1 < 1475 || pwm_value1 > 1525) {
 	flagStop = true;
 	analogWrite(5, pwm_center_value);
@@ -99,11 +101,11 @@ void falling1() {
 void falling() {
   attachInterrupt(2, rising, RISING);
   pwm_value = micros() - prev_time;
-  if (pwm_value < 1475 || pwm_value > 1525) {
+  str_msg.data = pwm_value;
+  if (pwm_value < 1419 || pwm_value > 1469) {
 	flagStop = true;
 	analogWrite(5, pwm_center_value);
 	analogWrite(6, pwm_center_value);
   }
 }
-
 
