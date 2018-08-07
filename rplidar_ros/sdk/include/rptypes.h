@@ -3,7 +3,7 @@
  *
  *  Copyright (c) 2009 - 2014 RoboPeak Team
  *  http://www.robopeak.com
- *  Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ *  Copyright (c) 2014 - 2018 Shanghai Slamtec Co., Ltd.
  *  http://www.slamtec.com
  *
  */
@@ -34,6 +34,7 @@
 
 #pragma once
 
+
 #ifdef _WIN32
 
 //fake stdint.h for VC only
@@ -56,18 +57,19 @@ typedef unsigned __int64  uint64_t;
 
 #endif
 
+
 //based on stdint.h
-typedef int8_t _s8;
-typedef uint8_t _u8;
+typedef int8_t         _s8;
+typedef uint8_t        _u8;
 
-typedef int16_t _s16;
-typedef uint16_t _u16;
+typedef int16_t        _s16;
+typedef uint16_t       _u16;
 
-typedef int32_t _s32;
-typedef uint32_t _u32;
+typedef int32_t        _s32;
+typedef uint32_t       _u32;
 
-typedef int64_t _s64;
-typedef uint64_t _u64;
+typedef int64_t        _s64;
+typedef uint64_t       _u64;
 
 #define __small_endian
 
@@ -94,6 +96,7 @@ typedef _u32            _word_size_t;
 #define THREAD_PROC  
 #endif
 
+
 typedef uint32_t u_result;
 
 #define RESULT_OK              0
@@ -110,5 +113,4 @@ typedef uint32_t u_result;
 #define IS_OK(x)    ( ((x) & RESULT_FAIL_BIT) == 0 )
 #define IS_FAIL(x)  ( ((x) & RESULT_FAIL_BIT) )
 
-typedef _word_size_t (THREAD_PROC
-* thread_proc_t ) ( void * );
+typedef _word_size_t (THREAD_PROC * thread_proc_t ) ( void * );

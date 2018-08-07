@@ -3,7 +3,7 @@
  *
  *  Copyright (c) 2009 - 2014 RoboPeak Team
  *  http://www.robopeak.com
- *  Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ *  Copyright (c) 2014 - 2018 Shanghai Slamtec Co., Ltd.
  *  http://www.slamtec.com
  *
  */
@@ -43,8 +43,8 @@
 #else
 extern "C++"
 {
-template<typename _CountofType, size_t _SizeOfArray>
-char (*__countof_helper(_CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
+template <typename _CountofType, size_t _SizeOfArray>
+char (*__countof_helper( _CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
 #define _countof(_Array) sizeof(*__countof_helper(_Array))
 }
 #endif
@@ -55,11 +55,13 @@ char (*__countof_helper(_CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
 #define offsetof(_structure, _field) ((_word_size_t)&(((_structure *)0x0)->_field))
 #endif
 
-#define BEGIN_STATIC_CODE(_blockname_) \
+
+#define BEGIN_STATIC_CODE( _blockname_ ) \
     static class _static_code_##_blockname_ {   \
     public:     \
-        _static_code_##_blockname_ ()
+        _static_code_##_blockname_ () 
 
-#define END_STATIC_CODE(_blockname_) \
+
+#define END_STATIC_CODE( _blockname_ ) \
     }   _instance_##_blockname_;
 

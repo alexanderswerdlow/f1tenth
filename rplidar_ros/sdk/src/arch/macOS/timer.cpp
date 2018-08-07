@@ -3,7 +3,7 @@
  *
  *  Copyright (c) 2009 - 2014 RoboPeak Team
  *  http://www.robopeak.com
- *  Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ *  Copyright (c) 2014 - 2018 Shanghai Slamtec Co., Ltd.
  *  http://www.slamtec.com
  *
  */
@@ -34,19 +34,20 @@
 
 #include "arch/macOS/arch_macOS.h"
 
-namespace rp {
-namespace arch {
-_u64 getus() {
-  timeval now;
-  gettimeofday(&now, NULL);
-  return now.tv_sec * 1000000 + now.tv_usec;
-}
 
-_u32 rp_getms() {
-  timeval now;
-  gettimeofday(&now, NULL);
-  return now.tv_sec * 1000L + now.tv_usec / 1000L;
+namespace rp{ namespace arch{
+_u64 getus()
+{
+    timeval now;
+    gettimeofday(&now,NULL);
+    return now.tv_sec*1000000 + now.tv_usec;
 }
-
+    
+_u32 rp_getms()
+{
+    timeval now;
+    gettimeofday(&now,NULL);
+    return now.tv_sec*1000L + now.tv_usec/1000L;
 }
-}
+    
+}}

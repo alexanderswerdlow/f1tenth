@@ -6,12 +6,13 @@ import rospy, math
 from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
-r = 2.5;
-1.5
+
+r = 1.5;
+
 pub = rospy.Publisher('move_base_simple/goal', PoseStamped, queue_size=1)
 
-def quaternion_to_euler_angle(w, x, y, z):
 
+def quaternion_to_euler_angle(w, x, y, z):
     t0 = +2.0 * (w * x + y * z)
     t1 = +1.0 - 2.0 * (x * x + y * y)
     X = math.degrees(math.atan2(t0, t1))
@@ -27,9 +28,11 @@ def quaternion_to_euler_angle(w, x, y, z):
 
     return X, Y, Z
 
+
 def cmd_callback(data):
     global pub
-    q = euler_from_quaternion([data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w])
+    q = euler_from_quaternion(
+        [data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w])
     z1 = q[2]
     x = (5 * math.cos(z1)) + data.pose.pose.position.x
     y = (5 * math.sin(z1)) + data.pose.pose.position.y

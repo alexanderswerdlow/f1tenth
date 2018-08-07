@@ -32,10 +32,10 @@ def talker():
     rospy.init_node('serial_talker', anonymous=True)
     em_pub.publish(False)
     rospy.Subscriber("drive_parameters", drive_param, callback)
-
     rospy.spin()
 
 
 if __name__ == '__main__':
     rospy.loginfo("Serial Talker Initialized")
     talker()
+    em_pub.publish(True)

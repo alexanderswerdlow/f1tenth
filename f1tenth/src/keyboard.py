@@ -2,6 +2,7 @@
 
 import rospy
 from race.msg import drive_param
+from std_msgs.msg import Bool
 import curses
 
 # import signal
@@ -34,7 +35,7 @@ curses.cbreak()
 stdscr.keypad(1)
 rospy.init_node('keyboard_talker', anonymous=True)
 pub = rospy.Publisher('drive_parameters', drive_param, queue_size=10)
-
+em_pub = rospy.Publisher('eStop', Bool, queue_size=10)
 # set alarm
 # signal.alarm(TIMEOUT)
 # s = input()
@@ -79,4 +80,6 @@ while key != ord('q'):
     msg.velocity = forward
     msg.angle = left
     pub.publish(msg)
+em_pub.publish(True)
+stdscr.addstr(5, 20, "Emergency STOP!!!!!")
 curses.endwin()
