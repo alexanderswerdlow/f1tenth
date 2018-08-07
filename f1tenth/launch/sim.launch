@@ -23,6 +23,8 @@
 		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
 	</node>
 
+	<node name="setpoints" pkg="race" type="setpoint.py" output="screen"/>
+	
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/hypha_stage_sim.rviz"/>
 
 </launch>

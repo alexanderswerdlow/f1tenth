@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Grid1
         - /TF1/Frames1
       Splitter Ratio: 0.515679419
     Tree Height: 1229
@@ -45,7 +46,7 @@ Visualization Manager:
         Y: 0
         Z: 0
       Plane: XY
-      Plane Cell Count: 10
+      Plane Cell Count: 100
       Reference Frame: <Fixed Frame>
       Value: true
     - Alpha: 0.699999988
@@ -317,8 +318,8 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: -100.520638
-      Target Frame: base_link
+      Scale: -260.041992
+      Target Frame: base_footprint
       Value: TopDownOrtho (rviz)
       X: 0
       Y: 0
