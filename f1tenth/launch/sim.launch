@@ -3,7 +3,7 @@
 
 	<rosparam file="$(find race)/params/car_constants.yaml" command="load"/>
 
-	<node name="hallway_data" pkg="rosbag" type="play" output="screen" args="--clock -s 13 -r 1 $(find race)/bags/hallway.bag"/>
+	<node name="hallway_data" pkg="rosbag" type="play" output="screen" args="--clock -s 13 -r 0.1 $(find race)/bags/hallway.bag"/>
 
 	<include file="$(find race)/launch/tf.launch"/>
 
@@ -15,16 +15,18 @@
 
 	<include file="$(find race)/launch/gmapping.launch"/>
 
-	<node pkg="move_base" type="move_base" respawn="false" name="move_base">
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base" >
 		<rosparam file="$(find race)/params/local_costmap_params.yaml" command="load"/>
 		<rosparam file="$(find race)/params/global_costmap_params.yaml" command="load"/>
 		<rosparam file="$(find race)/params/move_base_params.yaml" command="load"/>
 		<rosparam file="$(find race)/params/teb_local_planner_params.yaml" command="load"/>
+		<rosparam file="$(find race)/params/global_planner.yaml" command="load"/>
 		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
+		<param name="base_global_planner" value="global_planner/GlobalPlanner" />
 	</node>
 
-	<!-- <node pkg="race" type="setpoint.py" output="screen" name="setpoint" /> -->
-	<node pkg="race" type="control.py" output="screen" name="control" />
+	<!-- <node pkg="race" type="setpoint.py" output="screen" name="setpoint" />-->
+	<node pkg="race" type="controller" output="screen" name="control" />
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/hypha_stage_sim.rviz"/>
 
 </launch>

@@ -6,6 +6,7 @@
 #include <math.h>
 
 ros::Time prevTime;
+ros::Publisher pub;
 double desiredThrottle, desiredSteering, prevError, wheelbase;
 double kP = 0.1;
 double kI = 0;
@@ -33,22 +34,19 @@ double convert_trans_rot_vel_to_steering_angle(double v, double omega, double wh
   return atan(wheelbase / radius);
 }
 void updateOdom(nav_msgs::Odometry data) {
-  double thet = atan(data.twist.twist.linear.y / data.twist.twist.linear.x);
-
-  double q = getYawFromPose(data.pose.pose);
-  double diff = thet - q;
-  double vel = sqrt(pow(data.twist.twist.linear.x, 2) + pow(data.twist.twist.linear.y, 2));
-  double compVel = vel / cos(diff);
+  double compVel = sqrt(pow(data.twist.twist.linear.x, 2) + pow(data.twist.twist.linear.y, 2));
   ros::Time currentTime = ros::Time::now();
   double dt = currentTime.toSec() - prevTime.toSec();
   double err = desiredThrottle - compVel;
-  double output = (err * kP) + ((err - prevError) / (dt));
+  double kpOut = (err * kP);
+  double kDOut = fabs((err - prevError)) > 1.0 ? 0.0 : ((err - prevError) / (dt));
+  double output = desiredThrottle + kpOut + kDOut;
   prevTime = currentTime;
   prevError = err;
-  /*race::drive_param msg;
-  msg.velocity = output;
-  msg.angle = steering;
-  pub.publish(msg); */
+  race::drive_param msg;
+  msg.velocity = (float) output;
+  msg.angle = (float) tfDegrees(desiredSteering);
+  pub.publish(msg);
 }
 
 void updateCmd(geometry_msgs::Twist data) {
@@ -61,17 +59,15 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "controller");
 
   ros::NodeHandle n;
-
+  pub = n.advertise<race::drive_param>("drive_parameters", 1000);
   prevTime = ros::Time::now();
   desiredThrottle = desiredSteering = prevError = 0;
   n.param("wheelabase", wheelbase, 0.3);
 
-  ros::Publisher chatter_pub = n.advertise<race::drive_param>("drive_parameters", 1000);
-
   ros::Rate loop_rate(100);
 
   ros::Subscriber cmdSub = n.subscribe("cmd_vel", 100, updateCmd);
-  ros::Subscriber odomSub = n.subscribe("cmd_vel", 100, updateOdom);
+  ros::Subscriber odomSub = n.subscribe("odometry/filtered", 100, updateOdom);
 
   ros::spin();
 
