@@ -8,28 +8,28 @@ TebLocalPlannerROS:
  dt_ref: 0.3
  dt_hysteresis: 0.1
  global_plan_overwrite_orientation: True
- allow_init_with_backwards_motion: False
+ allow_init_with_backwards_motion: True
  max_global_plan_lookahead_dist: 3.0
  feasibility_check_no_poses: 2
 
- max_vel_x: 0.4
- max_vel_x_backwards: 0.0
+ max_vel_x: 1.5
+ max_vel_x_backwards: 0.2
  max_vel_y: 0.0
- max_vel_theta: 0.3 # the angular velocity is also bounded by min_turning_radius in case of a carlike robot (r = v / omega)
- acc_lim_x: 0.5
- acc_lim_theta: 0.5
+ max_vel_theta: 2.0 # the angular velocity is also bounded by min_turning_radius in case of a carlike robot (r = v / omega)
+ acc_lim_x: 0.8
+ acc_lim_theta: 0.8
 
  # ********************** Carlike robot parameters ********************
  min_turning_radius: 0.46250573198 #0.283 #0.255 for 45deg       # Min turning radius of the carlike robot (compute value using a model or adjust with rqt_reconfigure manually)
  wheelbase: 0.32385             # Wheelbase of our robot
- cmd_angle_instead_rotvel: True # stage simulator takes the angle instead of the rotvel as input (twist message)
+ cmd_angle_instead_rotvel: False # stage simulator takes the angle instead of the rotvel as input (twist message)
  # ********************************************************************
 
  footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
   type: "line"
   radius: 0.2 # for type "circular"
   line_start: [0.0, 0.0] # for type "line"
-  line_end: [0.4, 0.0] # for type "line"
+  line_end: [0.3, 0.0] # for type "line"
   front_offset: 0.2 # for type "two_circles"
   front_radius: 0.2 # for type "two_circles"
   rear_offset: 0.2 # for type "two_circles"
@@ -44,7 +44,7 @@ TebLocalPlannerROS:
 
  # Obstacles
 
- min_obstacle_dist: 0.27 # This value must also include our robot's expansion, since footprint_model is set to "line".
+ min_obstacle_dist: 0.2 # This value must also include our robot's expansion, since footprint_model is set to "line".
  include_costmap_obstacles: True
  costmap_obstacles_behind_robot_dist: 1.0
  obstacle_poses_affected: 30
@@ -65,7 +65,7 @@ TebLocalPlannerROS:
  weight_acc_lim_theta: 1
  weight_kinematics_nh: 1000
  weight_kinematics_forward_drive: 1
- weight_kinematics_turning_radius: 500
+ weight_kinematics_turning_radius: 1
  weight_optimaltime: 1
  weight_obstacle: 50
  weight_dynamic_obstacle: 10 # not in use yet

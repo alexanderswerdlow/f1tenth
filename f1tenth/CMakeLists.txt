@@ -109,7 +109,7 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
         #  INCLUDE_DIRS include
-        #  LIBRARIES race
+        LIBRARIES race
         CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs geometry_msgs visualization_msgs
         #  DEPENDS system_lib
 )
@@ -211,4 +211,8 @@ include_directories(
 # catkin_add_nosetests(test)
 add_executable(L1_controller_v3 src/L1_controller_v3.cpp)
 target_link_libraries(L1_controller_v3 ${catkin_LIBRARIES})
-add_dependencies(L1_controller_v3 hypha_racecar_generate_messages_cpp)
+add_dependencies(L1_controller_v3 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(controller src/controller.cpp)
+target_link_libraries(controller ${catkin_LIBRARIES})
+add_dependencies(controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

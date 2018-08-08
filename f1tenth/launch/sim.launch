@@ -3,7 +3,7 @@
 
 	<rosparam file="$(find race)/params/car_constants.yaml" command="load"/>
 
-	<node name="hallway_data" pkg="rosbag" type="play" output="screen" args="--clock -s 2 -r 1 /home/aswerdlow/Documents/logs/_2018-08-07-10-01-05.bag"/>
+	<node name="hallway_data" pkg="rosbag" type="play" output="screen" args="--clock -s 13 -r 1 $(find race)/bags/hallway.bag"/>
 
 	<include file="$(find race)/launch/tf.launch"/>
 
@@ -23,8 +23,8 @@
 		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
 	</node>
 
-	<!--<node name="setpoints" pkg="race" type="setpoint.py" output="screen"/> -->
-
+	<!-- <node pkg="race" type="setpoint.py" output="screen" name="setpoint" /> -->
+	<node pkg="race" type="control.py" output="screen" name="control" />
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/hypha_stage_sim.rviz"/>
 
 </launch>
