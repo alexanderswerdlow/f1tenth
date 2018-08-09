@@ -1,0 +1,16 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/aswerdlow/catkin_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/kinetic/lib/python2.7/dist-packages"
+    ],
+    "files.associations": {
+        "*.tpp": "cpp",
+        "bool.h": "c",
+        "int32.h": "c",
+        "empty.h": "c",
+        "string.h": "c",
+        "drive_values.h": "c",
+        "ros.h": "c",
+        "chatter_values.h": "c"
+    }
+}

@@ -7,7 +7,7 @@ from std_msgs.msg import Bool
 
 pub = rospy.Publisher('drive_pwm', drive_values, queue_size=10)
 em_pub = rospy.Publisher('eStop', Bool, queue_size=10)
-
+control_pub = rospy.Publisher('controlOverride', Bool, queue_size=10)
 
 # function to map from one range to another, similar to arduino
 def arduino_map(x, in_min, in_max, out_min, out_max):
@@ -31,6 +31,7 @@ def callback(data):
 def talker():
     rospy.init_node('serial_talker', anonymous=True)
     em_pub.publish(False)
+    control_pub.publish(False)
     rospy.Subscriber("drive_parameters", drive_param, callback)
     rospy.spin()
 

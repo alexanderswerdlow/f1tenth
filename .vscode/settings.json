@@ -6,6 +6,7 @@
     "/opt/ros/kinetic/lib/python2.7/dist-packages"
   ],
   "files.associations": {
-    "string": "cpp"
+    "string": "cpp",
+    "stdio.h": "c"
   }
 }

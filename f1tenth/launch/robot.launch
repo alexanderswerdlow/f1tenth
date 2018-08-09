@@ -26,8 +26,6 @@
 		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
 	</node>
 
-	<node name="talker" pkg="race" type="talker.py" output="screen"/>
-
 	<node pkg="race" type="timed_roslaunch.sh" args="15 race bagdata.launch" name="timed_roslaunch" output="screen"/>
 
 </launch>

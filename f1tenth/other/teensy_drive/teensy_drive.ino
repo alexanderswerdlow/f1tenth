@@ -6,75 +6,82 @@
 #include <race/chatter_values.h>
 #include <race/drive_values.h>
 ros::NodeHandle nh;
-
-boolean eStopFlag = false; // These values were cacluated for the specific Teensy microcontroller using an oscilloscope.
-boolean controlOverrideFlag = false;
-int pwm_center_value = 9830; //  15% duty cycle - corresponds to zero velocity, zero steering
-int pwm_lowerlimit = 8738;   //  10% duty cycle - corresponds to max reverse velocity, extreme left steering
-int pwm_upperlimit = 10922;  //  20% duty cycle - corresponds to max forward velocity, extreme right steering
-volatile int steeringPWMInput = 0;
-volatile int steeringPWMPrevTime = 0;
-volatile int throttlePWMInput = 0;
-volatile int throttlePWMPrevTime = 0;
 race::chatter_values debug_msg; // creater a ROS Publisher called chatter of type debug_msg
 ros::Publisher chatter("chatter", &debug_msg);
-volatile long lastDriveCommandTime = 0;
-volatile long lastDebugMsg = 0;
-volatile int throttle = 0;
-volatile int steering = 0;
-int throttleOutPin = 5;
-int steeringOutPin = 6;
-int throttleInPin = 2;
-int steeringInPin = 3;
+
+boolean eStopFlag = false;
+boolean controlOverrideFlag = false;
+int pwm_center_value = 9830;
+int steering_trim = 367;
+int pwm_center_steering_value = pwm_center_value - steering_trim;
+int constrained_pwm_lowerlimit = 7500;
+int constrained_pwm_upperlimit = 1200;
+int pwm_lowerlimit = 6554;
+int pwm_upperlimit = 13108;
+int steeringPWMInput = 1500;
+int steeringPWMPrevTime = 0;
+int throttlePWMInput = 1444;
+int throttlePWMPrevTime = 0;
+
+long lastDriveCommandTime = 0;
+long lastDebugMsg = 0;
+int throttle = pwm_center_value;
+int steering = pwm_center_value - steering_trim;
+int escPin = 5;
+int servoPin = 6;
+int escControl = 2;
+int servoControl = 3;
 
 // Pin 5 is connected to the ESC..dive motor
 // Pin 6 is connected to the steering servo.
 // Pin 2 is throttle input from the Reciever
 // Pin 3 is the steering input from the Reciever
 
+void set(int esc, int servo) {
+  analogWrite(escPin, esc);
+  analogWrite(servoPin, servo);
+  debug_msg.throttle_output = esc;
+  debug_msg.steering_output = servo;
+}
+
 void messageDrive(const race::drive_values &pwm) {
   lastDriveCommandTime = micros();
-  if (pwm.pwm_drive < pwm_lowerlimit) {
-    throttle = pwm_center_value;
-  } else if (pwm.pwm_drive > pwm_upperlimit) {
-    throttle = pwm_center_value;
-  } else {
-    throttle = pwm.pwm_drive;
-  }
-
-  if (pwm.pwm_angle < pwm_lowerlimit) {
-    steering = pwm_lowerlimit;
-  } else if (pwm.pwm_angle > pwm_upperlimit) {
-    steering = pwm_upperlimit;
-  } else {
-    steering = pwm.pwm_angle;
-  }
+  throttle = pwm.pwm_drive;
+  steering = pwm.pwm_angle;
 }
 
 void messageEmergencyStop(const std_msgs::Bool &flag) {
   eStopFlag = flag.data;
-  if (eStopFlag == true) {
-    analogWrite(5, pwm_center_value);
-    analogWrite(6, pwm_center_value);
+  if (eStopFlag) {
+	set(pwm_center_value, pwm_center_steering_value);
   }
 }
+
+void overrideControl(const std_msgs::Bool &flag) {
+  controlOverrideFlag = flag.data;
+}
+
+
+double arduino_map(int x, double in_min, double in_max, double out_min, double out_max) {
+  int val = x;
+  if (val < in_min) {
+	val = in_min;
+  } else if (val > in_max) {
+	val = in_max;
+  }
+  return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 void updateOutput() {
   long currentTime = micros();
-  if ((((currentTime - lastDriveCommandTime) > 3000000) && !controlOverrideFlag) || eStopFlag) {
-    analogWrite(throttleOutPin, pwm_center_value);
-    analogWrite(steeringOutPin, pwm_center_value);
-    debug_msg.throttle_output = pwm_center_value;
-    debug_msg.steering_output = pwm_center_value;
-  } else if (controlOverrideFlag) { ;
-    analogWrite(throttleOutPin, throttlePWMInput);
-    analogWrite(steeringOutPin, seeringPWMInput);
-    debug_msg.throttle_output = throttlePWMInput;
-    debug_msg.steering_output = steeringPWMInput;
+  if ((((currentTime - lastDriveCommandTime) > 2000000) && !controlOverrideFlag) || eStopFlag) {
+	set(pwm_center_value, pwm_center_steering_value);
+  } else if (controlOverrideFlag) {
+	int steerOut = (int) arduino_map(steeringPWMInput, 1000, 2000, 6554, 13108);
+	int throttleOut = (int) arduino_map(throttlePWMInput, 1000, 2000, 6554, 13108);
+	set(throttleOut, steerOut);
   } else {
-    analogWrite(throttleOutPin, throttle);
-    analogWrite(steeringOutPin, steering);
-    debug_msg.throttle_output = throttle;
-    debug_msg.steering_output = steering;
+	set(throttle, steering);
   }
   debug_msg.throttle_input = throttlePWMInput;
   debug_msg.steering_input = steeringPWMInput;
@@ -82,26 +89,27 @@ void updateOutput() {
   debug_msg.eStop = eStopFlag;
 
   if ((currentTime - lastDebugMsg) > 50000) {
-    chatter.publish(&debug_msg);
-    lastDebugMsg = currentTime;
+	chatter.publish(&debug_msg);
+	lastDebugMsg = currentTime;
   }
 }
 
 ros::Subscriber<race::drive_values> sub_drive("drive_pwm", &messageDrive); // Subscribe to drive_pwm topic sent by Jetson
 ros::Subscriber<std_msgs::Bool> sub_stop("eStop", &messageEmergencyStop);  // Subscribe to estop topic sent by Jetson
+ros::Subscriber<std_msgs::Bool> sub_control("controlOverride", &overrideControl);  // Subscribe to estop topic sent by Jetson
 
 void setup() {
-  // Need to produce PWM signals so we need to setup the PWM registers. This setup happens next.
-  analogWriteFrequency(throttleOutPin, 100); //  freq at which PWM signals is generated at pin 5.
-  analogWriteFrequency(steeringOutPin, 100);
+  analogWriteFrequency(escPin, 100); //  freq at which PWM signals is generated at pin 5.
+  analogWriteFrequency(servoPin, 100);
   analogWriteResolution(16);                     // Resolution for the PWM signal
-  analogWrite(throttleOutPin, pwm_center_value); // Setup zero velocity and steering.
-  analogWrite(steeringOutPin, pwm_center_value);
-  attachInterrupt(throttleInPin, risingThrottle, RISING);
-  attachInterrupt(steeringInPin, risingSteering, RISING);
+  analogWrite(escPin, pwm_center_value); // Setup zero velocity and steering.
+  analogWrite(servoPin, pwm_center_value - steering_trim);
+  attachInterrupt(escControl, risingThrottle, RISING);
+  attachInterrupt(servoControl, risingSteering, RISING);
   nh.initNode();           // intialize ROS node
   nh.subscribe(sub_drive); // start the subscribers.
   nh.subscribe(sub_stop);
+  nh.subscribe(sub_control);
   nh.advertise(chatter); // start the publisher..can be used for debugging.
   lastDriveCommandTime = micros();
   lastDebugMsg = micros();
@@ -113,24 +121,24 @@ void loop() {
 }
 
 void risingThrottle() {
-  attachInterrupt(throttleInPin, fallingThrottle, FALLING);
+  attachInterrupt(escControl, fallingThrottle, FALLING);
   throttlePWMPrevTime = micros();
 }
 void risingSteering() {
-  attachInterrupt(steeringInPin, fallingSteering, FALLING);
+  attachInterrupt(servoControl, fallingSteering, FALLING);
   steeringPWMPrevTime = micros();
 }
 void fallingThrottle() {
-  attachInterrupt(throttleInPin, risingThrottle, RISING);
+  attachInterrupt(escControl, risingThrottle, RISING);
   throttlePWMInput = micros() - throttlePWMPrevTime;
-  if (throttlePWMInput < 1475 || throttlePWMInput > 1525) {
-    controlOverrideFlag = true;
+  if (throttlePWMInput < 1490 || throttlePWMInput > 1510) {
+	controlOverrideFlag = true;
   }
 }
 void fallingSteering() {
-  attachInterrupt(steeringInPin, risingSteering, RISING);
+  attachInterrupt(servoControl, risingSteering, RISING);
   steeringPWMInput = micros() - steeringPWMPrevTime;
-  if (steeringPWMInput < 1419 || steeringPWMInput > 1469) {
-    controlOverrideFlag = true;
+  if (steeringPWMInput < 1434 || steeringPWMInput > 1454) {
+	controlOverrideFlag = true;
   }
 }
