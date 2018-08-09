@@ -7,11 +7,14 @@
 
 ros::Time prevTime;
 ros::Publisher pub;
-double desiredThrottle, desiredSteering, prevError, wheelbase;
+double desiredThrottle, desiredSteering, prevError, wheelbase, prevOutput;
 double kP = 0.1;
 double kI = 0;
-double kD = 1.0;
+double kD = 0.5;
 
+inline bool sameSign(double a, double b) {
+  return a * b >= 0.0f;
+}
 double getYawFromPose(const geometry_msgs::Pose &carPose) {
   double x = carPose.orientation.x;
   double y = carPose.orientation.y;
@@ -41,8 +44,12 @@ void updateOdom(nav_msgs::Odometry data) {
   double kpOut = (err * kP);
   double kDOut = fabs((err - prevError)) > 1.0 ? 0.0 : ((err - prevError) / (dt));
   double output = desiredThrottle + kpOut + kDOut;
+  output = output > 3.0 ? 3.0 : output;
+  output = output < -3.0 ?-3.0 : output;
+  output = sameSign(output, desiredThrottle) ? output : 0.0;
   prevTime = currentTime;
   prevError = err;
+  prevOutput = output;
   race::drive_param msg;
   msg.velocity = (float) output;
   msg.angle = (float) tfDegrees(desiredSteering);
@@ -61,7 +68,7 @@ int main(int argc, char **argv) {
   ros::NodeHandle n;
   pub = n.advertise<race::drive_param>("drive_parameters", 1000);
   prevTime = ros::Time::now();
-  desiredThrottle = desiredSteering = prevError = 0;
+  desiredThrottle = desiredSteering = prevError = prevOutput = 0;
   n.param("wheelabase", wheelbase, 0.3);
 
   ros::Rate loop_rate(100);

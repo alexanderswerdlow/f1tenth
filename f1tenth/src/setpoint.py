@@ -30,13 +30,14 @@ def quaternion_to_euler_angle(w, x, y, z):
 
 
 def cmd_callback(data):
-    global pub
-    q = euler_from_quaternion(
-        [data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w])
-    z1 = q[2]
-    x = (5 * math.cos(z1)) + data.pose.pose.position.x
-    y = (5 * math.sin(z1)) + data.pose.pose.position.y
-
+    #global pub
+    #q = euler_from_quaternion(
+    #    [data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w])
+    #z1 = q[2]
+    #x = (5 * math.cos(z1)) + data.pose.pose.position.x
+    #y = (5 * math.sin(z1)) + data.pose.pose.position.y
+    x = 10
+    y = 0
     msg = PoseStamped()
     msg.header.stamp = rospy.Time.now()
     msg.header.frame_id = 'map'
