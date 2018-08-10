@@ -12,7 +12,7 @@ ros::Publisher chatter("chatter", &debug_msg);
 boolean eStopFlag = false;
 boolean controlOverrideFlag = false;
 int pwm_center_value = 9830;
-int steering_trim = 367;
+int steering_trim = 433;
 int pwm_center_steering_value = pwm_center_value - steering_trim;
 int constrained_pwm_lowerlimit = 7500;
 int constrained_pwm_upperlimit = 1200;
@@ -20,7 +20,7 @@ int pwm_lowerlimit = 6554;
 int pwm_upperlimit = 13108;
 int steeringPWMInput = 1500;
 int steeringPWMPrevTime = 0;
-int throttlePWMInput = 1444;
+int throttlePWMInput = 1434;
 int throttlePWMPrevTime = 0;
 
 long lastDriveCommandTime = 0;
@@ -138,7 +138,7 @@ void fallingThrottle() {
 void fallingSteering() {
   attachInterrupt(servoControl, risingSteering, RISING);
   steeringPWMInput = micros() - steeringPWMPrevTime;
-  if (steeringPWMInput < 1434 || steeringPWMInput > 1454) {
+  if (steeringPWMInput < 1424 || steeringPWMInput > 1444) {
 	controlOverrideFlag = true;
   }
 }

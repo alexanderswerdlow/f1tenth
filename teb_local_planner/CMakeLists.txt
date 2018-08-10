@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8.3)
 project(teb_local_planner)
 
 # Set to Release in order to speed up the program significantly
-#set(CMAKE_BUILD_TYPE Release) #None, Debug, Release, RelWithDebInfo, MinSizeRel
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release) #None, Debug, Release, RelWithDebInfo, MinSizeRel
+
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
   base_local_planner
