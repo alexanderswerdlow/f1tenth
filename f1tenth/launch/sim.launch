@@ -4,31 +4,32 @@
 	<rosparam file="$(find race)/params/car_constants.yaml" command="load"/>
 
 	<node name="hallway_data" pkg="rosbag" type="play" output="screen"
-		  args="--clock -s 0 -r 1  /home/aswerdlow/Documents/logs/_2018-08-10-10-50-12.bag"/>
+		  args="--clock -s 0 -r 0.5 /home/aswerdlow/Documents/logs/_2018-08-10-10-50-12.bag"/>
 
 	<include file="$(find race)/launch/tf.launch"/>
 
 	<include file="$(find race)/launch/rf2o_config.launch"/>
 
-	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-		<rosparam command="load" file="$(find race)/params/ekf_params.yaml"/>
+	<node pkg="robot_localization" type="ukf_localization_node" name="ekf_se" clear_params="true">
+		<rosparam command="load" file="$(find race)/params/ekf_params1.yaml"/>
 	</node>
 
 	<include file="$(find race)/launch/gmapping.launch"/>
 
-	<node pkg="move_base" type="move_base" respawn="false" name="move_base">
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+		<param name="SBPLLatticePlanner/primitive_filename" value="$(find sbpl)/matlab/mprim/traxxas.mprim"/>
+		<param name="base_global_planner" value="SBPLLatticePlanner"/>
+		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
 		<rosparam file="$(find race)/params/local_costmap_params.yaml" command="load"/>
 		<rosparam file="$(find race)/params/global_costmap_params.yaml" command="load"/>
 		<rosparam file="$(find race)/params/move_base_params.yaml" command="load"/>
 		<rosparam file="$(find race)/params/teb_local_planner_params.yaml" command="load"/>
-		<rosparam file="$(find race)/params/global_planner.yaml" command="load"/>
-		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
-		<param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+		<rosparam file="$(find race)/params/sbpl.yaml" command="load"/>
 	</node>
 
-	<!--<node pkg="race" type="setpoint.py" output="screen" name="setpoint"/>
+	<!--<node pkg="race" type="setpoint.py" output="screen" name="setpoint"/>-->
 
-	<node pkg="race" type="controller" output="screen" name="control"/> -->
+	<node pkg="race" type="controller" output="screen" name="control"/>
 
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find race)/other/rviz/hypha_stage_sim.rviz"/>
 

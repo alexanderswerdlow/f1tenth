@@ -216,3 +216,7 @@ add_dependencies(L1_controller_v3 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_E
 add_executable(controller src/controller.cpp)
 target_link_libraries(controller ${catkin_LIBRARIES})
 add_dependencies(controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(scan_filter src/scan_filter.cpp)
+target_link_libraries(scan_filter ${catkin_LIBRARIES})
+add_dependencies(scan_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

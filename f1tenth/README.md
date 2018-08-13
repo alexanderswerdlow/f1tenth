@@ -87,3 +87,7 @@
          <node name="hallway_data" pkg="rosbag" type="play" output="screen" args="--clock -r 1 /home/aswerdlow/Documents/logs/_2018-08-06-12-09-07.bag"/>````
          
          /home/aswerdlow/Documents/logs/_2018-08-09-17-33-42.bag
+         
+           allow_unknown: true
+           default_tolerance: 0.075
+           orientation_mode: 3
