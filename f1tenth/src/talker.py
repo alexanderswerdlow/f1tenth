@@ -23,9 +23,10 @@ def arduino_map(x, in_min, in_max, out_min, out_max):
 def callback(data):
     velocity = data.velocity
     angle = data.angle
-    # print("Velocity: ",velocity,"Angle: ",angle)
-    # Do the computation
-    pwm1 = arduino_map(velocity, -0.1, 0.1, 6554, 13108);
+    #vel = 0
+    #if(abs(velocity) - 9830 < 300 and abs(velocity) - 9830 < 300):
+
+    pwm1 = arduino_map(velocity, -1.7, 1.7, 6554, 13108);
     pwm2 = arduino_map(-angle, -25, 25, 6554, 12241);
 
     msg = drive_values()

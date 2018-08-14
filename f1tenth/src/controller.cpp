@@ -8,9 +8,9 @@
 ros::Time prevTime;
 ros::Publisher pub;
 double desiredThrottle, desiredSteering, prevError, wheelbase, prevOutput, maxVel;
-double kP = 0.05;
+double kP = 0.075;
 double kI = 0.0;
-double kD = 0.0;
+double kD = kP * 10;
 
 inline bool sameSign(double a, double b) {
   return a * b >= 0.0f;
@@ -45,15 +45,13 @@ void updateOdom(nav_msgs::Odometry data) {
   double err = desiredThrottle - compVel;
   double kpOut = (err * kP);
   double kDOut = fabs((err - prevError)) > 1.0 ? 0.0 : ((err - prevError) / (dt));
-  double output = desiredThrottle + kpOut + kDOut;
-  output = output > 3.0 ? 3.0 : output;
-  output = output < -3.0 ?-3.0 : output;
-  output = sameSign(output, desiredThrottle) ? output : 0.0;
+  double output = fabs(err) > 0.05 ? desiredThrottle + kpOut + kDOut : desiredThrottle;
+  //output = sameSign(output, desiredThrottle) ? output : 0.0;
   prevTime = currentTime;
   prevError = err;
   prevOutput = output;
   race::drive_param msg;
-  msg.velocity = (float) (desiredThrottle);
+  msg.velocity = (float) (output);
   msg.angle = (float) tfDegrees(desiredSteering);
   pub.publish(msg);
 }
