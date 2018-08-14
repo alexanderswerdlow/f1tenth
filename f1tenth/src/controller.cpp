@@ -7,10 +7,10 @@
 
 ros::Time prevTime;
 ros::Publisher pub;
-double desiredThrottle, desiredSteering, prevError, wheelbase, prevOutput;
-double kP = 0.1;
-double kI = 0;
-double kD = 0.5;
+double desiredThrottle, desiredSteering, prevError, wheelbase, prevOutput, maxVel;
+double kP = 0.05;
+double kI = 0.0;
+double kD = 0.0;
 
 inline bool sameSign(double a, double b) {
   return a * b >= 0.0f;
@@ -37,6 +37,8 @@ double convert_trans_rot_vel_to_steering_angle(double v, double omega, double wh
   return atan(wheelbase / radius);
 }
 void updateOdom(nav_msgs::Odometry data) {
+  //maxVel = data.twist.twist.linear.x > maxVel ? data.twist.twist.linear.x : maxVel;
+  //std::cout << maxVel << std::endl;
   double compVel = sqrt(pow(data.twist.twist.linear.x, 2) + pow(data.twist.twist.linear.y, 2));
   ros::Time currentTime = ros::Time::now();
   double dt = currentTime.toSec() - prevTime.toSec();
@@ -51,7 +53,7 @@ void updateOdom(nav_msgs::Odometry data) {
   prevError = err;
   prevOutput = output;
   race::drive_param msg;
-  msg.velocity = (float) output;
+  msg.velocity = (float) (desiredThrottle);
   msg.angle = (float) tfDegrees(desiredSteering);
   pub.publish(msg);
 }
@@ -68,8 +70,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle n;
   pub = n.advertise<race::drive_param>("drive_parameters", 1000);
   prevTime = ros::Time::now();
-  desiredThrottle = desiredSteering = prevError = prevOutput = 0;
-  n.param("wheelabase", wheelbase, 0.3);
+  desiredThrottle = desiredSteering = prevError = prevOutput = maxVel = 0;
+  n.param("wheelabase", wheelbase, 0.32);
 
   ros::Rate loop_rate(100);
 

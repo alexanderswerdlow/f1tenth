@@ -2,30 +2,14 @@
 
 	<rosparam file="$(find race)/params/car_constants.yaml" command="load"/>
 
+	<include file="$(find race)/launch/rplidar.launch"/>
+
 	<node name="rosserial_python" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1"/>
 
 	<include file="$(find razor_imu_9dof)/launch/razor-pub.launch"/>
 
-	<include file="$(find race)/launch/rplidar.launch"/>
-
 	<include file="$(find race)/launch/tf.launch"/>
 
-	<include file="$(find race)/launch/rf2o_config.launch"/>
-
-	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-		<rosparam command="load" file="$(find race)/params/ekf_params.yaml"/>
-	</node>
-
-	<include file="$(find race)/launch/gmapping.launch"/>
-
-	<node pkg="move_base" type="move_base" respawn="false" name="move_base">
-		<rosparam file="$(find race)/params/local_costmap_params.yaml" command="load"/>
-		<rosparam file="$(find race)/params/global_costmap_params.yaml" command="load"/>
-		<rosparam file="$(find race)/params/move_base_params.yaml" command="load"/>
-		<rosparam file="$(find race)/params/teb_local_planner_params.yaml" command="load"/>
-		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
-	</node>
-
-	<node pkg="race" type="timed_roslaunch.sh" args="15 race bagdata.launch" name="timed_roslaunch" output="screen"/>
+	<node pkg="race" type="timed_roslaunch.sh" args="15 race nav.launch" name="timed_roslaunch" output="screen"/>
 
 </launch>

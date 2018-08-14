@@ -14,8 +14,8 @@ boolean controlOverrideFlag = false;
 int pwm_center_value = 9830;
 int steering_trim = 433;
 int pwm_center_steering_value = pwm_center_value - steering_trim;
-int constrained_pwm_lowerlimit = 7500;
-int constrained_pwm_upperlimit = 1200;
+int constrained_pwm_lowerlimit = 9200;
+int constrained_pwm_upperlimit = 10400;
 int pwm_lowerlimit = 6554;
 int pwm_upperlimit = 13108;
 int steeringPWMInput = 1500;
@@ -38,9 +38,15 @@ int servoControl = 3;
 // Pin 3 is the steering input from the Reciever
 
 void set(int esc, int servo) {
-  analogWrite(escPin, esc);
+  int cappedEsc = esc;
+  if (cappedEsc < constrained_pwm_lowerlimit) {
+    cappedEsc = constrained_pwm_lowerlimit;
+  } else if (cappedEsc > constrained_pwm_upperlimit) {
+    cappedEsc = constrained_pwm_upperlimit;
+  }
+  analogWrite(escPin, cappedEsc);
   analogWrite(servoPin, servo);
-  debug_msg.throttle_output = esc;
+  debug_msg.throttle_output = cappedEsc;
   debug_msg.steering_output = servo;
 }
 

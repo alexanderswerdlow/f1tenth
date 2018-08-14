@@ -11,7 +11,12 @@ control_pub = rospy.Publisher('controlOverride', Bool, queue_size=10)
 
 # function to map from one range to another, similar to arduino
 def arduino_map(x, in_min, in_max, out_min, out_max):
-    return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
+    val = x
+    if (val < in_min):
+        val = in_min
+    elif (val > in_max):
+        val = in_max
+    return (val - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
 
 
 # callback function on occurance of drive parameters(angle & velocity)
@@ -20,8 +25,9 @@ def callback(data):
     angle = data.angle
     # print("Velocity: ",velocity,"Angle: ",angle)
     # Do the computation
-    pwm1 = arduino_map(velocity, -3, 3, 6554, 13108);
-    pwm2 = arduino_map(angle, -30, 30, 6554, 12241);
+    pwm1 = arduino_map(velocity, -0.1, 0.1, 6554, 13108);
+    pwm2 = arduino_map(-angle, -25, 25, 6554, 12241);
+
     msg = drive_values()
     msg.pwm_drive = pwm1
     msg.pwm_angle = pwm2
