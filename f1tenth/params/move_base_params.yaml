@@ -1,4 +1,4 @@
-shutdown_costmaps: true
+shutdown_costmaps: false
 
 controller_frequency: 60.0
 controller_patience: 0.5

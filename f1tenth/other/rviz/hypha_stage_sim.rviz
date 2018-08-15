@@ -8,6 +8,7 @@ Panels:
         - /Grid1
         - /TF1/Frames1
         - /Odometry1/Shape1
+        - /Marker1/Status1
       Splitter Ratio: 0.515679419
     Tree Height: 1229
   - Class: rviz/Selection
@@ -131,9 +132,13 @@ Visualization Manager:
           Value: true
         laser:
           Value: false
+        left_frame:
+          Value: true
         map:
           Value: true
         odom:
+          Value: true
+        right_frame:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -149,6 +154,9 @@ Visualization Manager:
                   {}
                 laser:
                   {}
+                left_frame:
+                  right_frame:
+                    {}
       Update Interval: 0
       Value: true
     - Angle Tolerance: 0.100000001
@@ -285,6 +293,30 @@ Visualization Manager:
       Topic: /move_base_node/SBPLLatticePlanner/plan
       Unreliable: false
       Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /move_base_node/TebLocalPlannerROS/teb_markers
+      Name: Marker
+      Namespaces:
+        PointObstacles: true
+        RobotFootprintModel: true
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.100000001
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.300000012
+      Head Radius: 0.100000001
+      Name: Pose
+      Shaft Length: 1
+      Shaft Radius: 0.0500000007
+      Shape: Arrow
+      Topic: /move_base_simple/goal
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -319,7 +351,7 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: -175
+      Scale: 336.233856
       Target Frame: base_footprint
       Value: TopDownOrtho (rviz)
       X: 0
