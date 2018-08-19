@@ -8,7 +8,6 @@ Panels:
         - /Grid1
         - /TF1/Frames1
         - /Odometry1/Shape1
-        - /Marker1/Status1
       Splitter Ratio: 0.515679419
     Tree Height: 1229
   - Class: rviz/Selection
@@ -101,7 +100,7 @@ Visualization Manager:
       Color: 255; 255; 0
       Color Transformer: FlatColor
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 1
@@ -118,7 +117,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/TF
       Enabled: true
       Frame Timeout: 15
@@ -298,8 +297,7 @@ Visualization Manager:
       Marker Topic: /move_base_node/TebLocalPlannerROS/teb_markers
       Name: Marker
       Namespaces:
-        PointObstacles: true
-        RobotFootprintModel: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -341,7 +339,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 3.14159012
+      Angle: 4.69499207
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
@@ -351,7 +349,7 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 336.233856
+      Scale: 117.463844
       Target Frame: base_footprint
       Value: TopDownOrtho (rviz)
       X: 0

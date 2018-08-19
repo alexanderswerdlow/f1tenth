@@ -5,6 +5,7 @@
 #include <std_msgs/String.h>
 #include <race/chatter_values.h>
 #include <race/drive_values.h>
+#include <race/drive_flags.h>
 ros::NodeHandle nh;
 race::chatter_values debug_msg; // creater a ROS Publisher called chatter of type debug_msg
 ros::Publisher chatter("chatter", &debug_msg);
@@ -56,15 +57,12 @@ void messageDrive(const race::drive_values &pwm) {
   steering = pwm.pwm_angle;
 }
 
-void messageEmergencyStop(const std_msgs::Bool &flag) {
-  eStopFlag = flag.data;
+void driveFlags(const race::drive_flags &flag) {
+  controlOverrideFlag = flag.controlOverride;
+  eStopFlag = flag.eStop;
   if (eStopFlag) {
-	set(pwm_center_value, pwm_center_steering_value);
+    set(pwm_center_value, pwm_center_steering_value);
   }
-}
-
-void overrideControl(const std_msgs::Bool &flag) {
-  controlOverrideFlag = flag.data;
 }
 
 
@@ -80,7 +78,7 @@ double arduino_map(int x, double in_min, double in_max, double out_min, double o
 
 void updateOutput() {
   long currentTime = micros();
-  if ((((currentTime - lastDriveCommandTime) > 2000000) && !controlOverrideFlag) || eStopFlag) {
+  if ((((currentTime - lastDriveCommandTime) > 85000) && !controlOverrideFlag) || eStopFlag) {
 	set(pwm_center_value, pwm_center_steering_value);
   } else if (controlOverrideFlag) {
 	int steerOut = (int) arduino_map(steeringPWMInput, 1000, 2000, 6554, 13108);
@@ -94,31 +92,28 @@ void updateOutput() {
   debug_msg.controlOverride = controlOverrideFlag;
   debug_msg.eStop = eStopFlag;
 
-  if ((currentTime - lastDebugMsg) > 50000) {
+  if ((currentTime - lastDebugMsg) > 100000) {
 	chatter.publish(&debug_msg);
 	lastDebugMsg = currentTime;
   }
 }
 
 ros::Subscriber<race::drive_values> sub_drive("drive_pwm", &messageDrive); // Subscribe to drive_pwm topic sent by Jetson
-ros::Subscriber<std_msgs::Bool> sub_stop("eStop", &messageEmergencyStop);  // Subscribe to estop topic sent by Jetson
-ros::Subscriber<std_msgs::Bool> sub_control("controlOverride", &overrideControl);  // Subscribe to estop topic sent by Jetson
-
+ros::Subscriber<race::drive_flags> sub_flag("driveFlags", &driveFlags);  // Subscribe to estop topic sent by Jetson
 void setup() {
   analogWriteFrequency(escPin, 100); //  freq at which PWM signals is generated at pin 5.
   analogWriteFrequency(servoPin, 100);
   analogWriteResolution(16);                     // Resolution for the PWM signal
   analogWrite(escPin, pwm_center_value); // Setup zero velocity and steering.
   analogWrite(servoPin, pwm_center_value - steering_trim);
-  attachInterrupt(escControl, risingThrottle, RISING);
-  attachInterrupt(servoControl, risingSteering, RISING);
   nh.initNode();           // intialize ROS node
   nh.subscribe(sub_drive); // start the subscribers.
-  nh.subscribe(sub_stop);
-  nh.subscribe(sub_control);
+  nh.subscribe(sub_flag);
   nh.advertise(chatter); // start the publisher..can be used for debugging.
   lastDriveCommandTime = micros();
   lastDebugMsg = micros();
+  attachInterrupt(escControl, risingThrottle, RISING);
+  attachInterrupt(servoControl, risingSteering, RISING);
 }
 
 void loop() {

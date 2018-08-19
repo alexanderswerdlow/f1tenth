@@ -1,0 +1,2 @@
+bool eStop
+bool controlOverride

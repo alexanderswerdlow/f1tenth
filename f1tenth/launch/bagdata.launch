@@ -3,6 +3,6 @@
 	<node name="talker" pkg="race" type="talker.py" output="screen"/>
 
 	<node pkg="rosbag" type="record" name="rosbag_record_standard_data" respawn="true" output="screen"
-		  args="scan imu -o /home/cyber-physical/Documents/logs/"/>
+		  args="-a -o /home/cyber-physical/Documents/logs/"/>
 
 </launch>

@@ -14,13 +14,16 @@
 - Adding `include_directories(~/catkin_ws/devel/include)` to the same file will allow IDEs to view any custom message files that your packages create
     - Add these lines directly above the `catkin_workspace()` line at the end
 - The [robot_localization](http://wiki.ros.org/robot_localization) package provides a simple interface for an EKF, or UKF and in our case, uses data from the rf2o_laser_odometry package and the IMU to estimate the current state (in the odom frame, of type `nav_msgs/Odometry`)
+    - In some cases when certain inputs are set to false for the KF, the package will output no useful odometry data (All zeroes) without issuing a warning message. Setting all values to true in the odom/imu/twist config can reveal if this is an issue.
 - The [gmapping](http://wiki.ros.org/gmapping) package uses the filtered odometry data from the EKF (robot_localization pkg) along with the lidar scan data in order to build a dynamic map (occupancy grid) around the robot
 - The [navigation stack](http://wiki.ros.org/navigation?distro=kinetic) works by creating two separate costmaps, and two separate planners
     - The Global Costmap takes in a map (Occupancy Grid) from the gmapping package and uses it to dynamically build a costmap over time, designating areas that are free, unknown, or occupied (designated by values between 0-255)
     - The Global Planner takes this data and plans a global path using a `.mprim` file generated in by matlab that describes that kinetmatic constraints of the car. Detailed instructions can be found [here](http://sbpl.net/node/52)
     - The local costmap creates a smaller costmap that is frequently updated, directly from lidar data (doesn't use gmapping and is always centered on the robot's current position)
     - The local planner (in our case using the teb_local_planner as a plugin to move_base), uses the local costmap along with the global plan to create a short term path and series of future poses along with the neccessary linear and angular velocities (geometry_msgs/Twist) to reach the goal
-- Drivers
+- [TEB Local Planner](http://wiki.ros.org/teb_local_planner)
+    - Info about the robot footprint params can be found [here](http://wiki.ros.org/teb_local_planner/Tutorials/Obstacle%20Avoidance%20and%20Robot%20Footprint%20Model)
+- Driver
     - [Razor IMU](https://github.com/KristofRobot/razor_imu_9dof)
     - [RPLidar A2](https://github.com/Slamtec/rplidar_ros)
     - [ZED Camera](https://github.com/willdzeng/zed_cpu_ros) (Only outputs raw video streams, depth sensing requires Nvidia CUDA and a different driver)

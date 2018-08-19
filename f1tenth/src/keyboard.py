@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
-from race.msg import drive_param
+from race.msg import drive_flags
 from std_msgs.msg import Bool
 import curses
 
@@ -34,9 +34,7 @@ stdscr = curses.initscr()
 curses.cbreak()
 stdscr.keypad(1)
 rospy.init_node('keyboard_talker', anonymous=True)
-pub = rospy.Publisher('drive_parameters', drive_param, queue_size=10)
-em_pub = rospy.Publisher('eStop', Bool, queue_size=10)
-control_pub = rospy.Publisher('controlOverride', Bool, queue_size=10)
+em_pub = rospy.Publisher('driveFlags', drive_flags, queue_size=10)
 # set alarm
 # signal.alarm(TIMEOUT)
 # s = input()
@@ -53,12 +51,11 @@ while key != ord('q'):
     key = stdscr.getch()
     stdscr.refresh()
     #	signal.alarm(0)
-    if key == curses.KEY_DC:
-        left = 0
-        forward = 0
-        stdscr.addstr(5, 20, "Stop")
-    elif key == curses.KEY_UP:
-        control_pub.publish(False)
-em_pub.publish(True)
+    if key == curses.KEY_UP:
+        temp = drive_flags()
+        em_pub.publish(temp)
+temp = drive_flags()
+temp.controlOverride = True
+em_pub.publish(temp)
 stdscr.addstr(5, 20, "Emergency STOP!!!!!")
 curses.endwin()

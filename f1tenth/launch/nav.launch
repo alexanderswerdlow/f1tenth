@@ -3,13 +3,13 @@
 	<include file="$(find race)/launch/rf2o_config.launch"/>
 
 	<node pkg="robot_localization" type="ukf_localization_node" name="ekf_se" clear_params="true">
-		<rosparam command="load" file="$(find race)/params/ekf_params1.yaml"/>
+		<rosparam command="load" file="$(find race)/params/ekf_params.yaml"/>
 	</node>
 
 	<include file="$(find race)/launch/gmapping.launch"/>
 
 	<node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
-		<param name="SBPLLatticePlanner/primitive_filename" value="$(find race)/params/car.mprim"/>
+		<param name="SBPLLatticePlanner/primitive_filename" value="$(find race)/params/car4.mprim"/>
 		<param name="base_global_planner" value="SBPLLatticePlanner"/>
 		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
 		<rosparam file="$(find race)/params/local_costmap_params.yaml" command="load"/>
@@ -20,7 +20,5 @@
 	</node>
 
 	<node pkg="race" type="controller" output="screen" name="control"/>
-
-	<node pkg="race" type="talker.py" output="screen" name="talker"/>
 
 </launch>

@@ -56,6 +56,7 @@ add_message_files(
         drive_values.msg
         pid_input.msg
         chatter_values.msg
+        drive_flags.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -209,14 +210,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-add_executable(L1_controller_v3 src/L1_controller_v3.cpp)
-target_link_libraries(L1_controller_v3 ${catkin_LIBRARIES})
-add_dependencies(L1_controller_v3 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 add_executable(controller src/controller.cpp)
 target_link_libraries(controller ${catkin_LIBRARIES})
 add_dependencies(controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-add_executable(scan_filter src/scan_filter.cpp)
-target_link_libraries(scan_filter ${catkin_LIBRARIES})
-add_dependencies(scan_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
