@@ -214,3 +214,7 @@ include_directories(
 add_executable(controller src/controller.cpp)
 target_link_libraries(controller ${catkin_LIBRARIES})
 add_dependencies(controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(L1_controller_v2 src/L1_controller_v2.cpp)
+target_link_libraries(L1_controller_v2 ${catkin_LIBRARIES})
+add_dependencies(L1_controller_v2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

@@ -62,7 +62,8 @@ void updateOdom(nav_msgs::Odometry data) {
 
 void updateCmd(geometry_msgs::Twist data) {
   desiredThrottle = data.linear.x;
-  desiredSteering = convert_trans_rot_vel_to_steering_angle(data.linear.x, data.angular.z, wheelbase);
+  //desiredSteering = convert_trans_rot_vel_to_steering_angle(data.linear.x, data.angular.z, wheelbase);
+  desiredSteering = data.angular.z;
   double output = 0;
   if (p != NULL) {
 	double compVel = sqrt(pow(lastOdom.twist.twist.linear.x, 2) + pow(lastOdom.twist.twist.linear.y, 2));
