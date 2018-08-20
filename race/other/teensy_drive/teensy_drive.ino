@@ -6,6 +6,7 @@
 #include <race/chatter_values.h>
 #include <race/drive_values.h>
 #include <race/drive_flags.h>
+#inclide "math.h"
 ros::NodeHandle nh;
 race::chatter_values debug_msg; // creater a ROS Publisher called chatter of type debug_msg
 ros::Publisher chatter("chatter", &debug_msg);
@@ -41,9 +42,9 @@ int servoControl = 3;
 void set(int esc, int servo) {
   int cappedEsc = esc;
   if (cappedEsc < constrained_pwm_lowerlimit) {
-    cappedEsc = constrained_pwm_lowerlimit;
+	cappedEsc = constrained_pwm_lowerlimit;
   } else if (cappedEsc > constrained_pwm_upperlimit) {
-    cappedEsc = constrained_pwm_upperlimit;
+	cappedEsc = constrained_pwm_upperlimit;
   }
   analogWrite(escPin, cappedEsc);
   analogWrite(servoPin, servo);
@@ -61,10 +62,9 @@ void driveFlags(const race::drive_flags &flag) {
   controlOverrideFlag = flag.controlOverride;
   eStopFlag = flag.eStop;
   if (eStopFlag) {
-    set(pwm_center_value, pwm_center_steering_value);
+	set(pwm_center_value, pwm_center_steering_value);
   }
 }
-
 
 double arduino_map(int x, double in_min, double in_max, double out_min, double out_max) {
   int val = x;
@@ -78,14 +78,21 @@ double arduino_map(int x, double in_min, double in_max, double out_min, double o
 
 void updateOutput() {
   long currentTime = micros();
-  if ((((currentTime - lastDriveCommandTime) > 80000) && !controlOverrideFlag) || eStopFlag) {
+  if ((((currentTime - lastDriveCommandTime) > 1000000) && !controlOverrideFlag) || eStopFlag) {
 	set(pwm_center_value, pwm_center_steering_value);
   } else if (controlOverrideFlag) {
 	int steerOut = (int) arduino_map(steeringPWMInput, 1000, 2000, 6554, 13108);
 	int throttleOut = (int) arduino_map(throttlePWMInput, 1000, 2000, 6554, 13108);
 	set(throttleOut, steerOut);
   } else {
-	set(throttle, steering);
+    int input = 0;
+	if (throttle > 9830) {
+	  input = 1500 + math.fabs((throttlePWMInput - 1500))
+	} else {
+
+	}
+	int throttleOut = (int) arduino_map(throttlePWMInput, 1000, 2000, 6554, 13108);
+	set(throttleOut, steering);
   }
   debug_msg.throttle_input = throttlePWMInput;
   debug_msg.steering_input = steeringPWMInput;
@@ -95,6 +102,9 @@ void updateOutput() {
   if ((currentTime - lastDebugMsg) > 200000) {
 	chatter.publish(&debug_msg);
 	lastDebugMsg = currentTime;
+  }
+  if ((currentTime - lastDriveCommandTime) > 10000000) {
+	controlOverrideFlag = true;
   }
 }
 
@@ -140,6 +150,6 @@ void fallingSteering() {
   attachInterrupt(servoControl, risingSteering, RISING);
   steeringPWMInput = micros() - steeringPWMPrevTime;
   if (steeringPWMInput < 1424 || steeringPWMInput > 1444) {
-	controlOverrideFlag = true;
+	//controlOverrideFlag = true;
   }
 }

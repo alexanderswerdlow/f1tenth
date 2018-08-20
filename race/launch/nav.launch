@@ -21,7 +21,7 @@
 
 	<node pkg="race" type="controller" output="screen" name="control"/>
 
-	<node pkg="rosbag" type="record" name="rosbag_record_standard_data" respawn="true" output="screen"
-		  args="scan imu -o /home/cyber-physical/Documents/logs/"/>
+	<!--<node pkg="rosbag" type="record" name="rosbag_record_standard_data" respawn="true" output="screen"
+		  args="cmd_vel chatter drive_pwm -o /home/cyber-physical/Documents/logs/"/> -->
 
 </launch>

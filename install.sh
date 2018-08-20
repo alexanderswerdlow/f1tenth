@@ -59,7 +59,7 @@ cd ~/$name_catkinws/src
 
 catkin_init_workspace
 
-git clone 'https://alexanderswerdlow:3eM29&il4T@github.com/alexanderswerdlow/f1tenth.git'
+git clone 'https://username:password/alexanderswerdlow/f1tenth.git'
 
 cd f1tenth
 
