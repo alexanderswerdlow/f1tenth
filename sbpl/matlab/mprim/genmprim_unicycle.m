@@ -43,11 +43,11 @@ UNICYCLE_MPRIM_16DEGS = 1;
 if UNICYCLE_MPRIM_16DEGS == 1
     resolution = 0.025;
     numberofangles = 16; %preferably a power of 2, definitely multiple of 8
-    numberofprimsperangle = 6;
+    numberofprimsperangle = 4;
 
     %multipliers (multiplier is used as costmult*cost)
     forwardcostmult = 1;
-    backwardcostmult = 5;
+    backwardcostmult = 2500;
     forwardandturncostmult = 2;
     sidestepcostmult = 5000;
     turninplacecostmult = 5000;
@@ -61,11 +61,11 @@ if UNICYCLE_MPRIM_16DEGS == 1
     %0 theta change
     basemprimendpts0_c(1,:) = [1 0 0 forwardcostmult];
     basemprimendpts0_c(2,:) = [8 0 0 forwardcostmult];
-    basemprimendpts0_c(3,:) = [-1 0 0 backwardcostmult];
-    basemprimendpts0_c(4,:) = [-8 0 0 backwardcostmult];
+%    basemprimendpts0_c(3,:) = [-1 0 0 backwardcostmult];
+   % basemprimendpts0_c(4,:) = [-8 0 0 backwardcostmult];
     %1/16 theta change
-    basemprimendpts0_c(5,:) = [8 1 1 forwardandturncostmult];
-    basemprimendpts0_c(6,:) = [8 -1 -1 forwardandturncostmult];
+    basemprimendpts0_c(3,:) = [8 1 1 forwardandturncostmult];
+    basemprimendpts0_c(4,:) = [8 -1 -1 forwardandturncostmult];
     %1/16 theta change going backward
     %basemprimendpts0_c(7,:) = [-8 -1 1 backwardandturncostmult];
     %basemprimendpts0_c(8,:) = [-8 1 -1 backwardandturncostmult];
@@ -77,11 +77,11 @@ if UNICYCLE_MPRIM_16DEGS == 1
     %0 theta change 
     basemprimendpts45_c(1,:) = [1 1 0 forwardcostmult];
     basemprimendpts45_c(2,:) = [6 6 0 forwardcostmult];
-    basemprimendpts45_c(3,:) = [-1 -1 0 backwardcostmult];
-    basemprimendpts45_c(4,:) = [-6 -6 0 backwardcostmult];
+%    basemprimendpts45_c(3,:) = [-1 -1 0 backwardcostmult];
+%    basemprimendpts45_c(4,:) = [-6 -6 0 backwardcostmult];
     %1/16 theta change
-    basemprimendpts45_c(5,:) = [5 7 1 forwardandturncostmult];
-    basemprimendpts45_c(6,:) = [7 5 -1 forwardandturncostmult];
+    basemprimendpts45_c(3,:) = [5 7 1 forwardandturncostmult];
+    basemprimendpts45_c(5,:) = [7 5 -1 forwardandturncostmult];
     %basemprimendpts45_c(7,:) = [-5 -7 1 backwardandturncostmult];
     %basemprimendpts45_c(8,:) = [-7 -5 -1 backwardandturncostmult];
 
@@ -92,11 +92,11 @@ if UNICYCLE_MPRIM_16DEGS == 1
     %0 theta change     
     basemprimendpts22p5_c(1,:) = [2 1 0 forwardcostmult];
     basemprimendpts22p5_c(2,:) = [6 3 0 forwardcostmult];    
-    basemprimendpts22p5_c(3,:) = [-2 -1 0 backwardcostmult];
-    basemprimendpts22p5_c(4,:) = [-6 -3 0 backwardcostmult];
+   % basemprimendpts22p5_c(3,:) = [-2 -1 0 backwardcostmult];
+  %  basemprimendpts22p5_c(4,:) = [-6 -3 0 backwardcostmult];
     %1/16 theta change
-    basemprimendpts22p5_c(5,:) = [5 4 1 forwardandturncostmult];
-    basemprimendpts22p5_c(6,:) = [7 2 -1 forwardandturncostmult];
+    basemprimendpts22p5_c(3,:) = [5 4 1 forwardandturncostmult];
+    basemprimendpts22p5_c(4,:) = [7 2 -1 forwardandturncostmult];
     %basemprimendpts22p5_c(7,:) = [-5 -4 1 backwardandturncostmult];
     %basemprimendpts22p5_c(8,:) = [-7 -2 -1 backwardandturncostmult];
 

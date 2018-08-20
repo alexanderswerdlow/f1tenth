@@ -82,14 +82,18 @@ void updateCmd(geometry_msgs::Twist data) {
 
   double pwm1 = arduino_map(desiredThrottle, -1.7, 1.7, 6554, 13108);
   double pwm2 = arduino_map(-tfDegrees(desiredSteering), -25, 25, 6554, 12241);
-  double vel = pwm1;
+  double vel = 0;
   /*if (pwm1 > 9830) {
-	if (pwm1 - 9830 < 305 and pwm1 - 9830 > 75) {
-	  vel = 9830 + 305;
+	if (pwm1 - 9830 < 390 and pwm1 - 9830 > 75) {
+	  vel = 9830 + 390;
+	} else {
+	  vel = pwm1;
 	}
   } else {
-	if (9830 - pwm1 < 305 and 9830 - pwm1 > 75) {
-	  vel = 9830 - 305;
+	if (9830 - pwm1 < 390 and 9830 - pwm1 > 75) {
+	  vel = 9830 - 390;
+	} else {
+	  vel = pwm1;
 	}
   }*/
   race::drive_values msg;

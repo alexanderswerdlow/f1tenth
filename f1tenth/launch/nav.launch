@@ -9,7 +9,7 @@
 	<include file="$(find race)/launch/gmapping.launch"/>
 
 	<node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
-		<param name="SBPLLatticePlanner/primitive_filename" value="$(find race)/params/car4.mprim"/>
+		<param name="SBPLLatticePlanner/primitive_filename" value="$(find race)/params/test.mprim"/>
 		<param name="base_global_planner" value="SBPLLatticePlanner"/>
 		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
 		<rosparam file="$(find race)/params/local_costmap_params.yaml" command="load"/>
@@ -20,5 +20,8 @@
 	</node>
 
 	<node pkg="race" type="controller" output="screen" name="control"/>
+
+	<node pkg="rosbag" type="record" name="rosbag_record_standard_data" respawn="true" output="screen"
+		  args="chatter cmd_vel drive_pwm scan imu -o /home/cyber-physical/Documents/logs/"/>
 
 </launch>

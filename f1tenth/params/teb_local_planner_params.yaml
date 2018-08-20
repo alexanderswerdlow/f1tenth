@@ -5,7 +5,7 @@ TebLocalPlannerROS:
  # Trajectory
 
  teb_autosize: True
- dt_ref: 0.1
+ dt_ref: 0.3
  dt_hysteresis: 0.1
  global_plan_overwrite_orientation: True
  allow_init_with_backwards_motion: False
@@ -18,12 +18,12 @@ TebLocalPlannerROS:
  max_vel_x: 1.7
  max_vel_x_backwards: 0.5
  max_vel_y: 0.0
- max_vel_theta: 0.8 # the angular velocity is also bounded by min_turning_radius in case of a carlike robot (r = v / omega)
+ max_vel_theta: 1.0 # the angular velocity is also bounded by min_turning_radius in case of a carlike robot (r = v / omega)
  acc_lim_x: 0.8
- acc_lim_theta: 0.4
+ acc_lim_theta: 0.5
 
  # ********************** Carlike robot parameters ********************
- min_turning_radius: 1.5 #0.283 #0.255 for 45deg       # Min turning radius of the carlike robot (compute value using a model or adjust with rqt_reconfigure manually)
+ min_turning_radius: 1.25 #0.283 #0.255 for 45deg       # Min turning radius of the carlike robot (compute value using a model or adjust with rqt_reconfigure manually)
  wheelbase: 0.32385             # Wheelbase of our robot
  cmd_angle_instead_rotvel: False # stage simulator takes the angle instead of the rotvel as input (twist message)
  # ********************************************************************
@@ -42,7 +42,7 @@ TebLocalPlannerROS:
   # GoalTolerance
 
  xy_goal_tolerance: 0.2
- yaw_goal_tolerance: 0.1
+ yaw_goal_tolerance: 1.0
  free_goal_vel: False
 
  # Obstacles
@@ -67,12 +67,12 @@ TebLocalPlannerROS:
  weight_acc_lim_x: 1
  weight_acc_lim_theta: 1
  weight_kinematics_nh: 1000
- weight_kinematics_forward_drive: 10  #1
+ weight_kinematics_forward_drive: 200  #1
  weight_kinematics_turning_radius: 85 #1
- weight_optimaltime: 5
- weight_obstacle: 120
+ weight_optimaltime: 150
+ weight_obstacle: 170
  weight_dynamic_obstacle: 1 # not in use yet
- weight_viapoint: 85
+ weight_viapoint: 250
 
  # Homotopy Class Planner
 

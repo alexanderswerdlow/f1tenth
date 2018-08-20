@@ -41,9 +41,9 @@ int servoControl = 3;
 void set(int esc, int servo) {
   int cappedEsc = esc;
   if (cappedEsc < constrained_pwm_lowerlimit) {
-    cappedEsc = constrained_pwm_lowerlimit;
+	cappedEsc = constrained_pwm_lowerlimit;
   } else if (cappedEsc > constrained_pwm_upperlimit) {
-    cappedEsc = constrained_pwm_upperlimit;
+	cappedEsc = constrained_pwm_upperlimit;
   }
   analogWrite(escPin, cappedEsc);
   analogWrite(servoPin, servo);
@@ -61,10 +61,9 @@ void driveFlags(const race::drive_flags &flag) {
   controlOverrideFlag = flag.controlOverride;
   eStopFlag = flag.eStop;
   if (eStopFlag) {
-    set(pwm_center_value, pwm_center_steering_value);
+	set(pwm_center_value, pwm_center_steering_value);
   }
 }
-
 
 double arduino_map(int x, double in_min, double in_max, double out_min, double out_max) {
   int val = x;
@@ -78,14 +77,15 @@ double arduino_map(int x, double in_min, double in_max, double out_min, double o
 
 void updateOutput() {
   long currentTime = micros();
-  if ((((currentTime - lastDriveCommandTime) > 85000) && !controlOverrideFlag) || eStopFlag) {
-	set(pwm_center_value, pwm_center_steering_value);
-  } else if (controlOverrideFlag) {
+  if ((((currentTime - lastDriveCommandTime) > 85000))) {
 	int steerOut = (int) arduino_map(steeringPWMInput, 1000, 2000, 6554, 13108);
 	int throttleOut = (int) arduino_map(throttlePWMInput, 1000, 2000, 6554, 13108);
 	set(throttleOut, steerOut);
+  } else if (eStopFlag) {
+	set(pwm_center_value, pwm_center_steering_value);
   } else {
-	set(throttle, steering);
+	int throttleOut = (int) arduino_map(throttlePWMInput, 1000, 2000, 6554, 13108);
+	set(throttleOut, steering);
   }
   debug_msg.throttle_input = throttlePWMInput;
   debug_msg.steering_input = steeringPWMInput;
@@ -133,13 +133,13 @@ void fallingThrottle() {
   attachInterrupt(escControl, risingThrottle, RISING);
   throttlePWMInput = micros() - throttlePWMPrevTime;
   if (throttlePWMInput < 1490 || throttlePWMInput > 1510) {
-	controlOverrideFlag = true;
+	//controlOverrideFlag = true;
   }
 }
 void fallingSteering() {
   attachInterrupt(servoControl, risingSteering, RISING);
   steeringPWMInput = micros() - steeringPWMPrevTime;
-  if (steeringPWMInput < 1424 || steeringPWMInput > 1444) {
-	controlOverrideFlag = true;
+  if (steeringPWMInput < 1310 || steeringPWMInput > 1570) {
+	//controlOverrideFlag = true;
   }
 }
