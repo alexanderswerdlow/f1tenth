@@ -29,4 +29,4 @@ global_costmap:
 
   inflation:
     inflation_radius: 2.5
-    cost_scaling_factor: 6.0
+    cost_scaling_factor: 8.0

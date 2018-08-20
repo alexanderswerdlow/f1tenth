@@ -14,7 +14,7 @@
 - Adding `include_directories(~/catkin_ws/devel/include)` to the same file will allow IDEs to view any custom message files that your packages create
     - Add these lines directly above the `catkin_workspace()` line at the end
 - The [robot_localization](http://wiki.ros.org/robot_localization) package provides a simple interface for an EKF, or UKF and in our case, uses data from the rf2o_laser_odometry package and the IMU to estimate the current state (in the odom frame, of type `nav_msgs/Odometry`)
-    - In some cases when certain inputs are set to false for the KF, the package will output no useful odometry data (All zeroes) without issuing a warning message. Setting all values to true in the odom/imu/twist config can reveal if this is an issue.
+    - In some cases when certain inputs are set to false for the UKF, the package will output no useful odometry data (All zeroes) without issuing a warning message. Setting all values to true in the odom/imu/twist config can reveal if this is an issue.
 - The [gmapping](http://wiki.ros.org/gmapping) package uses the filtered odometry data from the EKF (robot_localization pkg) along with the lidar scan data in order to build a dynamic map (occupancy grid) around the robot
 - The [navigation stack](http://wiki.ros.org/navigation?distro=kinetic) works by creating two separate costmaps, and two separate planners
     - The Global Costmap takes in a map (Occupancy Grid) from the gmapping package and uses it to dynamically build a costmap over time, designating areas that are free, unknown, or occupied (designated by values between 0-255)
@@ -27,3 +27,6 @@
     - [Razor IMU](https://github.com/KristofRobot/razor_imu_9dof)
     - [RPLidar A2](https://github.com/Slamtec/rplidar_ros)
     - [ZED Camera](https://github.com/willdzeng/zed_cpu_ros) (Only outputs raw video streams, depth sensing requires Nvidia CUDA and a different driver)
+    - [Teensy](https://github.com/mlab-upenn/f1tenthpublic/tree/master/code/Teensy%20Firmware) To change message files for the teensy, you need to add a msg file in `f1tenth/msg`, update `add_message_files` in CMakeLists, then follow the instructions in the f1tenth teensy readme. You must cmake, and rebuild the rosserial libraries folder.
+- Launch files
+    - An sh file is used when running code on the robot so that the imu, lidar, and teensy can startup before recording data or running navigation   

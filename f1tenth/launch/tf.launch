@@ -1,7 +1,9 @@
 <launch>
-	<node pkg="tf" type="static_transform_publisher" name="base_footprint2base_link" args="0 0 0.0 0 0 0 /base_footprint /base_link 10"/>
-	<node pkg="tf" type="static_transform_publisher" name="base_link2laser_link" args="-0.03175 0.0 0.1397 1.57079633 0.0 0.0 /base_link /laser 10"/>
-	<node pkg="tf" type="static_transform_publisher" name="base_link2imu" args="0.19685 0 0.0635 0 0 0 /base_link /base_imu_link 10"/>
+
+	<node pkg="tf" type="static_transform_publisher" name="base_footprint2base_link" args="0 0 0.08 0 0 0 /base_footprint /base_link 10"/>
+	<node pkg="tf" type="static_transform_publisher" name="base_link2laser_link"
+		  args="-0.03175 0.0 0.0 1.57079633 0.0 0.0 /base_link /laser 10"/>
+	<node pkg="tf" type="static_transform_publisher" name="base_link2imu" args="0.19685 0 0 0 0 0 /base_link /base_imu_link 10"/>
 	<node pkg="tf" type="static_transform_publisher" name="zed_tf" args="0.0889 0 0.114 0 0 0 base_link left_frame 10"/>
-	<node pkg="tf" type="static_transform_publisher" name="zed_left_right_tf" args="0 0.120 0 0 0 0 left_frame right_frame 10"/>
+	<node pkg="tf" type="static_transform_publisher" name="static_tf_2" args="0 0.120 0 0 0 0 left_frame right_frame 10"/>
 </launch>

@@ -24,7 +24,7 @@ odom_frame: odom
 
 # How long (in seconds) between updates to the map.
 # Lowering this number updates the occupancy grid more often, at the expense of greater computational load.
-map_update_interval: 1.75
+map_update_interval: 1.25
 
 # The maximum usable range of the laser. A beam is cropped to this value
 maxUrange: 5.5
