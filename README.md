@@ -63,3 +63,9 @@
        alias cclean='cd ~/catkin_ws && catkin_make clean && catkin_make && cd -'
        alias log='ssh -X cyber-physical@cyber-physical'
         ```
+- Useful Repos
+    - https://github.com/mrsd16teamd/loco_car/
+    - https://github.com/Hypha-ROS/hypharos_racecar
+    - https://github.com/mlab-upenn/f1tenthpublic/tree/master/code
+    - https://github.com/tysik/obstacle_detector
+    - https://github.com/ceezeh/UnmannedNavigationSystem
