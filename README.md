@@ -1,4 +1,4 @@
-### f1tenth notes
+### f1tenth documentation
 - In order to access data from usb devices, ensure that the device is plugged in and you are accessing the correct port (Use `ls /dev/tty*` to check, you should look for `/dev/tty/USB*` or `/dev/tty/ACM*`)
 - You also need to add your user to the dialout group by running `sudo adduser example_username dialout`
 - Need to make python files executable, ex. `chmod +x example.py`
