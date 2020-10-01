@@ -33,7 +33,7 @@
     - [ZED Camera](https://github.com/willdzeng/zed_cpu_ros) (Only outputs raw video streams, depth sensing requires Nvidia CUDA and a different driver)
     - [Teensy](https://github.com/mlab-upenn/f1tenthpublic/tree/master/code/Teensy%20Firmware) To change message files for the teensy, you need to add a msg file in `f1tenth/msg`, update `add_message_files` in CMakeLists, then follow the instructions in the f1tenth teensy readme. You must cmake, and rebuild the rosserial libraries folder.
 - [Launch files](http://wiki.ros.org/roslaunch)
-    - An sh file is used when running code on the robot so that the imu, lidar, and teensy can startup before recording data or running navigation   
+    - A .sh file is used when running code on the robot so that the imu, lidar, and teensy can startup before recording data or running navigation   
 - [Paramaters](http://wiki.ros.org/rosparam#YAML_Format)
     - [.yaml files](http://wiki.ros.org/rosparam#YAML_Format) can be used to define ros parameters.
         - Indents restrict the scope of the parameters, only allowing access to node handles whose name matches the name at the top of the indented block
